@@ -1,0 +1,232 @@
+<p>savings works!</p>
+<div class="savings-account-form">
+    <h1 class="text-3xl font-bold mb-2">Mở tài khoản tiết kiệm</h1>
+    
+    <div class="breadcrumb text-sm mb-4">
+      <span>Trang chủ</span>
+      <span class="mx-1">></span>
+      <span>Tiết kiệm</span>
+      <span class="mx-1">></span>
+      <span class="text-primary">Mở tài khoản tiết kiệm</span>
+    </div>
+  
+    <app-stepper [currentStep]="currentStep"></app-stepper>
+  
+    <div  *ngIf="currentStep === 1"  class="form-container">
+      <form [formGroup]="savingsForm" (ngSubmit)="onSubmit()">
+        <div class="form-section">
+          <div class="grid">
+            <div class="col-12 md:col-4">
+              <label for="account" class="block mb-2">Tài khoản nguồn</label>
+            </div>
+            <div class="col-12 md:col-8">
+              <p-select 
+                inputId="account"
+                formControlName="accountSrc" 
+                [options]="accounts" 
+                optionLabel="name"
+                optionValue="value"
+                [showClear]="false">
+              </p-select>
+            </div>
+          </div>
+          
+          <div class="grid mt-3">
+            <div class="col-12 md:col-4">
+              <label class="block mb-2">Số dư khả dụng</label>
+            </div>
+            <div class="col-12 md:col-8">
+              <div class="font-medium">{{ formatCurrency(accounts[1].balance) }}</div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-section">
+          <div class="grid">
+            <div class="col-12 md:col-4">
+              <label for="term" class="block mb-2">Kỳ hạn gửi</label>
+            </div>
+            <div class="col-12 md:col-8">
+              <p-select 
+                inputId="term"
+                formControlName="term" 
+                [options]="terms" 
+                optionLabel="name"
+                [showClear]="false">
+              </p-select>
+            </div>
+          </div>
+          
+          <div class="grid mt-3">
+            <div class="col-12 md:col-4">
+              <label for="amount" class="block mb-2">Số tiền gửi</label>
+            </div>
+            <div class="col-12 md:col-8">
+              <p-inputNumber 
+                inputId="amount"
+                formControlName="amount" 
+                [min]="1000000"
+                [showButtons]="false" 
+                mode="currency" 
+                currency="VND"
+                locale="vi-VN">
+              </p-inputNumber>
+              <small *ngIf="amount?.invalid && amount?.touched" class="p-error block mt-1">
+                Số tiền gửi tối thiểu là 1.000.000 VND
+              </small>
+            </div>
+          </div>
+          
+          <div class="grid mt-3">
+            <div class="col-12 md:col-4">
+              <label for="paymentMethod" class="block mb-2">Hình thức trả lãi</label>
+            </div>
+            <div class="col-12 md:col-8">
+              <p-select 
+                inputId="paymentMethod"
+                formControlName="paymentMethod" 
+                [options]="paymentMethods" 
+                optionLabel="name"
+                [showClear]="false">
+              </p-select>
+            </div>
+          </div>
+        </div>
+  
+        <div class="mt-4 flex align-items-center">
+          <p-checkbox 
+            inputId="termsAgreement"
+            formControlName="termsAgreement" 
+            [binary]="true" 
+            styleClass="mr-2">
+          </p-checkbox>
+          <label for="termsAgreement" class="ml-2">
+            Tôi đã đọc, hiểu rõ, đồng ý và cam kết tuân thủ các điều khoản, điều kiện và
+            <span class="terms-text">Thỏa thuận mở và sử dụng dịch vụ tiền gửi trực tuyến</span> của Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)
+          </label>
+        </div>
+        <small *ngIf="termsAgreement?.invalid && termsAgreement?.touched" class="p-error block mt-1">
+          Bạn phải đồng ý với điều khoản và điều kiện để tiếp tục
+        </small>
+  
+        <div class="flex justify-content-center mt-4">
+          <button 
+            pButton 
+            type="submit" 
+            label="Tiếp tục"
+            class="submit-button"
+            [disabled]="savingsForm.invalid">
+          </button>
+        </div>
+      </form>
+    </div>
+ 
+  <div  *ngIf="currentStep === 2 "  class="form-container">
+    <form [formGroup]="savingsForm" (ngSubmit)="onSubmit()">
+      <div class="form-section">
+        
+        <div class="grid">
+          <div class="col-12 md:col-4">
+            <label for="account" class="block mb-2">Tài khoản nguồn bước 2  </label>
+          </div>
+          <div class="col-12 md:col-8">
+            <p-select 
+              inputId="account"
+              formControlName="accountSrc" 
+              [options]="accounts" 
+              optionLabel="name"
+              [showClear]="false">
+            </p-select>
+          </div>
+        </div>
+        
+        <div class="grid mt-3">
+          <div class="col-12 md:col-4">
+            <label class="block mb-2">Số dư khả dụng</label>
+          </div>
+          <div class="col-12 md:col-8">
+            <div class="font-medium">{{ formatCurrency(accounts[1].balance) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="grid">
+          <div class="col-12 md:col-4">
+            <label for="term" class="block mb-2">Kỳ hạn gửi</label>
+          </div>
+          <div class="col-12 md:col-8">
+            <p-select 
+              inputId="term"
+              formControlName="term" 
+              [options]="terms" 
+              optionLabel="name"
+              [showClear]="false">
+            </p-select>
+          </div>
+        </div>
+        
+        <div class="grid mt-3">
+          <div class="col-12 md:col-4">
+            <label for="amount" class="block mb-2">Số tiền gửi</label>
+          </div>
+          <div class="col-12 md:col-8">
+            <p-inputNumber 
+              inputId="amount"
+              formControlName="amount" 
+              [min]="1000000"
+              [showButtons]="false" 
+              mode="currency" 
+              currency="VND"
+              locale="vi-VN">
+            </p-inputNumber>
+            <small *ngIf="amount?.invalid && amount?.touched" class="p-error block mt-1">
+              Số tiền gửi tối thiểu là 1.000.000 VND
+            </small>
+          </div>
+        </div>
+        
+        <div class="grid mt-3">
+          <div class="col-12 md:col-4">
+            <label for="paymentMethod" class="block mb-2">Hình thức trả lãi</label>
+          </div>
+          <div class="col-12 md:col-8">
+            <p-select 
+              inputId="paymentMethod"
+              formControlName="paymentMethod" 
+              [options]="paymentMethods" 
+              optionLabel="name"
+              [showClear]="false">
+            </p-select>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 flex align-items-center">
+        <p-checkbox 
+          inputId="termsAgreement"
+          formControlName="termsAgreement" 
+          [binary]="true" 
+          styleClass="mr-2">
+        </p-checkbox>
+        <label for="termsAgreement" class="ml-2">
+          Tôi đã đọc, hiểu rõ, đồng ý và cam kết tuân thủ các điều khoản, điều kiện và
+          <span class="terms-text">Thỏa thuận mở và sử dụng dịch vụ tiền gửi trực tuyến</span> của Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)
+        </label>
+      </div>
+      <small *ngIf="termsAgreement?.invalid && termsAgreement?.touched" class="p-error block mt-1">
+        Bạn phải đồng ý với điều khoản và điều kiện để tiếp tục
+      </small>
+
+      <div class="flex justify-content-center mt-4">
+        <button 
+          pButton 
+          type="submit" 
+          label="Tiếp tục"
+          class="submit-button"
+          [disabled]="savingsForm.invalid">
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
