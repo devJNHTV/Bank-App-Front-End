@@ -176,6 +176,51 @@
     }
   }
   
+  // Success step styling
+  .success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    
+    .success-content {
+      text-align: center;
+      background: white;
+      border-radius: 12px;
+      padding: 48px 32px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      
+      .success-icon {
+        font-size: 4rem;
+        color: #28a745;
+        margin-bottom: 24px;
+        display: block;
+      }
+      
+      h2 {
+        color: #28a745;
+        margin-bottom: 16px;
+      }
+      
+      p {
+        line-height: 1.6;
+        margin-bottom: 32px;
+      }
+      
+      .button-group {
+        display: flex;
+        justify-content: center;
+        
+        button {
+          min-width: 160px;
+          padding: 12px 24px;
+        }
+      }
+    }
+  }
+
   // Responsive design
   @media (max-width: 768px) {
     .savings-account-form {
@@ -191,6 +236,25 @@
         
         .col-12 {
           margin-bottom: 10px;
+        }
+      }
+    }
+    
+    .success-container {
+      .success-content {
+        padding: 32px 20px;
+        margin: 16px;
+        
+        .success-icon {
+          font-size: 3rem;
+        }
+        
+        h2 {
+          font-size: 1.5rem;
+        }
+        
+        .button-group button {
+          width: 100%;
         }
       }
     }

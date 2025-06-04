@@ -1,31 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { CheckboxModule } from 'primeng/checkbox';
 import { StepperComponent } from '../../components/stepper/stepper.component';
-
-interface Account {
-  name: string;
-  balance: number;
-  value: string;
-}
-
-interface Term {
-  name: string;
-  value: string;
-  months: number;
-  rate: number;
-}
-
-interface PaymentMethod {
-  name: string;
-  value: string;
-}
+import { Account, Term } from '../../interfaces/account.interface';
+import { AccountService } from '../../services/account/account.service';
+import { Step1FormComponent } from './steps/step1-form.component';
+import { Step2ConfirmationComponent } from './steps/step2-confirmation.component';
+import { Step3OtpComponent } from './steps/step3-otp.component';
 
 @Component({
   selector: 'app-about',
@@ -34,89 +17,149 @@ interface PaymentMethod {
     CommonModule,
     ButtonModule,
     RippleModule,
-    ReactiveFormsModule,
-    SelectModule,
-    InputNumberModule,
-    CheckboxModule,
-    StepperComponent
+    StepperComponent,
+    Step1FormComponent,
+    Step2ConfirmationComponent,
+    Step3OtpComponent
   ],
   templateUrl: './savings.component.html',
   styleUrl: './savings.component.scss'
 })
 export class SavingsComponent {
-  counter = 0;
-  id: number = 0;
-  accountData: any;
+  @ViewChild(Step3OtpComponent) step3Component!: Step3OtpComponent;
   
-  // Savings form properties
-  savingsForm: FormGroup;
   currentStep: number = 1;
+  accounts: Account[] = [];
+  terms: Term[] = [];
+  formData: any = null;
+  transactionId: string = '';
   
-  accounts: Account[] = [
-    { name: '0123456789 - Tài khoản thanh toán', balance: 50000000, value: '0123456789' },
-    { name: '0987654321 - Tài khoản thanh toán 2', balance: 100000000, value: '0987654321' }
-  ];
-  
-  terms: Term[] = [
-    { name: '1 tháng - 4.5%/năm', value: '1', months: 1, rate: 4.5 },
-    { name: '3 tháng - 5.0%/năm', value: '3', months: 3, rate: 5.0 },
-    { name: '6 tháng - 5.5%/năm', value: '6', months: 6, rate: 5.5 },
-    { name: '12 tháng - 6.0%/năm', value: '12', months: 12, rate: 6.0 },
-    { name: '24 tháng - 6.5%/năm', value: '24', months: 24, rate: 6.5 }
-  ];
-  
-  paymentMethods: PaymentMethod[] = [
-    { name: 'Trả lãi cuối kỳ', value: 'end' },
-    { name: 'Trả lãi định kỳ hàng tháng', value: 'monthly' },
-    { name: 'Tái tục gốc và lãi', value: 'compound' }
-  ];
-
   constructor(
-    private route: ActivatedRoute,
-    private fb: FormBuilder
-  ) {
-    this.savingsForm = this.fb.group({
-      accountSrc: ['', Validators.required],
-      interate: [this.terms[0].rate, Validators.required],
-      amount: [1000000, [Validators.required, Validators.min(1000000)]],
-      paymentMethod: [this.paymentMethods[0], Validators.required],
-      term: [this.terms[0].months, Validators.required],
-      termsAgreement: [false, Validators.requiredTrue]
+    private accountService: AccountService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.accountService.getAccounts().subscribe((res: any) => {
+      this.accounts = res.data;
+      console.log(this.accounts);
+    });
+    
+    this.accountService.getTerms().subscribe((res: any) => {
+      this.terms = res.data;
+      console.log(this.terms);
     });
   }
 
-  ngOnInit(): void {
+  // Handle form submission from Step 1
+  onStep1Submit(formData: any): void {
+    console.log('Step 1 form submitted:', formData);
+    this.formData = formData;
+    this.currentStep = 2;
   }
 
-  // Getter for form controls
-  get amount() {
-    return this.savingsForm.get('amount');
+  // Handle confirmation from Step 2
+  onStep2Confirm(): void {
+    console.log('Step 2 confirmed, final data:', this.formData);
+    
+    this.accountService.createAccount(this.formData).subscribe({
+      next: (res: any) => {
+        console.log('Step 2 API response:', res.data);
+        
+        // Lưu transactionId từ response để chuyển sang step 3
+        if (res.data && res.data.id) {
+          this.transactionId = res.data.id;          
+          // Chuyển sang step 3 (OTP verification)
+          this.currentStep = 3;
+        } else {
+          console.error('Không tìm thấy transaction ID trong response');
+        }
+      },
+      error: (error) => {
+        console.error('Lỗi khi tạo tài khoản:', error);
+        // Có thể hiển thị thông báo lỗi cho user
+      }
+    });
   }
 
-  get termsAgreement() {
-    return this.savingsForm.get('termsAgreement');
+  // Handle back button from Step 2
+  onStep2Back(): void {
+    this.currentStep = 1;
   }
 
-  // Format currency method
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(amount);
+  // Handle OTP submission from Step 3
+  onOtpSubmit(data: {savingRequestID: string, otpCode: string}): void {
+    console.log('OTP submitted:', data);
+    
+    // Gửi ID và OTP xuống backend để xác thực
+    this.accountService.verifyOtp(data.otpCode, data.savingRequestID).subscribe({
+      next: (res: any) => {
+        console.log('OTP verification successful:', res);
+        // Reset loading state và hiển thị thành công
+        if (this.step3Component) {
+          this.step3Component.resetLoading();
+          this.step3Component.showSuccess('Xác thực OTP thành công!');
+        }
+        
+        // Chuyển sang step thành công sau 1 giây
+        setTimeout(() => {
+          this.currentStep = 4;
+        }, 1500);
+      },
+      error: (error: any) => {
+        console.error('OTP verification failed:', error);
+        console.error('status code appexception:', error.error.status);
+        
+        // Reset loading state
+        if (this.step3Component) {
+          this.step3Component.resetLoading();
+          
+          // Xử lý các loại lỗi khác nhau
+          let errorMessage = 'Có lỗi xảy ra. Vui lòng thử lại.';
+          
+          if (error.status === 400) {
+            errorMessage = 'Mã OTP không chính xác. Vui lòng kiểm tra lại.';
+          } else if (error.status === 410 || error.error?.message?.includes('expired')) {
+            errorMessage = 'Mã OTP đã hết hạn. Vui lòng yêu cầu gửi lại OTP.';
+          } else if (error.status === 429) {
+            errorMessage = 'Bạn đã nhập sai quá nhiều lần. Vui lòng thử lại sau.';
+          } else if (error.error?.message) {
+            errorMessage = error.error.message;
+          }
+          
+          this.step3Component.showError(errorMessage);
+        }
+      }
+    });
   }
 
-  // Submit method
-  onSubmit(): void {
-    if (this.savingsForm.valid) {
-      console.log('Form submitted:', this.savingsForm.value);
-      this.currentStep = this.currentStep + 1; // Move to next step
-      // Here you would typically call a service to submit the form
-    } else {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.savingsForm.controls).forEach(key => {
-        this.savingsForm.get(key)?.markAsTouched();
-      });
-    }
+  // Handle back button from Step 3
+  onStep3Back(): void {
+    this.currentStep = 2;
+  }
+
+  // Handle resend OTP from Step 3
+  onResendOtp(transactionId: string): void {
+    console.log('Resending OTP for transaction:', transactionId);
+    
+    this.accountService.resendOtp(transactionId).subscribe({
+      next: (res: any) => {
+        console.log('OTP resent successfully:', res);
+        if (this.step3Component) {
+          this.step3Component.showSuccess('Mã OTP đã được gửi lại thành công!');
+        }
+      },
+      error: (error: any) => {
+        console.error('Failed to resend OTP:', error);
+        if (this.step3Component) {
+          let errorMessage = 'Không thể gửi lại OTP. Vui lòng thử lại.';
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          }
+          this.step3Component.showError(errorMessage);
+        }
+      }
+    });
   }
 }
 

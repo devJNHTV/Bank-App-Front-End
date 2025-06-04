@@ -1,0 +1,117 @@
+<div class="form-container">
+  <form [formGroup]="savingsForm" (ngSubmit)="onSubmit()">
+    <div class="form-section">
+      <div class="grid">
+        <div class="col-12 md:col-4">
+          <label for="account" class="block mb-2">Tài khoản nguồn</label>
+        </div>
+        <div class="col-12 md:col-8">
+          <p-select 
+            inputId="account"
+            formControlName="accountNumberSource" 
+            [options]="accounts" 
+            optionLabel="accountNumber"
+            optionValue="accountNumber"
+            placeholder="Chọn tài khoản"
+            [showClear]="false">
+          </p-select>
+        </div>
+      </div>
+      
+      <div class="grid mt-10" style="margin-top: 10px;">
+        <div class="col-12 md:col-4">
+          <label class="block mb-2">Số dư khả dụng</label>
+        </div>
+        <div class="col-12 md:col-8">
+          <div class="font-medium" style="color: green;">
+            <span *ngIf="selectedAccount; else noAccount">
+              {{ formatCurrency(selectedAccount.balance) }}
+            </span>
+            <ng-template #noAccount>
+              <span class="text-muted">Vui lòng chọn tài khoản</span>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="grid">
+        <div class="col-12 md:col-4">
+          <label for="term" class="block mb-2">Kỳ hạn gửi</label>
+        </div>
+        <div class="col-12 md:col-8">
+          <p-select 
+            inputId="term"
+            formControlName="term" 
+            [options]="terms" 
+            optionLabel="termValueMonths"
+            optionValue="termValueMonths"
+            placeholder="Chọn kỳ hạn"
+            [showClear]="false">
+            <ng-template pTemplate="item" let-term>
+              {{ formatTermLabel(term) }}
+            </ng-template>
+            <ng-template pTemplate="selectedItem" let-term>
+              {{ formatTermLabel(term) }}
+            </ng-template>
+          </p-select>
+        </div>
+      </div>
+      
+      <div class="grid mt-3">
+        <div class="col-12 md:col-4">
+          <label for="initialDeposit" class="block mb-2">Số tiền gửi</label>
+        </div>
+        <div class="col-12 md:col-8">
+          <p-inputNumber 
+            inputId="initialDeposit"
+            formControlName="initialDeposit" 
+            [min]="1000000"
+            [showButtons]="false" 
+            mode="currency" 
+            currency="VND"
+            locale="vi-VN">
+          </p-inputNumber>
+          <small *ngIf="initialDeposit?.invalid && initialDeposit?.touched" class="p-error block mt-1">
+            <span *ngIf="initialDeposit?.errors?.['required']">
+              Vui lòng nhập số tiền gửi
+            </span>
+            <span *ngIf="initialDeposit?.errors?.['min']">
+              Số tiền gửi tối thiểu là 1.000.000 VND
+            </span>
+            <span *ngIf="initialDeposit?.errors?.['insufficientBalance']">
+              Số dư tài khoản không đủ để thực hiện giao dịch này
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 flex align-items-center">
+      <p-checkbox 
+        inputId="termsAgreement"
+        formControlName="termsAgreement" 
+        [binary]="true" 
+        styleClass="mr-2">
+      </p-checkbox>
+      <label for="termsAgreement" class="ml-2">
+        Tôi đã đọc, hiểu rõ, đồng ý và cam kết tuân thủ các điều khoản, điều kiện và
+        <span class="terms-text">Thỏa thuận mở và sử dụng dịch vụ tiền gửi trực tuyến</span> của Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)
+      </label>
+    </div>
+    <small *ngIf="termsAgreement?.invalid && termsAgreement?.touched" class="p-error block mt-1">
+      Bạn phải đồng ý với điều khoản và điều kiện để tiếp tục
+    </small>
+
+    <div class="flex justify-content-center mt-4">
+      <button 
+        pButton 
+        type="submit" 
+        label="Tiếp tục"
+        class="submit-button"
+        [disabled]="savingsForm.invalid">
+      </button>
+    </div>
+  </form>
+</div> 
