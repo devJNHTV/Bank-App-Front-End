@@ -1,0 +1,160 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 1rem;
+
+  .logo {
+    height: 60px;
+    width: auto;
+  }
+}
+
+.form-card {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: white;
+
+  mat-card-header {
+    padding: 1.5rem 1.5rem 0;
+    text-align: center;
+    display: block;
+
+    mat-card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1e88e5;
+      margin-bottom: 0.5rem;
+    }
+
+    mat-card-subtitle {
+      color: #666;
+      font-size: 0.95rem;
+    }
+  }
+
+  mat-card-content {
+    padding: 1.5rem;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  gap: 1rem;
+
+  button {
+    min-width: 120px;
+
+    mat-spinner {
+      display: inline-block;
+      margin-right: 8px;
+    }
+  }
+}
+
+.resend-otp {
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.additional-info {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 1rem;
+
+  .info-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #1e88e5;
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .form-card {
+    border-radius: 8px;
+
+    mat-card-header {
+      padding: 1rem 1rem 0;
+
+      mat-card-title {
+        font-size: 1.25rem;
+      }
+    }
+
+    mat-card-content {
+      padding: 1rem;
+    }
+  }
+
+  .form-actions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+
+  .additional-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
