@@ -1,0 +1,56 @@
+<!-- src/app/loan/DashboardLoan/dashboard-loan.component.html -->
+<div class="dashboard-wrapper">
+  <p-panel header="Bảng Điều Khiển Khoản Vay" [style]="{'border-radius': '12px', 'overflow': 'hidden'}">
+    <div class="dashboard-container">
+      <!-- Thống kê -->
+      <div class="stats-grid">
+        <p-card class="stat-card" [style]="{'background': 'linear-gradient(135deg, #e3f2fd, #bbdefb)'}">
+          <div class="stat-content">
+            <i class="pi pi-wallet stat-icon"></i>
+            <div class="stat-info">
+              <h3>Tổng Số Tiền Đã Vay</h3>
+              <p class="stat-value">{{ totalBorrowed | currency:'VND':'symbol':'1.0-0' }}</p>
+            </div>
+          </div>
+        </p-card>
+        <p-card class="stat-card" [style]="{'background': 'linear-gradient(135deg, #fff3e0, #ffe0b2)'}">
+          <div class="stat-content">
+            <i class="pi pi-money-bill stat-icon"></i>
+            <div class="stat-info">
+              <h3>Tổng Số Tiền Còn Nợ</h3>
+              <p class="stat-value">{{ totalOutstanding | currency:'VND':'symbol':'1.0-0' }}</p>
+            </div>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- Nút điều hướng -->
+      <div class="button-group">
+        <p-button
+          label="Đăng Ký Khoản Vay"
+          icon="pi pi-plus"
+          styleClass="p-button-raised p-button-success modern-button"
+          (click)="navigateToCreateLoan()"
+        ></p-button>
+        <p-button
+          label="Tổng Quan Khoản Vay"
+          icon="pi pi-list"
+          styleClass="p-button-raised p-button-info modern-button"
+          (click)="navigateToLoanOverview()"
+        ></p-button>
+        <p-button
+          label="Lịch Sử Vay"
+          icon="pi pi-history"
+          styleClass="p-button-raised p-button-warning modern-button"
+          (click)="navigateToLoanHistory()"
+        ></p-button>
+        <p-button
+          label="Khoản Vay Hiện Tại"
+          icon="pi pi-file"
+          styleClass="p-button-raised p-button-primary modern-button"
+          (click)="navigateToCurrentLoan()"
+        ></p-button>
+      </div>
+    </div>
+  </p-panel>
+</div>
