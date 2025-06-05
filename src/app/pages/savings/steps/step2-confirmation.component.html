@@ -1,0 +1,73 @@
+<div class="confirmation-container">
+  <h2 class="text-2xl font-bold mb-4">Xác nhận thông tin</h2>
+  
+  <div class="confirmation-section">
+    <h3 class="section-title">Thông tin tài khoản tiết kiệm</h3>
+    
+    <div class="info-row">
+      <span class="label">Tài khoản nguồn:</span>
+      <span class="value">{{ selectedAccount?.accountNumber }}</span>
+    </div>
+    
+    <div class="info-row">
+      <span class="label">Số dư khả dụng:</span>
+      <span class="value">{{ formatCurrency(selectedAccount?.balance || 0) }}</span>
+    </div>
+    
+    <div class="info-row">
+      <span class="label">Kỳ hạn gửi:</span>
+      <span class="value">{{ selectedTerm ? formatTermLabel(selectedTerm) : '' }}</span>
+    </div>
+    
+    <div class="info-row">
+      <span class="label">Số tiền gửi:</span>
+      <span class="value highlight">{{ formatCurrency(formData?.initialDeposit || 0) }}</span>
+    </div>
+  </div>
+
+  <div class="confirmation-section">
+    <h3 class="section-title">Thông tin dự kiến</h3>
+    
+    <div class="info-row">
+      <span class="label">Lãi suất:</span>
+      <span class="value">{{ getInterestRateDisplay() }}%/năm</span>
+    </div>
+    
+    <div class="info-row">
+      <span class="label">Ngày đáo hạn dự kiến:</span>
+      <span class="value">{{ getMaturityDate() }}</span>
+    </div>
+    
+    <div class="info-row">
+      <span class="label">Tiền lãi dự kiến:</span>
+      <span class="value highlight">{{ formatCurrency(getExpectedInterest()) }}</span>
+    </div>
+    
+    <div class="info-row">
+      <span class="label">Tổng tiền nhận được:</span>
+      <span class="value total">{{ formatCurrency(getTotalAmount()) }}</span>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <i class="pi pi-exclamation-triangle"></i>
+    <p>Vui lòng kiểm tra kỹ thông tin trước khi xác nhận. Sau khi xác nhận, bạn không thể thay đổi thông tin.</p>
+  </div>
+
+  <div class="button-group">
+    <button 
+      pButton 
+      type="button" 
+      label="Quay lại"
+      class="p-button-outlined"
+      (click)="onBack()">
+    </button>
+    <button 
+      pButton 
+      type="button" 
+      label="Xác nhận"
+      class="p-button"
+      (click)="onConfirm()">
+    </button>
+  </div>
+</div> 

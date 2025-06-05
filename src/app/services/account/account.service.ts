@@ -14,6 +14,7 @@ export class AccountService {
 
   getAccounts(): Observable<Account[]>  {
       console.log(this.token);
+
     return this.http.get<Account[]>(`${this.apiUrl}/getAllPaymentAccount`, {
       headers: {
         'Authorization': `Bearer ${this.token}`
@@ -55,4 +56,4 @@ export class AccountService {
       }
     });
   }
-}     
+}

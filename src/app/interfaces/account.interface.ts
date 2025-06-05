@@ -5,4 +5,6 @@ export interface Account {
 export interface Term {
     termValueMonths: number;
     interestRate: number;
+
 }
+
