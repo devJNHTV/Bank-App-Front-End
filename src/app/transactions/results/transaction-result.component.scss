@@ -1,0 +1,51 @@
+:host {
+    display: block;
+    max-width: 600px;
+    margin: 1rem auto; 
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+  :host ::ng-deep .p-card {
+    border: 1px solid #f0f4f2; /* Tăng độ dày viền và chỉnh màu */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Tùy chọn thêm đổ bóng */
+  }
+  
+.result-card {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  
+    &.success-card {
+      background-color: #e0f7e9;
+      color: #2e7d32;
+    }
+  
+    &.error-card {
+      background-color: #fdecea;
+      color: #c62828;
+    }
+  }
+  
+  .result-content {
+    text-align: center;
+  
+    i.pi {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+  
+    h2 {
+      margin-bottom: 0.5rem;
+    }
+  
+    .info-grid {
+      margin-top: 2rem;
+      text-align: left;
+  
+      .field {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }

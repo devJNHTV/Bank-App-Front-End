@@ -1,0 +1,60 @@
+<p-card header="Xác nhận giao dịch" styleClass="p-mt-4">
+  <div class="p-fluid">
+    <div class="p-field">
+      <label>Từ tài khoản:</label>
+      <p><i class="pi pi-building-columns mr-2"></i> {{ transferData.fromAccountNumber }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>Đến tài khoản:</label>
+      <p><i class="pi pi-building-columns mr-2"></i> {{ transferData.toAccountNumber }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>Số tiền:</label>
+      <p><i class="pi pi-money-bill mr-2"></i> {{ transferData.amount | number : "1.0-0" }} VNĐ</p>
+    </div>
+
+    <div class="p-field" *ngIf="transferData.description">
+      <label>Nội dung:</label>
+      <p>{{ transferData.description }}</p>
+    </div>
+
+    <div class="p-field">
+      <label for="otp">Nhập mã OTP:</label>
+      <p-inputotp
+        id="otp"
+        [(ngModel)]="otpCode"
+        placeholder="Nhập mã OTP "
+        [length]="6"
+      />
+    </div>
+
+    <div class="p-field">
+      <p>
+        <i class="pi pi-exclamation-triangle mr-2" style="color: #f59e42; font-size: 1.2rem; vertical-align: middle;"></i>
+        Vui lòng kiểm tra kỹ các thông tin của giao dịch trước khi xác nhận
+      </p>
+    </div>
+
+    <div class="p-d-flex p-jc-end p-mt-3">
+      <button
+        pButton
+        type="button"
+        class="p-button-secondary p-mr-2"
+        (click)="onCancel()"
+      >
+        Hủy
+      </button>
+      <button
+        pButton
+        type="button"
+        class="p-button-success"
+        (click)="onConfirm()"
+        [disabled]="!otpCode"
+      >
+        Xác nhận
+      </button>
+    </div>
+  </div>
+</p-card>

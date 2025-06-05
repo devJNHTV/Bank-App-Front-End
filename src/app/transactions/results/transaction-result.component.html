@@ -1,0 +1,27 @@
+<p-card class="result-card" [ngClass]="{ 'success-card': success, 'error-card': !success }">
+    <div class="result-content">
+      <i
+        class="pi"
+        [ngClass]="success ? 'pi-check-circle' : 'pi-times-circle'"
+        [style.color]="success ? '#2e7d32' : '#c62828'"
+      ></i>
+  
+      <h2>{{ success ? 'Giao dịch thành công!' : 'Giao dịch thất bại' }}</h2>
+      <p>{{ transactionData.message }}</p>
+  
+      <div class="info-grid">
+        <div class="field"><strong>Từ tài khoản:</strong> {{ transactionData.fromAccount }}</div>
+        <div class="field"><strong>Đến tài khoản:</strong> {{ transactionData.toAccount }}</div>
+        <div class="field"><strong>Số tiền:</strong> {{ transactionData.amount | number: '1.0-0' }} VNĐ</div>
+        <div class="field" *ngIf="transactionData.description">
+          <strong>Nội dung:</strong> {{ transactionData.description }}
+        </div>
+        <div class="field">
+          <strong>Thời gian:</strong> {{ transactionData.timestamp | date: 'dd/MM/yyyy HH:mm:ss' }}
+        </div>
+      </div>
+  
+      <button pButton label="Quay lại trang chính" class="p-mt-3" (click)="goHome()"></button>
+    </div>
+  </p-card>
+  
