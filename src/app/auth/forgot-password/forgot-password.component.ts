@@ -34,28 +34,18 @@ import { MustMatch } from '../must-match.validator';
 })
 export class ForgotPasswordComponent {
   currentForm: string = 'forgotPassword';
-  registerForm: FormGroup;
   forgotPasswordForm: FormGroup;
-  showPassword: boolean = false;
   isLoading: boolean = false;
+  errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder) {
-    this.registerForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
-    }, {
-      validator: MustMatch('password', 'confirmPassword')
-    });
-
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.forgotPasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['test22@example.com', [Validators.required, Validators.email]]
     });
-  }
-
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
   }
 
   switchForm(form: string) {
@@ -66,12 +56,21 @@ export class ForgotPasswordComponent {
   onForgotPasswordSubmit() {
     if (this.forgotPasswordForm.valid) {
       this.isLoading = true;
-      // Implement forgot password logic
-      console.log('Forgot password form submitted', this.forgotPasswordForm.value);
-      setTimeout(() => {
-        this.isLoading = false;
-        this.switchForm('verifyOtp');
-      }, 1000);
+      this.errorMessage = null;
+
+      const email = this.forgotPasswordForm.get('email')?.value;
+
+      this.authService.resendVerificationCode(email).subscribe({
+        next: () => {
+          console.log('Gửi thành công');
+        },
+        error: (error) => {
+          console.error('Lỗi gửi:', error);
+          this.isLoading = false;
+          this.errorMessage = error.message;
+        }
+      });
+
     }
   }
 

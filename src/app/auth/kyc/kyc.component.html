@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="form-container">
+    <div class="logo-container">
+      <img
+        src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon-logo-klb.jpg"
+        alt="KienlongBank Logo"
+        class="logo"
+      />
+    </div>
+
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>Xác minh danh tính (KYC)</mat-card-title>
+        <mat-card-subtitle>Vui lòng điền thông tin để xác minh danh tính</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div *ngIf="message" class="info-message">{{ message }}</div>
+        <form [formGroup]="kycForm" (ngSubmit)="onSubmit()" class="form">
+          <!-- <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Mã khách hàng</mat-label>
+              <input matInput formControlName="customerId" placeholder="Nhập mã khách hàng" readonly />
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error *ngIf="kycForm.get('customerId')?.hasError('required')">
+                Vui lòng nhập mã khách hàng
+              </mat-error>
+            </mat-form-field>
+          </div> -->
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Số CMND/CCCD</mat-label>
+              <input matInput formControlName="identityNumber" placeholder="Nhập số CMND/CCCD" />
+              <mat-icon matSuffix>badge</mat-icon>
+              <mat-error *ngIf="kycForm.get('identityNumber')?.hasError('required')">
+                Vui lòng nhập số CMND/CCCD
+              </mat-error>
+              <mat-error *ngIf="kycForm.get('identityNumber')?.hasError('pattern')">
+                Số CMND/CCCD phải là 12 chữ số
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Họ và tên</mat-label>
+              <input matInput formControlName="fullName" placeholder="Nhập họ và tên" />
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error *ngIf="kycForm.get('fullName')?.hasError('required')">
+                Vui lòng nhập họ và tên
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ngày sinh</mat-label>
+              <input matInput formControlName="dateOfBirth" placeholder="YYYY-MM-DD" type="date" />
+              <mat-icon matSuffix>calendar_today</mat-icon>
+              <mat-error *ngIf="kycForm.get('dateOfBirth')?.hasError('required')">
+                Vui lòng nhập ngày sinh
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Giới tính</mat-label>
+              <mat-select formControlName="gender">
+                <mat-option value="male">Nam</mat-option>
+                <mat-option value="female">Nữ</mat-option>
+                <mat-option value="other">Khác</mat-option>
+              </mat-select>
+              <mat-icon matSuffix>people</mat-icon>
+              <mat-error *ngIf="kycForm.get('gender')?.hasError('required')">
+                Vui lòng chọn giới tính
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="kycForm.invalid || isLoading">
+              <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+              <span *ngIf="!isLoading">Gửi KYC</span>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

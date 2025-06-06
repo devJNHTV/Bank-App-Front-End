@@ -11,15 +11,17 @@ import { ChangePasswordComponent } from './auth/change-password/change-password.
 import { AuthGuard } from './core/guards/auth.guard';
 import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { KycComponent } from './auth/kyc/kyc.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
+    { path: 'kyc', component: KycComponent, canActivate: [AuthGuard] },
     { path: 'register', component: RegisterComponent },
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'verify-otp', component: VerifyOtpComponent },
-    { path: 'change-password', component: ChangePasswordComponent },
+    { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard] },
     { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
     { path: 'home', component: HomeComponent },
     { path: 'about', component: AboutComponent },

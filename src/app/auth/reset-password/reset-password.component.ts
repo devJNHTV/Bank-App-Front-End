@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -33,15 +33,23 @@ export class ResetPasswordComponent implements OnInit {
   isLoading = false;
   showPassword = false;
   errorMessage = '';
+  token: string = '';
 
   constructor(
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
+    this.route.queryParams.subscribe(params => {
+      this.token = params['token'] || '';
+      if (!this.token) {
+        this.errorMessage = 'Token không hợp lệ hoặc đã hết hạn.';
+      }
+    });
   }
 
   initForm(): void {
@@ -69,9 +77,9 @@ export class ResetPasswordComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { password } = this.resetPasswordForm.value;
+    const { password, confirmPassword } = this.resetPasswordForm.value;
 
-    this.authService.resetPassword(password).subscribe({
+    this.authService.resetPassword(this.token, password, confirmPassword).subscribe({
       next: () => {
         this.router.navigate(['/login']);
         this.isLoading = false;
