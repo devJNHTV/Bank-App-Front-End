@@ -46,6 +46,13 @@
   
       .field {
         margin-bottom: 0.5rem;
+        i.pi {
+            font-size: 1rem; 
+            margin-right: 0.5rem; 
+            color: #757575; 
+            justify-content: center;
+            align-items: center;
+          }
       }
     }
   }

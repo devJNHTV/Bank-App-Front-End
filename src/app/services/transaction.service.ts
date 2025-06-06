@@ -20,6 +20,16 @@ export class TransactionService {
       headers: this.getAuthHeaders()
     });
   }
+  getCurrentCustomer(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/customers/detail`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  getListToAccountNumberTransactioLatest(accountNumber: string): Observable<any> {
+    return this.http.get(`${this.baseUrlTransaction}/get-latest-transaction/${accountNumber}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
 // Create Transaction
 
 transfer(payload: any): Observable<any> {
@@ -27,6 +37,24 @@ transfer(payload: any): Observable<any> {
     headers: this.getAuthHeaders()
   });
 }
+// Resend OTP
+resendOtp(payload: any): Observable<any> {
+  return this.http.post(`${this.baseUrlTransaction}/resend-otp`, payload, {
+    headers: this.getAuthHeaders()
+  });
+}
+// Confirm Transaction
+confirmTransaction(payload: any): Observable<any> {
+  return this.http.post(`${this.baseUrlTransaction}/confirm-transaction`, payload, {
+    headers: this.getAuthHeaders()
+  });
+}
+
+ getCustomerByAccountNumber(accountNumber: string): Observable<any> {
+  return this.http.get(`${this.baseUrl}/account/get-customer/${accountNumber}`, {
+    headers: this.getAuthHeaders()
+  }); 
+ }
   getTransactionById(id: string): Observable<any> {
     return this.http.get(`${this.baseUrlTransaction}/${id}`, {
       headers: this.getAuthHeaders()

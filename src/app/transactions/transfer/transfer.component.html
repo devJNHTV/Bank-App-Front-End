@@ -1,13 +1,17 @@
 <div class="card" *ngIf="!showConfirmForm">
   <h2 class="header-title p-mb-3 text-center">
-    <button pButton type="button" class="p-button-rounded p-button-text">
+    <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
       <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
     </button>Chuyển khoản nội bộ</h2>
   <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
     <div class="p-fluid p-formgrid p-grid">
       
       <div class="p-field p-col-12 p-md-6">
-        <label for="fromAccountNumber">Tài khoản nguồn:</label>
+        <label for="fromAccountNumber">Tài khoản nguồn:     
+          <small *ngIf="fromCustomerName" style="font-size: 14px;">
+            <strong><i class="pi pi-user mr-2 ml-2"></i>{{ fromCustomerName }}</strong>
+         </small>
+        </label>
         <div class="flex ">
           
           <p-dropdown
@@ -24,7 +28,7 @@
             }"
             aria-describedby="fromAccountNumber-help"
           />
-          <button pButton type="button" class="p-button-rounded p-button-text">
+          <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
             <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
           </button>
         </div>
@@ -37,9 +41,9 @@
         <small
           id="fromAccountNumber-help"
           *ngIf="
-    submitted &&
-    transferForm.controls['fromAccountNumber'].errors?.['required']
-  "
+          submitted &&
+          transferForm.controls['fromAccountNumber'].errors?.['required']
+          "
           class="p-error"
         >
           Số tài khoản nguồn không được để trống.
@@ -55,7 +59,7 @@
             pInputText
             id="toAccountNumber"
             formControlName="toAccountNumber"
-            placeholder="Nhập số tài khoản đích"
+            placeholder="Số tài khoản"
             [ngClass]="{
               'ng-invalid ng-dirty':
                 submitted && transferForm.controls['toAccountNumber'].errors
@@ -70,14 +74,33 @@
             class="p-error"
             >Số tài khoản đích không được để trống.</small
           >
-          <button pButton type="button" class="p-button-rounded p-button-text">
-            <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
+          <button
+            pButton
+            type="button"
+            class="p-button p-button-icon-only p-button-text ml-2"
+            (click)="openToAccountNumberLatest()"
+          >
+          <i class="pi pi-address-book" style="font-size: 1.5rem;"></i>
           </button>
+          <!-- Hiện danh sách tài khoản đã chuyển gần nhất -->
+          <p-dialog header="Danh sách tài khoản gần đây" [(visible)]="showRecentAccounts" [modal]="true" [style]="{width: '400px'}" [closable]="true" (onHide)="showRecentAccounts = false">
+            <ul>
+              <li *ngFor="let account of listInforToAccountNumberTransactionLatest" (click)="selectRecentAccount(account)" style="cursor: pointer; padding: 0.5rem; border-bottom: 1px solid #ccc;">
+                <i class="pi pi-user mr-3 ml-2"></i>{{ account.customerName }} - {{ account.accountNumber }}
+              </li>
+            </ul>
+          </p-dialog>
         </div>
+        <small *ngIf="toCustomerName" class="customer-name">
+           <strong><i class="pi pi-user mr-2 ml-2"></i>{{ toCustomerName }}</strong>
+        </small>
+  
+        
       </div>
+
       <div class="formgrid grid">
         <div class="p-field p-col-12 md:col-6">
-          <label for="amount">Số tiền:</label>
+          <label for="amount">Số tiền giao dịch:</label>
           <span
             [ngClass]="{
               'ng-invalid ng-dirty-wrapper':
@@ -169,11 +192,11 @@
       ></button>
     </div>
   </form>
-  <p-toast />
-<p-button type="button" pRipple (click)="showSuccess()" label="Success" severity="success" />
+  
 </div>
 <app-confirm-transaction
   *ngIf="showConfirmForm && someTransferData"
   [transferData]="someTransferData"
   (cancel)="onCancelConfirm()"
 ></app-confirm-transaction>
+<p-toast></p-toast>
