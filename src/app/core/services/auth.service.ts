@@ -2,9 +2,17 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError, firstValueFrom } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError, firstValueFrom, from } from 'rxjs';
+import { catchError, tap, switchMap, finalize } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import Swal from 'sweetalert2';
+
+interface TokenResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  token_type: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +26,8 @@ export class AuthService {
   private keycloakUrl = environment.keycloak.url;
   private clientId = environment.keycloak.clientId;
   private clientSecret = environment.keycloak.clientSecret;
+  private refreshInProgress = false;
+  private refreshTokenPromise: Promise<TokenResponse> | null = null;
 
   constructor(
     private http: HttpClient,
@@ -146,10 +156,16 @@ export class AuthService {
     );
   }
 
-  refreshToken(): Observable<any> {
+  refreshToken(): Observable<TokenResponse> {
+    // Nếu đã có một refresh token request đang chạy, trả về Observable từ Promise đó
+    if (this.refreshTokenPromise) {
+      return from(this.refreshTokenPromise);
+    }
+
     const refreshToken = this.getRefreshToken();
     if (!refreshToken) {
-      return throwError(() => new Error('Không có refresh token. Vui lòng đăng nhập lại.'));
+      this.handleSessionExpired('Phiên đăng nhập đã hết hạn');
+      return throwError(() => new Error('Không có refresh token'));
     }
 
     const body = new HttpParams()
@@ -158,36 +174,115 @@ export class AuthService {
       .set('client_secret', this.clientSecret)
       .set('refresh_token', refreshToken);
 
-    return this.http.post(this.keycloakUrl, body, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    }).pipe(
-      tap((res: any) => {
-        if (isPlatformBrowser(this.platformId)) {
-          localStorage.setItem(this.tokenKey, res.access_token);
-          localStorage.setItem(this.refreshTokenKey, res.refresh_token);
-        }
-        this.isAuthenticatedSubject.next(true);
+    const refreshRequest = this.http
+      .post<TokenResponse>(this.keycloakUrl, body, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      })
+      .pipe(
+        tap((res: TokenResponse) => {
+          console.log('Refresh token thành công');
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem(this.tokenKey, res.access_token);
+            localStorage.setItem(this.refreshTokenKey, res.refresh_token);
+          }
+        }),
+        catchError((error) => {
+          console.error('Lỗi refresh token:', error);
+          this.handleSessionExpired('Không thể làm mới phiên đăng nhập');
+          return throwError(() => error);
+        })
+      );
+
+    this.refreshTokenPromise = firstValueFrom(refreshRequest);
+
+    return refreshRequest.pipe(
+      finalize(() => {
+        this.refreshTokenPromise = null;
       })
     );
   }
 
+  private handleSessionExpired(message: string): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.clear();
+    }
+    this.isAuthenticatedSubject.next(false);
+    this.isKycVerifiedSubject.next(false);
+    
+    Swal.fire({
+      title: 'Phiên đăng nhập hết hạn',
+      text: message,
+      icon: 'warning',
+      confirmButtonText: 'Đăng nhập lại',
+      allowOutsideClick: false
+    }).then(() => {
+      this.router.navigate(['/login'], { queryParams: { sessionExpired: true } });
+    });
+  }
+
+  logout(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.clear();
+    }
+    this.isAuthenticatedSubject.next(false);
+    this.isKycVerifiedSubject.next(false);
+    
+    Swal.fire({
+      title: 'Đăng xuất thành công',
+      text: 'Hẹn gặp lại bạn!',
+      icon: 'success',
+      timer: 2000,
+      showConfirmButton: false
+    }).then(() => {
+      this.router.navigate(['/login']).then(() => {
+        location.reload();
+      });
+    });
+  }
+
   async getValidToken(): Promise<string | null> {
     const token = this.getToken();
-    if (token && !this.isTokenExpired(token)) return token;
-
-    try {
-      const res = await firstValueFrom(this.refreshToken());
-      return res.access_token || null;
-    } catch {
+    if (!token) {
+      console.warn('Không có token, chuyển hướng đến trang đăng nhập');
+      this.router.navigate(['/login'], { queryParams: { sessionExpired: true } });
       return null;
     }
+
+    // Nếu token đã hết hạn hoặc sắp hết hạn, làm mới token
+    if (this.isTokenExpired(token) || this.isTokenExpiringSoon(token)) {
+      try {
+        const res = await firstValueFrom(this.refreshToken());
+        return res.access_token || null;
+      } catch (err) {
+        console.error('Lỗi khi làm mới token:', err);
+        this.logout();
+        return null;
+      }
+    }
+
+    // Nếu token còn hợp lệ, trả về token hiện tại
+    return token;
   }
 
   isTokenExpired(token: string): boolean {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return Date.now() >= payload.exp * 1000;
-    } catch {
+      const exp = payload.exp * 1000;
+      console.log('Token exp:', new Date(exp), 'Now:', new Date());
+      return Date.now() >= exp;
+    } catch (err) {
+      console.error('Lỗi decode token:', err);
+      return true;
+    }
+  }
+
+  isTokenExpiringSoon(token: string, seconds: number = 30): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp;
+      const now = Math.floor(Date.now() / 1000);
+      return exp - now < seconds;
+    } catch (e) {
       return true;
     }
   }
@@ -222,17 +317,6 @@ export class AuthService {
 
   getKycVerifiedValue(): boolean {
     return this.isKycVerifiedSubject.getValue();
-  }
-
-  logout(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem(this.tokenKey);
-      localStorage.removeItem(this.refreshTokenKey);
-      localStorage.removeItem("registerEmail");
-    }
-    this.isAuthenticatedSubject.next(false);
-    this.isKycVerifiedSubject.next(false);
-    this.router.navigate(['/login']);
   }
 
   getUserInfo(): any {

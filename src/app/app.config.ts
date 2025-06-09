@@ -1,6 +1,6 @@
 import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
@@ -14,11 +14,14 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(),
-    provideHttpClient(withInterceptorsFromDi(), withFetch(),
-      withInterceptors([authInterceptor])),
+    provideHttpClient(
+      withFetch(),
+      withInterceptorsFromDi(),
+      withInterceptors([authInterceptor])
+    ),
     provideAnimations(),
     provideStore(),
     provideEffects(),
@@ -32,6 +35,7 @@ export const appConfig: ApplicationConfig = {
           cssLayer: false
         }
       }
-    }), provideAnimationsAsync()
+    }),
+    provideAnimationsAsync()
   ]
 };

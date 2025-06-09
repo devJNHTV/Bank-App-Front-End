@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../core/services/auth.service';
 import { MustMatch } from '../must-match.validator';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-reset-password',
@@ -47,19 +48,26 @@ export class ResetPasswordComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.token = params['token'] || '';
       if (!this.token) {
-        this.errorMessage = 'Token không hợp lệ hoặc đã hết hạn.';
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: 'Token không hợp lệ hoặc đã hết hạn.',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.router.navigate(['/forgot-password']);
+        });
       }
     });
   }
 
   initForm(): void {
     this.resetPasswordForm = this.fb.group({
-      password: ['', [
+      password: ['290801Bin@', [
         Validators.required,
         Validators.minLength(8),
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
       ]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['290801Bin@', Validators.required]
     }, {
       validator: MustMatch('password', 'confirmPassword')
     });
@@ -71,6 +79,12 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit(): void {
     if (this.resetPasswordForm.invalid) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Lỗi',
+        text: 'Vui lòng nhập mật khẩu hợp lệ và khớp với xác nhận mật khẩu!',
+        confirmButtonText: 'OK'
+      });
       return;
     }
 
@@ -81,12 +95,25 @@ export class ResetPasswordComponent implements OnInit {
 
     this.authService.resetPassword(this.token, password, confirmPassword).subscribe({
       next: () => {
-        this.router.navigate(['/login']);
         this.isLoading = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công',
+          text: 'Mật khẩu đã được đặt lại thành công!',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.router.navigate(['/login']);
+        });
       },
       error: (error: { message?: string }) => {
-        this.errorMessage = error.message || 'Không thể đặt lại mật khẩu. Vui lòng thử lại.';
         this.isLoading = false;
+        this.errorMessage = error.message || 'Không thể đặt lại mật khẩu. Vui lòng thử lại.';
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: this.errorMessage,
+          confirmButtonText: 'OK'
+        });
       }
     });
   }

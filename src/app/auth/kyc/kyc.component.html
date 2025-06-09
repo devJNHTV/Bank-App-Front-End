@@ -53,16 +53,21 @@
             </mat-form-field>
           </div>
 
-          <div class="form-row">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Ngày sinh</mat-label>
-              <input matInput formControlName="dateOfBirth" placeholder="YYYY-MM-DD" type="date" />
-              <mat-icon matSuffix>calendar_today</mat-icon>
-              <mat-error *ngIf="kycForm.get('dateOfBirth')?.hasError('required')">
-                Vui lòng nhập ngày sinh
-              </mat-error>
-            </mat-form-field>
-          </div>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Ngày sinh</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="dateOfBirth"
+              placeholder="YYYY-MM-DD"
+            />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="kycForm.get('dateOfBirth')?.hasError('required')">
+              Vui lòng nhập ngày sinh
+            </mat-error>
+          </mat-form-field>
+
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="full-width">

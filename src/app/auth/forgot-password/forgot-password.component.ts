@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,29 +6,26 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { MatError } from '@angular/material/form-field';
-import { RouterModule } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Router } from '@angular/router'; 
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule, NgIf } from '@angular/common';
-import { MustMatch } from '../must-match.validator';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
   imports: [
-          NgIf,
-          CommonModule,
-          ReactiveFormsModule,
-          RouterModule,
-          MatCardModule,
-          MatFormFieldModule,
-          MatInputModule,
-          MatButtonModule,
-          MatIconModule,
-          MatProgressSpinnerModule
-        ],
+    NgIf,
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss'
 })
@@ -62,16 +59,33 @@ export class ForgotPasswordComponent {
 
       this.authService.resendVerificationCode(email).subscribe({
         next: () => {
-          console.log('Gửi thành công');
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Thành công',
+            text: 'Mã xác nhận đã được gửi đến email của bạn!',
+            confirmButtonText: 'OK'
+          }).then(() => {
+          });
         },
         error: (error) => {
-          console.error('Lỗi gửi:', error);
           this.isLoading = false;
           this.errorMessage = error.message;
+          Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: error.message || 'Đã có lỗi xảy ra, vui lòng thử lại!',
+            confirmButtonText: 'OK'
+          });
         }
       });
-
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Lỗi',
+        text: 'Vui lòng nhập email hợp lệ!',
+        confirmButtonText: 'OK'
+      });
     }
   }
-
 }

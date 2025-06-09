@@ -7,10 +7,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { MustMatch } from '../must-match.validator';
+import { CustomDateAdapter } from '../../shared/custom-date-adapter'; 
+import { MY_DATE_FORMATS } from '../../shared/date-formats';
 
 @Component({
   selector: 'app-register',
@@ -26,7 +31,14 @@ import { MustMatch } from '../must-match.validator';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'vi-VN' },
   ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
@@ -34,32 +46,45 @@ import { MustMatch } from '../must-match.validator';
 export class RegisterComponent {
   registerForm: FormGroup;
   showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
   isLoading: boolean = false;
   errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private dateAdapter: DateAdapter<Date>,
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      username: ['testfrontend', Validators.required],
+      username: ['testfe', Validators.required],
       fullName: ['test frontend', Validators.required],
-      email: ['testfrontend@gmail.com', [Validators.required, Validators.email]],
-      phoneNumber: ['0123456123', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      identityNumber: ['123123123123', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
+      email: ['testfe@gmail.com', [Validators.required, Validators.email]],
+      phoneNumber: ['0123456666', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      identityNumber: ['123123123666', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
       address: ['123 Nguyễn Văn Trỗi', Validators.required],
-      dateOfBirth: ['02-22-2002', Validators.required],
+      dateOfBirth: [new Date(2002, 5, 22), Validators.required],
       gender: ['male', Validators.required],
-      password: ['290801Bin@', [Validators.required, Validators.minLength(8)]],
+      password: [
+        '290801Bin@',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$/)
+        ]
+      ],
       confirmPassword: ['290801Bin@', Validators.required]
     }, {
       validator: MustMatch('password', 'confirmPassword')
     });
   }
 
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
+  togglePasswordVisibility(field: 'password' | 'confirmPassword') {
+    if (field === 'password') {
+      this.showPassword = !this.showPassword;
+    } else {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
   }
 
   onRegisterSubmit() {
@@ -67,7 +92,25 @@ export class RegisterComponent {
       this.isLoading = true;
       this.errorMessage = null;
 
-      const userData = this.registerForm.value;
+      const formValues = this.registerForm.value;
+      const rawDate = formValues.dateOfBirth;
+
+      let formattedDate: string;
+      if (rawDate instanceof Date) {
+        formattedDate = this.dateAdapter.format(rawDate, { dateInput: 'YYYY-MM-DD' });
+      } else if (typeof rawDate === 'string') {
+        formattedDate = rawDate;
+      } else {
+        this.isLoading = false;
+        this.errorMessage = 'Ngày sinh không hợp lệ';
+        return;
+      }
+
+      const userData = {
+        ...formValues,
+        dateOfBirth: formattedDate,
+      };
+
       this.authService.register(userData).subscribe({
         next: () => {
           this.isLoading = false;
@@ -75,9 +118,10 @@ export class RegisterComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.errorMessage = error.message;
-        }
+          this.errorMessage = error.message || 'Đăng ký thất bại. Vui lòng thử lại.';
+        },
       });
     }
   }
+
 }

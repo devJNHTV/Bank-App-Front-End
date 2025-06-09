@@ -14,7 +14,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { KycComponent } from './auth/kyc/kyc.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'kyc', component: KycComponent, canActivate: [AuthGuard] },
     { path: 'register', component: RegisterComponent },

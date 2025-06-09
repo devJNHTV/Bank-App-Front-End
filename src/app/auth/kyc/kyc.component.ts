@@ -11,11 +11,21 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { AuthService } from '../../core/services/auth.service';
 import { take } from 'rxjs/operators';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatNativeDateModule,
+} from '@angular/material/core';
+import { CustomDateAdapter } from '../../shared/custom-date-adapter';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MY_DATE_FORMATS } from '../../shared/date-formats';
 
 @Component({
   selector: 'app-kyc',
   standalone: true,
   imports: [
+    NgIf,
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
@@ -26,10 +36,16 @@ import { take } from 'rxjs/operators';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    NgIf,
+    MatDatepickerModule,
+    MatNativeDateModule,
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'vi-VN' },
   ],
   templateUrl: './kyc.component.html',
-  styleUrl: './kyc.component.scss'
+  styleUrl: './kyc.component.scss',
 })
 export class KycComponent implements OnInit {
   kycForm!: FormGroup;
@@ -47,10 +63,10 @@ export class KycComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Kiểm tra nếu đã KYC thì chuyển về dashboard
-    this.authService.isKycVerified()
+    this.authService
+      .isKycVerified()
       .pipe(take(1))
-      .subscribe(isVerified => {
+      .subscribe((isVerified) => {
         if (isVerified) {
           this.router.navigate(['/dashboard']);
         }
@@ -70,25 +86,38 @@ export class KycComponent implements OnInit {
 
   initForm(): void {
     this.kycForm = this.fb.group({
-      identityNumber: ['123123123122', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
-      fullName: ['test frontend1', Validators.required],
+      identityNumber: ['123123123133', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
+      fullName: ['test frontend3', Validators.required],
       dateOfBirth: ['', Validators.required],
       gender: ['Nam', Validators.required],
     });
   }
 
   onSubmit(): void {
-    if (this.kycForm.invalid) {
-      return;
-    }
+    if (this.kycForm.invalid) return;
 
     this.isLoading = true;
     this.errorMessage = null;
 
+    const rawDate = this.kycForm.get('dateOfBirth')?.value;
+    let formattedDate: string | null = null;
+
+    if (rawDate instanceof Date) {
+      const year = rawDate.getFullYear();
+      const month = ('0' + (rawDate.getMonth() + 1)).slice(-2);
+      const day = ('0' + rawDate.getDate()).slice(-2);
+      formattedDate = `${year}-${month}-${day}`;
+    } else if (typeof rawDate === 'string') {
+      formattedDate = rawDate // nếu đã định dạng từ adapter
+    }
+
     const kycData = {
       ...this.kycForm.value,
-      customerId: this.authService.getUserInfo()?.sub
+      customerId: this.authService.getUserInfo()?.sub,
+      dateOfBirth: formattedDate,
     };
+
+    console.log('kycData:', kycData);
 
     this.authService.verifyKyc(kycData).subscribe({
       next: () => {
