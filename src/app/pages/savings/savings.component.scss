@@ -1,16 +1,18 @@
 .savings-account-form {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     
     h1 {
       color: #2c3e50;
       margin-bottom: 10px;
+      text-align: center;
     }
     
     .breadcrumb {
       color: #6c757d;
       margin-bottom: 20px;
+      text-align: center;
       
       .text-primary {
         color: #007ad9 !important;
@@ -18,6 +20,223 @@
       }
     }
     
+    // Tab view customization
+    :host ::ng-deep .p-tabview {
+      .p-tabview-nav {
+        background: #f8f9fa;
+        border-radius: 8px 8px 0 0;
+        
+        .p-tabview-nav-link {
+          padding: 16px 24px;
+          font-weight: 500;
+          
+          &:not(.p-disabled):focus {
+            box-shadow: inset 0 0 0 0.2rem rgba(102, 126, 234, 0.2);
+          }
+        }
+        
+        .p-highlight .p-tabview-nav-link {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border-color: transparent;
+        }
+      }
+      
+      .p-tabview-panels {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 0 0 8px 8px;
+        padding: 24px;
+      }
+    }
+    
+    // Savings accounts container
+    .savings-accounts-container {
+      .accounts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 24px;
+        margin-bottom: 24px;
+
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .account-card {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+          &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.12);
+          }
+
+          :host ::ng-deep .p-card {
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            overflow: hidden;
+            border-left: 4px solid #28a745;
+            
+            .p-card-header {
+              padding: 0;
+              border-bottom: 1px solid #e9ecef;
+            }
+
+            .p-card-body {
+              padding: 0;
+            }
+          }
+
+          .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #e8f5e8 0%, #ffffff 100%);
+
+            .account-info {
+              .account-number {
+                font-size: 1.25rem;
+                font-weight: 700;
+                margin: 0 0 4px 0;
+                color: #2c3e50;
+                font-family: 'Courier New', monospace;
+              }
+
+              .account-type {
+                color: #28a745;
+                font-size: 0.9rem;
+                margin: 0;
+                font-weight: 500;
+              }
+            }
+
+            .account-status {
+              :host ::ng-deep .p-tag {
+                font-weight: 600;
+                padding: 6px 12px;
+              }
+            }
+          }
+
+          .card-content {
+            padding: 24px;
+
+            .balance-section {
+              margin-bottom: 20px;
+              text-align: center;
+
+              .balance-label {
+                display: block;
+                color: #6c757d;
+                font-size: 0.9rem;
+                margin-bottom: 8px;
+                font-weight: 500;
+              }
+
+              .balance-amount {
+                font-size: 2rem;
+                font-weight: 700;
+                font-family: 'Courier New', monospace;
+
+                &.balance-success {
+                  color: #28a745;
+                }
+
+                &.balance-warn {
+                  color: #ffc107;
+                }
+
+                &.balance-danger {
+                  color: #dc3545;
+                }
+              }
+            }
+
+            .savings-info {
+              margin-bottom: 24px;
+              padding: 16px;
+              background: #f8f9fa;
+              border-radius: 8px;
+              border-left: 3px solid #28a745;
+
+              .info-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+
+                &:last-child {
+                  margin-bottom: 0;
+                }
+
+                .label {
+                  font-size: 0.9rem;
+                  color: #6c757d;
+                  font-weight: 500;
+                }
+
+                .value {
+                  font-weight: 600;
+                  color: #2c3e50;
+                  font-family: 'Courier New', monospace;
+
+                  &.rate {
+                    color: #28a745;
+                  }
+                }
+              }
+            }
+
+            .account-actions {
+              display: flex;
+              gap: 8px;
+              flex-wrap: wrap;
+
+              :host ::ng-deep .p-button {
+                flex: 1;
+                min-width: 100px;
+                justify-content: center;
+
+                @media (max-width: 480px) {
+                  font-size: 0.875rem;
+                  padding: 8px 12px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 64px 24px;
+        color: #6c757d;
+
+        i {
+          display: block;
+          font-size: 4rem;
+          margin-bottom: 16px;
+          color: #28a745;
+        }
+
+        h3 {
+          font-size: 1.5rem;
+          margin: 0 0 12px 0;
+          color: #495057;
+        }
+
+        p {
+          font-size: 1rem;
+          margin: 0 0 24px 0;
+          max-width: 400px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+    }
+
+    // Form sections styling (for create new account tab)
     .form-container {
       background: white;
       border-radius: 8px;
@@ -103,6 +322,28 @@
       }
     }
     
+    // Success container
+    .success-container {
+      text-align: center;
+      padding: 40px 20px;
+      
+      .success-content {
+        max-width: 500px;
+        margin: 0 auto;
+        
+        .success-icon {
+          font-size: 4rem;
+          color: #28a745;
+          margin-bottom: 20px;
+        }
+        
+        .button-group {
+          margin-top: 20px;
+        }
+      }
+    }
+    
+    // Error handling
     .p-error {
       color: #dc3545;
       font-size: 12px;
@@ -110,27 +351,29 @@
     }
     
     // PrimeNG customizations
-    .p-select {
-      width: 100%;
-      
-      .p-select-label {
-        padding: 12px;
-      }
-    }
-    
-    .p-inputnumber {
-      width: 100%;
-      
-      .p-inputnumber-input {
-        padding: 12px;
+    :host ::ng-deep {
+      .p-select {
         width: 100%;
+        
+        .p-select-label {
+          padding: 12px;
+        }
       }
-    }
-    
-    .p-checkbox {
-      .p-checkbox-box {
-        width: 20px;
-        height: 20px;
+      
+      .p-inputnumber {
+        width: 100%;
+        
+        .p-inputnumber-input {
+          padding: 12px;
+          width: 100%;
+        }
+      }
+      
+      .p-checkbox {
+        .p-checkbox-box {
+          width: 20px;
+          height: 20px;
+        }
       }
     }
     
@@ -174,10 +417,29 @@
     .block {
       display: block;
     }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .savings-account-form {
+    .savings-accounts-container .accounts-grid .account-card {
+      .card-header {
+        background: linear-gradient(135deg, #1a4a1a 0%, #2d5a2d 100%);
+
+        .account-info .account-number {
+          color: #f8f9fa;
+        }
+      }
+
+      .savings-info {
+        background: #343a40;
+      }
+    }
   }
-  
-  // Success step styling
-  .success-container {
+}
+
+// Success step styling
+.success-container {
     display: flex;
     justify-content: center;
     align-items: center;

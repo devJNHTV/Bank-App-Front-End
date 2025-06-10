@@ -1,0 +1,88 @@
+<div class="credit-accounts-container">
+  <div class="page-header">
+    <h2 class="page-title">
+      <i class="pi pi-money-bill"></i>
+      Tài khoản tín dụng
+    </h2>
+    <p class="page-description">Quản lý các tài khoản tín dụng và thẻ của bạn</p>
+  </div>
+
+  <!-- Danh sách tài khoản dạng card dọc -->
+  <div class="accounts-grid" *ngIf="!loading">
+    <div class="account-card" *ngFor="let account of accounts; trackBy: trackByAccountNumber">
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <div class="account-info">
+              <h3 class="account-number">{{ account.accountNumber }}</h3>
+              <p class="account-type">Tài khoản tín dụng</p>
+            </div>
+            <div class="account-status">
+              <p-tag 
+                [value]="getCreditStatus(account.balance) === 'success' ? 'Ưu tú' : 
+                        getCreditStatus(account.balance) === 'warn' ? 'Tốt' : 'Cần cải thiện'"
+                [severity]="getCreditStatus(account.balance)">
+              </p-tag>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="card-content">
+          <div class="balance-section">
+            <label class="balance-label">Hạn mức tín dụng khả dụng:</label>
+            <div class="balance-amount" [ngClass]="'balance-' + getCreditStatus(account.balance)">
+              {{ formatCurrency(account.balance) }}
+            </div>
+          </div>
+
+          <div class="credit-info">
+            <div class="info-row">
+              <span class="label">Hạn mức tối đa:</span>
+              <span class="value">{{ formatCurrency(account.balance * 1.5) }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Đã sử dụng:</span>
+              <span class="value used">{{ formatCurrency(account.balance * 0.3) }}</span>
+            </div>
+          </div>
+
+          <div class="account-actions">
+            <p-button 
+              label="Thanh toán" 
+              icon="pi pi-credit-card"
+              styleClass="p-button-success p-button-sm">
+            </p-button>
+            <p-button 
+              label="Rút tiền mặt" 
+              icon="pi pi-money-bill"
+              styleClass="p-button-warning p-button-sm">
+            </p-button>
+            <p-button 
+              label="Chi tiết" 
+              icon="pi pi-eye"
+              styleClass="p-button-info p-button-sm">
+            </p-button>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-state" *ngIf="loading">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    <p>Đang tải danh sách tài khoản tín dụng...</p>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && accounts.length === 0">
+    <i class="pi pi-credit-card"></i>
+    <h3>Không có tài khoản tín dụng</h3>
+    <p>Bạn chưa có tài khoản tín dụng nào. Hãy đăng ký để được tư vấn mở thẻ tín dụng.</p>
+    <p-button 
+      label="Đăng ký thẻ tín dụng" 
+      icon="pi pi-plus"
+      styleClass="p-button-primary">
+    </p-button>
+  </div>
+</div>

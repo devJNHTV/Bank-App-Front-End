@@ -1,0 +1,278 @@
+<div class="payment-accounts-container">
+  <!-- <div class="page-header">
+    <h2 class="page-title">
+      <i class="pi pi-credit-card"></i>
+      Tài khoản thanh toán
+    </h2>
+    <p class="page-description">Quản lý các tài khoản thanh toán của bạn</p>
+  </div> -->
+    <div class="page-actions" *ngIf="!addAccount">
+      <p-button 
+              label="Mở tài khoản " 
+              icon="pi pi-plus"
+              styleClass="p-button-success p-button-sm"
+              (click)="createAccount()">
+                
+            
+    </p-button>
+    </div>
+    <div class="page-actions-divider"></div>
+  <!-- Danh sách tài khoản dạng card dọc -->
+  <div class="accounts-grid" *ngIf="!loading && !addAccount">
+    <div class="account-card" *ngFor="let account of accounts; trackBy: trackByAccountNumber">
+      <p-card>
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <div class="account-info">
+              <h3 class="account-type">Tài khoản thanh toán</h3>
+              <h3 class="account-number">{{ account.accountNumber }}</h3>
+         
+            </div>
+            <div class="account-status">
+              <p-tag 
+                [value]="getAccountStatus(account.status) === 'success' ? 'Hoạt động' : 
+                        getAccountStatus(account.status) === 'warn' ? 'Đóng' : 'Khóa'"
+                [severity]="getAccountStatus(account.status)">
+              </p-tag>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="card-content">
+          <div class="balance-section">
+            <label class="balance-label">Số dư khả dụng:</label>
+            <div class="balance-amount">
+              {{ formatCurrency(account.balance) }}
+            </div>
+          </div>
+
+          <div class="account-actions">
+            <p-button 
+              label="Chuyển tiền" 
+              icon="pi pi-send"
+              styleClass="p-button-success p-button-sm">
+            </p-button>
+            <p-button 
+              label="Rút tiền" 
+              icon="pi pi-minus"
+              styleClass="p-button-outlined p-button-sm"
+              >
+            </p-button>
+            <p-button 
+              label="Chi tiết" 
+              icon="pi pi-eye"
+              styleClass="p-button-info p-button-sm"
+              (click)="goToDetail(account.accountNumber)">
+            </p-button>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-state" *ngIf="loading">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    <p>Đang tải danh sách tài khoản...</p>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && accounts.length === 0">
+    <i class="pi pi-inbox"></i>
+    <h3>Không có tài khoản</h3>
+    <p>Bạn chưa có tài khoản thanh toán nào. Hãy liên hệ ngân hàng để mở tài khoản mới.</p>
+    <p-button 
+      label="Mở tài khoản mới" 
+      icon="pi pi-plus"
+      styleClass="p-button-primary">
+    </p-button>
+  </div>
+  <div class="add-account" *ngIf="addAccount">
+    <p-toast></p-toast>
+    
+    <!-- Header -->
+    <div class="form-header" *ngIf="currentStep === 1">
+      <h2 class="form-title">
+        <i class="pi pi-plus"></i>
+        Mở tài khoản thanh toán mới
+      </h2>
+      <p class="form-description">Vui lòng kiểm tra và xác nhận thông tin để mở tài khoản</p>
+    </div>
+
+    <!-- Step 1: Xác nhận thông tin khách hàng -->
+    <div class="confirmation-step" *ngIf="currentStep === 1">
+      <div class="customer-info-card">
+        <div class="card-header">
+          <h3 class="section-title">Thông tin khách hàng</h3>
+          <p class="section-subtitle">Vui lòng kiểm tra lại thông tin của bạn</p>
+        </div>
+        
+        <div class="customer-details">
+          <div class="info-row">
+            <span class="label">Họ và tên:</span>
+            <span class="value">{{ customerInfo.fullName }}</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Số CMND/CCCD:</span>
+            <span class="value">{{ customerInfo.identityNumber }}</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Ngày sinh:</span>
+            <span class="value">{{ customerInfo.dateOfBirth | date:'dd/MM/yyyy' }}</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Số điện thoại:</span>
+            <span class="value">{{ customerInfo.phoneNumber }}</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Email:</span>
+            <span class="value">{{ customerInfo.email }}</span>
+          </div>
+          
+          <div class="info-row">
+            <span class="label">Địa chỉ:</span>
+            <span class="value">{{ customerInfo.address }}</span>
+          </div>
+        </div>
+
+        <div class="account-type-info">
+          <h4 class="account-type-title">Loại tài khoản: Tài khoản thanh toán</h4>
+          <ul class="account-benefits">
+            <li><i class="pi pi-check"></i> Miễn phí mở tài khoản</li>
+            <li><i class="pi pi-check"></i> Chuyển khoản nhanh 24/7</li>
+            <li><i class="pi pi-check"></i> Thẻ ATM miễn phí năm đầu</li>
+            <li><i class="pi pi-check"></i> Internet Banking & Mobile Banking</li>
+          </ul>
+        </div>
+
+        <div class="warning-notice">
+          <i class="pi pi-exclamation-triangle"></i>
+          <p>Thông tin trên sẽ được sử dụng để mở tài khoản. Vui lòng kiểm tra kỹ trước khi xác nhận.</p>
+        </div>
+
+        <div class="button-group">
+          <p-button 
+            label="Hủy bỏ" 
+            icon="pi pi-times"
+            styleClass="p-button-outlined"
+            (click)="goBack()">
+          </p-button>
+          <p-button 
+            label="Xác nhận & Tiếp tục" 
+            icon="pi pi-check"
+            styleClass="p-button-success"
+            [loading]="isLoadingOtp"
+            (click)="confirmCustomerInfo()">
+          </p-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: OTP Verification -->
+    <div class="otp-step" *ngIf="currentStep === 2">
+      <div class="otp-card">
+        <div class="otp-header">
+          <i class="pi pi-shield otp-icon"></i>
+          <h3 class="otp-title">Xác thực OTP</h3>
+          <p class="otp-subtitle">Mã OTP đã được gửi đến email {{ customerInfo.email }}</p>
+        </div>
+
+        <div class="otp-form">
+          <div class="otp-input-section">
+            <label class="otp-label">Nhập mã OTP (6 số)</label>
+            <input 
+              type="text" 
+              pInputText 
+              class="otp-input"
+              [(ngModel)]="otpCode"
+             
+              placeholder="Nhập 6 số OTP"
+              maxlength="6"
+              autocomplete="off"
+              [disabled]="isLoadingOtp"
+            />
+            
+            <div class="otp-info">
+              <div class="countdown-wrapper" *ngIf="!canResend">
+                <i class="pi pi-clock"></i>
+                <span>Gửi lại OTP sau: {{ formatCountdown() }}</span>
+              </div>
+              
+              <button 
+                *ngIf="canResend"
+                type="button"
+                class="resend-button"
+                (click)="resendOtp()"
+                [disabled]="isLoadingOtp">
+                <i class="pi pi-refresh"></i>
+                Gửi lại OTP
+              </button>
+            </div>
+          </div>
+
+          <div class="security-notice">
+            <div class="notice-header">
+              <i class="pi pi-info-circle"></i>
+              <span>Lưu ý bảo mật</span>
+            </div>
+            <ul class="notice-list">
+              <li>Không chia sẻ mã OTP với bất kỳ ai</li>
+              <li>Mã OTP có hiệu lực trong 2 phút</li>
+              <li>Nhân viên ngân hàng không bao giờ yêu cầu OTP qua điện thoại</li>
+              <li>Để test: sử dụng mã OTP <strong>123456</strong></li>
+            </ul>
+          </div>
+
+          <div class="button-group">
+            <p-button 
+              label="Quay lại" 
+              icon="pi pi-arrow-left"
+              styleClass="p-button-outlined"
+              (click)="goBack()"
+              [disabled]="isLoadingOtp">
+            </p-button>
+            <p-button 
+              label="Xác nhận" 
+              icon="pi pi-check"
+              styleClass="p-button-success"
+              [loading]="isLoadingOtp"
+              [disabled]="otpCode.length !== 6"
+              (click)="verifyOtp()">
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Step 3: Thông báo thành công -->
+    <div class="success-step" *ngIf="currentStep === 3">
+      <div class="success-container">
+        <p-card styleClass="success-card">
+          <div class="success-content">
+            <div class="success-icon">
+              <i class="pi pi-check-circle"></i>
+            </div>
+            
+            <h2 class="success-title">Tạo tài khoản thành công!</h2>
+            
+            <p class="success-message">
+              Chúc mừng, tài khoản ngân hàng của bạn đã được tạo. 
+              Nhấn nút bên dưới để tiếp tục.
+            </p>
+            
+            <div class="success-actions">
+              <p-button 
+                label="Xác nhận" 
+                icon="pi pi-check"
+                styleClass="p-button-success confirm-button"
+                (click)="onConfirm()">
+              </p-button>
+            </div>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
