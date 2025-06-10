@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { Observable, of } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { Observable, of, combineLatest } from 'rxjs';
+import { map, catchError, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -11,17 +11,30 @@ export class KycGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): Observable<boolean> {
-    // Luôn gọi API để kiểm tra trạng thái KYC mới nhất
-    return this.authService.checkKycStatus().pipe(
-      map(({ verified }) => {
+    this.authService.initializeAuthState(); // Khởi tạo trạng thái xác thực
+    return combineLatest([
+      this.authService.isAuthenticated(),
+      this.authService.checkKycStatus(),
+    ]).pipe(
+      map(([isAuthenticated, { verified }]) => {
+        if (!isAuthenticated) {
+          this.router.navigate(['/login']);
+          return false;
+        }
         if (!verified) {
-          this.router.navigate(['/kyc']);
+          this.router.navigate(['/kyc'], {
+            queryParams: { message: 'Vui lòng xác minh danh tính' },
+          });
           return false;
         }
         return true;
+        
       }),
-      catchError(() => {
-        this.router.navigate(['/kyc']);
+      catchError((error) => {
+        console.error('Lỗi kiểm tra KYC:', error);
+        this.router.navigate(['/kyc'], {
+          queryParams: { message: 'Vui lòng xác minh danh tính' },
+        });
         return of(false);
       })
     );

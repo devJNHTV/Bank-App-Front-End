@@ -20,6 +20,7 @@ import {
 import { CustomDateAdapter } from '../../shared/custom-date-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MY_DATE_FORMATS } from '../../shared/date-formats';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-kyc',
@@ -63,6 +64,28 @@ export class KycComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.route.queryParams.subscribe((params) => {
+      if (params['message'] != '') {
+        Swal.fire({
+          title: 'Thông báo',
+          text: 'Vui lòng xác minh danh tính người dùng!',
+          icon: 'info',
+          confirmButtonText: 'OK',
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      }
+      Swal.fire({
+          title: 'Thông báo',
+          text: 'Bạn đã xác minh người dùng, không cần xác minh lại!',
+          icon: 'info',
+          confirmButtonText: 'OK',
+          timer: 3000,
+          timerProgressBar: true,
+        });
+    });
+
     this.authService
       .isKycVerified()
       .pipe(take(1))

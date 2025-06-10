@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
 
   initForm(): void {
     this.loginForm = this.fb.group({
-      username: ['testfe2', [Validators.required]],
+      username: ['test21', [Validators.required]],
       password: ['290801Bin@', [Validators.required, Validators.minLength(6)]]
     });
   }
@@ -77,9 +77,7 @@ export class LoginComponent implements OnInit {
     const { username, password } = this.loginForm.value;
 
     this.authService.login(username, password).subscribe({
-      next: (response: any) => {
-        this.authService.saveToken(response.access_token);
-        this.router.navigate(['/dashboard']);
+      next: () => {
         this.isLoading = false;
       },
       error: (error) => {

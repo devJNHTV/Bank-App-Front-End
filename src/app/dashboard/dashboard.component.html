@@ -1,10 +1,28 @@
-<mat-toolbar color="primary">
-  <span>KienlongBank Dashboard</span>
-  <span class="spacer"></span>
-  <button mat-raised-button color="accent" (click)="logout()">Đăng xuất</button>
-</mat-toolbar>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav" fixedInViewport>
+    <mat-toolbar color="primary">KienlongBank</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">🏠 Dashboard</a>
+      <a mat-list-item routerLink="/register" routerLinkActive="active-link">📝 Register</a>
+      <a mat-list-item routerLink="/login" routerLinkActive="active-link">🔐 Login</a>
+      <a mat-list-item routerLink="/detail" routerLinkActive="active-link">📄 Detail</a>
+      <a mat-list-item routerLink="/customers/accounts" routerLinkActive="active-link">💳 Customer Account</a>
+      <a mat-list-item routerLink="/kyc" routerLinkActive="active-link">🆔 KYC</a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-<div class="dashboard-container">
-  <h1>Chào mừng đến với Dashboard</h1>
-  <p>Đây là trang chính của ứng dụng sau khi đăng nhập.</p>
-</div>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="sidenav.toggle()" class="hide-desktop">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>KienlongBank Dashboard</span>
+      <span class="spacer"></span>
+      <button mat-raised-button color="accent" (click)="logout()">Đăng xuất</button>
+    </mat-toolbar>
+
+    <div class="dashboard-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

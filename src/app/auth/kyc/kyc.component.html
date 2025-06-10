@@ -87,6 +87,9 @@
           <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
 
           <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit">
+              <span routerLink="/login">Thoát</span>
+            </button>
             <button mat-raised-button color="primary" type="submit" [disabled]="kycForm.invalid || isLoading">
               <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
               <span *ngIf="!isLoading">Gửi KYC</span>

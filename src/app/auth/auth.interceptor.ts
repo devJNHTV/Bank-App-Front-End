@@ -1,21 +1,16 @@
-import {
-  HttpInterceptorFn,
-  HttpRequest,
-  HttpHandlerFn,
-  HttpEvent,
-  HttpErrorResponse
-} from '@angular/common/http';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable, from, throwError } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
-import { inject } from '@angular/core';
-import { AuthService } from '../core/services/auth.service';
+import { switchMap, catchError, retry } from 'rxjs/operators';
+import { inject, Injector } from '@angular/core';
 import Swal from 'sweetalert2';
+import { AuthService } from '../core/services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
-  const authService = inject(AuthService);
+  const injector = inject(Injector);
+  const authService = injector.get(AuthService);
 
   const ignoredUrls = [
     '/protocol/openid-connect/token',
@@ -29,55 +24,57 @@ export const authInterceptor: HttpInterceptorFn = (
 
   const token = authService.getToken();
 
-  // Nếu không có token -> request tiếp
   if (!token) {
     return next(req);
   }
 
-  // Nếu token đã hết hạn hoặc sắp hết hạn thì gọi refresh
+  const addAuthHeader = (request: HttpRequest<unknown>, token: string) =>
+    request.clone({
+      setHeaders: { Authorization: `Bearer ${token}` },
+    });
+
+  const handle401Error = (request: HttpRequest<unknown>, error: HttpErrorResponse): Observable<HttpEvent<unknown>> => {
+    return from(authService.refreshToken()).pipe(
+      retry({ count: 2, delay: 1000 }),
+      switchMap((res) => {
+        const newAuthReq = addAuthHeader(request, res.access_token);
+        return next(newAuthReq);
+      }),
+      catchError((refreshError) => {
+        console.error('Lỗi khi refresh token sau nhiều lần thử:', refreshError);
+        Swal.fire({
+          title: 'Phiên đăng nhập hết hạn',
+          text: 'Vui lòng đăng nhập lại.',
+          icon: 'warning',
+          confirmButtonText: 'Đăng nhập lại',
+          allowOutsideClick: false,
+        }).then(() => {
+          authService.logout();
+        });
+        return throwError(() => refreshError);
+      })
+    );
+  };
+
   if (authService.isTokenExpired(token) || authService.isTokenExpiringSoon(token, 30)) {
     return from(authService.refreshToken()).pipe(
+      retry({ count: 2, delay: 1000 }),
       switchMap((res) => {
-        const authReq = req.clone({
-          setHeaders: { Authorization: `Bearer ${res.access_token}` },
-        });
+        const authReq = addAuthHeader(req, res.access_token);
         return next(authReq);
       }),
-      catchError((error) => {
-        console.error('Lỗi khi refresh token:', error);
-        return throwError(() => error);
-      })
+      catchError((error) => handle401Error(req, error))
     );
   }
 
-  // Nếu token còn hiệu lực thì thêm vào header
-  const authReq = req.clone({
-    setHeaders: { Authorization: `Bearer ${token}` },
-  });
+  const authReq = addAuthHeader(req, token);
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        // Token không hợp lệ hoặc hết hạn
-        return from(authService.refreshToken()).pipe(
-          switchMap((res) => {
-            const newAuthReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${res.access_token}` },
-            });
-            return next(newAuthReq);
-          }),
-          catchError((refreshError) => {
-            console.error('Lỗi khi refresh token:', refreshError);
-            Swal.fire({
-              title: 'Lỗi xác thực',
-              text: 'Phiên làm việc của bạn đã hết hạn. Vui lòng đăng nhập lại.',
-              icon: 'error',
-              confirmButtonText: 'Đăng nhập lại'
-            });
-            return throwError(() => refreshError);
-          })
-        );
+        return handle401Error(req, error);
       }
+      console.error('Lỗi HTTP:', error?.error?.message || error?.message || 'Unknown error');
       return throwError(() => error);
     })
   );

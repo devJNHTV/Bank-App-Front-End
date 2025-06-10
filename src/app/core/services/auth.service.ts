@@ -2,31 +2,26 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { TokenResponse } from '../../auth/TokenResponse'
 import { BehaviorSubject, Observable, throwError, firstValueFrom, from } from 'rxjs';
 import { catchError, tap, switchMap, finalize } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
 
-interface TokenResponse {
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
-  token_type: string;
-}
-
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private tokenKey = 'auth_token';
+  private tokenKey = 'access_token';
   private refreshTokenKey = 'refresh_token';
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasTokenSync());
+  // private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasTokenSync());
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private isAdminSubject = new BehaviorSubject<boolean>(false);
   private isKycVerifiedSubject = new BehaviorSubject<boolean>(false);
   private apiUrl = environment.apiUrl;
   private keycloakUrl = environment.keycloak.url;
   private clientId = environment.keycloak.clientId;
   private clientSecret = environment.keycloak.clientSecret;
-  private refreshInProgress = false;
   private refreshTokenPromise: Promise<TokenResponse> | null = null;
 
   constructor(
@@ -36,6 +31,13 @@ export class AuthService {
   ) {
     console.log('API URL:', this.apiUrl);
     console.log('Keycloak URL:', this.keycloakUrl);
+    // if (isPlatformBrowser(this.platformId) && this.hasTokenSync()) {
+    //   this.restoreAuthState();
+    // }
+  }
+
+  // Khởi tạo trạng thái xác thực khi cần
+  initializeAuthState(): void {
     if (isPlatformBrowser(this.platformId) && this.hasTokenSync()) {
       this.restoreAuthState();
     }
@@ -49,10 +51,24 @@ export class AuthService {
         this.isKycVerifiedSubject.next(res.verified);
       },
       error: (error) => {
-        console.error('KYC Status Error:', error);
+        console.error('KYC Status Check Error:', error?.message || error);
         this.isKycVerifiedSubject.next(false);
       },
     });
+    // Kiểm tra quyền ADMIN từ token
+    const userInfo = this.getUserInfo();
+    if (userInfo && userInfo.roles && userInfo.roles.includes('ADMIN')) {
+      this.isAdminSubject.next(true);
+    }
+  }
+
+  isAdmin(): Observable<boolean> {
+    return this.isAdminSubject.asObservable();
+  }
+
+  private checkAdminAccess(): boolean {
+    const userInfo = this.getUserInfo();
+    return userInfo && userInfo.roles && userInfo.roles.includes('ADMIN');
   }
 
   register(userData: any): Observable<any> {
@@ -86,7 +102,7 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<any> {
-    console.log('Attempting login for user:', username);
+    console.log('Đang đăng nhập cho người dùng:', username);
     const body = new HttpParams()
       .set('grant_type', 'password')
       .set('client_id', this.clientId)
@@ -94,41 +110,42 @@ export class AuthService {
       .set('username', username)
       .set('password', password);
 
-    return this.http.post(this.keycloakUrl, body, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    }).pipe(
-      tap((res: any) => {
-        console.log('Login Response:', res);
-        if (isPlatformBrowser(this.platformId)) {
-          localStorage.setItem(this.tokenKey, res.access_token);
-          localStorage.setItem(this.refreshTokenKey, res.refresh_token);
-        }
-        this.isAuthenticatedSubject.next(true);
-
-        // Gọi check KYC
-        this.checkKycStatus().subscribe({
-          next: ({ verified }) => {
-            console.log('KYC Check after login:', verified);
-            this.isKycVerifiedSubject.next(verified);
-            this.router.navigate([verified ? '/dashboard' : '/kyc'], {
-              queryParams: !verified ? { message: 'Vui lòng xác minh danh tính' } : {},
-            });
-          },
-          error: (error) => {
-            console.error('KYC Check Error after login:', error);
-            this.router.navigate(['/kyc'], {
-              queryParams: { message: 'Vui lòng xác minh danh tính' },
-            });
-          },
-        });
-      }),
-      catchError((error) => {
-        console.error('Login Error:', error);
-        return throwError(() =>
-          new Error('Đăng nhập thất bại. Vui lòng kiểm tra tên đăng nhập hoặc mật khẩu.')
-        );
+    return this.http
+      .post(this.keycloakUrl, body, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       })
-    );
+      .pipe(
+        tap((res: any) => {
+          console.log('Phản hồi đăng nhập:', res);
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem(this.tokenKey, res.access_token);
+            localStorage.setItem(this.refreshTokenKey, res.refresh_token);
+          }
+          this.isAuthenticatedSubject.next(true);
+        }),
+        switchMap(() => this.checkKycStatus()),
+        tap(({ verified }) => {
+          console.log('Kiểm tra KYC sau đăng nhập:', verified);
+          this.isKycVerifiedSubject.next(verified);
+          this.router.navigate([verified ? '/dashboard' : '/kyc'], {
+            queryParams: !verified ? { message: 'Vui lòng xác minh danh tính' } : {},
+          });
+        }),
+        catchError((error) => {
+          console.error('Lỗi đăng nhập hoặc kiểm tra KYC:', error);
+          if (error.status === 401 || error.status === 403) {
+            return throwError(() =>
+              new Error('Đăng nhập thất bại. Vui lòng kiểm tra tên đăng nhập hoặc mật khẩu.')
+            );
+          }
+          this.router.navigate(['/kyc'], {
+            queryParams: { message: 'Vui lòng xác minh danh tính' },
+          });
+          return throwError(() =>
+            new Error('Không thể kiểm tra trạng thái KYC: ' + (error?.error?.message || error?.message || 'Lỗi không xác định'))
+          );
+        })
+      );
   }
 
   checkKycStatus(): Observable<{ verified: boolean }> {
@@ -139,8 +156,8 @@ export class AuthService {
         this.isKycVerifiedSubject.next(res.verified);
       }),
       catchError((error) => {
-        console.error('KYC Status Check Error:', error);
-        return throwError(() => new Error('Không thể kiểm tra trạng thái KYC: ' + error.error.message));
+        console.error('KYC Status Check Error:', error?.message);
+        return throwError(() => new Error('Không thể kiểm tra trạng thái KYC: ' + error?.error?.message || error?.message || 'Unknown error'));
       })
     );
   }
@@ -151,7 +168,58 @@ export class AuthService {
         if (res.isVerified) this.isKycVerifiedSubject.next(true);
       }),
       catchError((error) =>
-        throwError(() => new Error('Xác minh KYC thất bại: ' + error.error.message))
+        throwError(() => new Error('Xác minh KYC thất bại: ' + error?.error?.message || error?.message || 'Unknown error'))
+      )
+    );
+  }
+
+  getCustomerList(): Observable<any> {
+    if (!this.checkAdminAccess()) {
+      return throwError(() => new Error('Bạn không có quyền truy cập danh sách khách hàng'));
+    }
+    return this.http.get(`${this.apiUrl}/list`).pipe(
+      tap((res) => console.log('Customer List:', res)),
+      catchError((error) =>
+        throwError(() => new Error('Lấy danh sách khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
+      )
+    );
+  }
+
+  getCustomerDetail(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/detail`).pipe(
+      tap((res) => console.log('Customer Detail:', res)),
+      catchError((error) =>
+        throwError(() => new Error('Lấy thông tin khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
+      )
+    );
+  }
+
+  updateCustomer(customerData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/update`, customerData).pipe(
+      tap((res) => console.log('Update Customer Response:', res)),
+      catchError((error) =>
+        throwError(() => new Error('Cập nhật thông tin khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
+      )
+    );
+  }
+
+  updateCustomerStatus(statusData: any): Observable<any> {
+    if (!this.checkAdminAccess()) {
+      return throwError(() => new Error('Bạn không có quyền cập nhật trạng thái khách hàng'));
+    }
+    return this.http.put(`${this.apiUrl}/status`, statusData).pipe(
+      tap((res) => console.log('Update Customer Status Response:', res)),
+      catchError((error) =>
+        throwError(() => new Error('Cập nhật trạng thái khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
+      )
+    );
+  }
+
+  getCustomerAccounts(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/accounts`).pipe(
+      tap((res) => console.log('Customer Accounts:', res)),
+      catchError((error) =>
+        throwError(() => new Error('Lấy danh sách tài khoản thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
       )
     );
   }
@@ -188,8 +256,7 @@ export class AuthService {
         }),
         catchError((error) => {
           console.error('Lỗi refresh token:', error);
-          this.handleSessionExpired('Không thể làm mới phiên đăng nhập');
-          return throwError(() => error);
+          return throwError(() => new Error('Không thể làm mới token: ' + (error?.error?.message || 'Lỗi không xác định')));
         })
       );
 

@@ -12,19 +12,33 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { KycComponent } from './auth/kyc/kyc.component';
+import { CustomerListComponent } from './admin/customer-list/customer-list.component';
+import { AdminGuard } from './core/guards/admin.guard';
+import { CustomerDetailComponent } from './customer/customer-detail/customer-detail.component';
+import { CustomerAccountsComponent } from './customer/customer-accounts/customer-accounts.component';
+import { KycGuard } from './core/guards/kyc.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'kyc', component: KycComponent, canActivate: [AuthGuard] },
     { path: 'register', component: RegisterComponent },
+    { path: 'customers/accounts', component: CustomerAccountsComponent, canActivate: [AuthGuard, AuthGuard] },
+    { path: 'detail', component: CustomerDetailComponent, canActivate: [AuthGuard, AuthGuard] },
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'verify-otp', component: VerifyOtpComponent },
     { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard] },
-    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard, KycGuard] },
     { path: 'home', component: HomeComponent },
     { path: 'about', component: AboutComponent },
     { path: 'savings', component: SavingsComponent },
+    { 
+      path: 'admin',
+      canActivate: [AuthGuard, AdminGuard],
+      children: [
+        { path: 'customers', component: CustomerListComponent }
+      ]
+    },
     { path: '**', component: NotFoundComponent },
 ];
