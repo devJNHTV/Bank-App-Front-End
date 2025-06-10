@@ -7,9 +7,9 @@
     <div class="p-fluid p-formgrid p-grid">
       
       <div class="p-field p-col-12 p-md-6">
-        <label for="fromAccountNumber">Tài khoản nguồn:     
+        <label for="fromAccountNumber"><i class="pi pi-user mr-2 ml-2"></i> Tài khoản nguồn:     
           <small *ngIf="fromCustomerName" style="font-size: 14px;">
-            <strong><i class="pi pi-user mr-2 ml-2"></i>{{ fromCustomerName }}</strong>
+            <strong>{{ fromCustomerName }}</strong>
          </small>
         </label>
         <div class="flex ">
@@ -83,7 +83,7 @@
           <i class="pi pi-address-book" style="font-size: 1.5rem;"></i>
           </button>
           <!-- Hiện danh sách tài khoản đã chuyển gần nhất -->
-          <p-dialog header="Danh sách tài khoản gần đây" [(visible)]="showRecentAccounts" [modal]="true" [style]="{width: '400px'}" [closable]="true" (onHide)="showRecentAccounts = false">
+          <p-dialog header="Danh sách tài khoản đã giao dịch gần đây" [(visible)]="showRecentAccounts" [modal]="true" [style]="{width: '480px'}" [closable]="true" (onHide)="showRecentAccounts = false">
             <ul>
               <li *ngFor="let account of listInforToAccountNumberTransactionLatest" (click)="selectRecentAccount(account)" style="cursor: pointer; padding: 0.5rem; border-bottom: 1px solid #ccc;">
                 <i class="pi pi-user mr-3 ml-2"></i>{{ account.customerName }} - {{ account.accountNumber }}
@@ -180,14 +180,23 @@
       </div>
     </div>
 
-    <div class="p-d-flex p-jc-end p-mt-4">
+    <div class="p-d-flex p-jc-between p-mt-4" >
+      <button
+        pButton
+        pRipple
+        type="button"
+        label="Quay về"
+        icon="pi pi-arrow-left"
+        class="p-button-secondary mr-2"
+        (click)="goBack()"
+      ></button>
       <button
         pButton
         pRipple
         type="submit"
         label="Tiếp tục"
         icon="pi pi-check"
-        class="p-button-primary"
+        class="p-button-primary "
         [disabled]="transferForm.invalid && submitted"
       ></button>
     </div>
@@ -196,7 +205,7 @@
 </div>
 <app-confirm-transaction
   *ngIf="showConfirmForm && someTransferData"
-  [transferData]="someTransferData"
+  [transactionData]="someTransferData"
   (cancel)="onCancelConfirm()"
 ></app-confirm-transaction>
 <p-toast></p-toast>

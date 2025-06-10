@@ -5,6 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Location } from '@angular/common';
 
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -57,13 +58,15 @@ export class TransferComponent implements OnInit{
     referenceCode: string;
     toCustomerName: string | null;
     fromCustomerName: string | null;
+    type: string;
   } | null = null;
 
   
   constructor(
     private fb: FormBuilder,
     private transactionService: TransactionService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private location: Location
   ) {
     this.transferForm = this.fb.group({
       fromAccountNumber: [null, Validators.required],
@@ -101,7 +104,7 @@ export class TransferComponent implements OnInit{
               this.listToAccountNumberTransactionLatest = res.result || [];
               this.listInforToAccountNumberTransactionLatest = this.listToAccountNumberTransactionLatest.map((item: any) => ({
                 accountNumber: item.accountNumber,
-                customerName: item.customerName.toUpperCase()
+                customerName: this.removeVietnameseTones(item.customerName.toUpperCase())
               }));
               console.log("Danh sách tài khoản gần đây:", this.listToAccountNumberTransactionLatest);
             },
@@ -119,7 +122,10 @@ export class TransferComponent implements OnInit{
     // Get Current Customer
     this.transactionService.getCurrentCustomer().subscribe({
       next: (res) => {
-        this.fromCustomerName = res.data.fullName.toUpperCase();
+        this.fromCustomerName = this.removeVietnameseTones(res.data.fullName.toUpperCase());
+        this.transferForm.patchValue({
+          description: this.fromCustomerName + ' CHUYEN KHOAN'
+        });
       },
       error: (err) => {
         console.error('Lỗi khi lấy khách hàng hiện tại:', err);
@@ -147,7 +153,7 @@ export class TransferComponent implements OnInit{
     .subscribe({
       next: (res) => {
         if(res){
-          this.toCustomerName = res.toUpperCase();
+          this.toCustomerName = this.removeVietnameseTones(res.toUpperCase());
         }
       },
       error: (err) => {
@@ -192,7 +198,7 @@ export class TransferComponent implements OnInit{
         this.listToAccountNumberTransactionLatest = res.result || [];
         this.listInforToAccountNumberTransactionLatest = this.listToAccountNumberTransactionLatest.map((item: any) => ({
           accountNumber: item.accountNumber,
-          customerName: item.customerName.toUpperCase()
+          customerName: this.removeVietnameseTones(item.customerName.toUpperCase())
         }));
         console.log("Danh sách tài khoản gần đây:", this.listToAccountNumberTransactionLatest);
       },
@@ -215,6 +221,7 @@ export class TransferComponent implements OnInit{
         referenceCode: '',
         toCustomerName: this.toCustomerName,
         fromCustomerName: this.fromCustomerName,
+        type: 'TRANSFER',
       };
     }
 
@@ -234,13 +241,8 @@ export class TransferComponent implements OnInit{
     });
   }
   
-  // listInforToAccountNumberTransactionLatest = [
-  //   { accountNumber: '87654321', customerName: 'Nguyen Van A' },
-  //   { accountNumber: '987654321', customerName: 'Tran Thi B' },
-  //   { accountNumber: '456789123', customerName: 'Le Van C' },
-  // ];
+
   
-     
     
   showRecentAccounts = false;
   openToAccountNumberLatest() {
@@ -275,6 +277,15 @@ selectRecentAccount(account: { accountNumber: string; customerName: string }) {
     this.someTransferData = null;
     this.showConfirmForm = false;
     this.submitted = false;
+  }
+  removeVietnameseTones(str: string): string {
+    return str
+      .normalize('NFD') 
+      .replace(/[\u0300-\u036f]/g, '') 
+      .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  }
+  goBack(): void {
+    this.location.back();
   }
 }
 

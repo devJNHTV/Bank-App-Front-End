@@ -25,7 +25,8 @@ export class TransactionResultComponent  {
   transactionData: any = {};
   fromCustomerName: string | null = null;
   toCustomerName: string | null = null;
-
+  message: string = '';
+  transactionType: string = '';
   constructor(
     private router: Router,
     private location: Location,
@@ -36,16 +37,20 @@ export class TransactionResultComponent  {
       transactionData: any;
       fromCustomerName: string | null;
       toCustomerName: string | null;
+      message: string;
+      type: string;
     };
     this.success = state?.success ?? false;
     this.transactionData = state?.transactionData ?? {};
     this.fromCustomerName = state?.fromCustomerName ?? null;
     this.toCustomerName = state?.toCustomerName ?? null;
-    console.log('➡️ Dữ liệu từ router state:', this.transactionData);
+    this.message = state?.message ?? '';
+    this.transactionType = state?.type ?? '';
+    console.log(' Dữ liệu từ router state:', this.transactionData);
   }
 
-  goHome() {
-    this.router.navigate(['/']);
+  goHome() {  
+    this.router.navigate(['/transactions']);
   }
    
 }

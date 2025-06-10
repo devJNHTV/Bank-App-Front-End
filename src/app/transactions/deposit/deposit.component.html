@@ -1,0 +1,165 @@
+<div class="card" *ngIf="!showConfirmForm">
+    <h2 class="header-title p-mb-3 text-center">
+      <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+        <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
+      </button>Nộp tiền vào tài khoản</h2>
+    <form [formGroup]="depositForm" (ngSubmit)="onSubmit()">
+      <div class="p-fluid p-formgrid p-grid">
+        
+        <div class="p-field p-col-12 p-md-6">
+          <label for="toAccountNumber"> <i class="pi pi-user mr-2 ml-2"></i> Tài khoản của bạn:  
+            <small *ngIf="toCustomerName" style="font-size: 14px;">
+                <strong>{{ toCustomerName }}</strong>
+             </small>   
+          </label>
+          <div class="flex ">
+            
+            <p-dropdown
+              formControlName="toAccountNumber"
+              [options]="toAccountOptions"
+              optionLabel="accountDescription"
+              optionValue="accountNumber"
+              [showClear]="false"
+              class="w-full md:w-56"
+              (onChange)="onAccountChange($event)"
+              [ngClass]="{
+                'ng-invalid ng-dirty':
+                  submitted && depositForm.controls['toAccountNumber'].errors
+              }"
+              aria-describedby="toAccountNumber-help"
+            />
+            <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+              <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
+            </button>
+          </div>
+          
+          <div *ngIf="selectedBalance !== null" class="p-mt-2">
+            <p>
+              <i class="pi pi-money-bill mr-2"></i> Số dư:
+              {{ selectedBalance | number : "1.0-0" }} VNĐ
+            </p>
+          </div>
+          <small
+            id="toAccountNumber-help"
+            *ngIf="
+            submitted &&
+            depositForm.controls['toAccountNumber'].errors?.['required']
+            "
+            class="p-error"
+          >
+            Số tài khoản nguồn không được để trống.
+          </small>
+        </div>
+  
+  
+        <div class="formgrid grid">
+          <div class="p-field p-col-12 md:col-6">
+            <label for="amount">Số tiền cần nộp:</label>
+            <span
+              [ngClass]="{
+                'ng-invalid ng-dirty-wrapper':
+                  submitted && depositForm.controls['amount'].errors
+              }"
+            >
+              <p-inputNumber
+                id="amount"
+                formControlName="amount"
+                mode="currency"
+                currency="VND"
+                locale="vi-VN"
+                placeholder="Nhập số tiền"
+                aria-describedby="amount-errors"
+              >
+              </p-inputNumber>
+            </span>
+            <ng-container
+              id="amount-errors"
+              *ngIf="submitted && depositForm.controls['amount'].errors"
+            >
+              <small
+                *ngIf="depositForm.controls['amount'].errors?.['required']"
+                class="p-error"
+                >Số tiền không được để trống.</small
+              >
+              <small
+                *ngIf="depositForm.controls['amount'].errors?.['min']"
+                class="p-error"
+              >
+                Số tiền phải lớn hơn hoặc bằng
+                {{ depositForm.controls["amount"].errors["min"].min }}.
+              </small>
+            </ng-container>
+          </div>
+          <div class="p-field p-col-12 md:col-6">
+            <label for="currency">Loại tiền</label>
+            <p-dropdown
+              id="currency"
+              formControlName="currency"
+              [options]="currencyOptions"
+              optionLabel="currencyName"
+              optionValue="currencyCode"
+              [showClear]="false"
+              class="w-full md:w-56"
+              [ngClass]="{
+                'ng-invalid ng-dirty':
+                  submitted && depositForm.controls['currency'].errors
+              }"
+              aria-describedby="currency-errors"
+            ></p-dropdown>
+          
+            <ng-container
+              id="currency-errors"
+              *ngIf="submitted && depositForm.controls['currency'].errors"
+            >
+              <small *ngIf="depositForm.controls['currency'].errors?.['required']" class="p-error">
+                Vui lòng chọn loại tiền.
+              </small>
+            </ng-container>
+          </div>
+          
+        </div>
+        
+        
+  
+        <div class="p-field p-col-12">
+          <label for="description">Nội dung nộp tiền:</label>
+          <textarea
+            pTextarea
+            id="description"
+            formControlName="description"
+            rows="5"
+            cols="30"
+            placeholder="Nhập nội dung "
+          ></textarea>
+        </div>
+      </div>
+  
+      <div class="p-d-flex p-jc-between p-mt-4" >
+        <button
+          pButton
+          pRipple
+          type="button"
+          label="Quay về"
+          icon="pi pi-arrow-left"
+          class="p-button-secondary mr-2"
+          (click)="goBack()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="submit"
+          label="Tiếp tục"
+          icon="pi pi-check"
+          class="p-button-primary "
+          [disabled]="depositForm.invalid && submitted"
+        ></button>
+      </div>
+    </form>
+    
+  </div>
+  <app-confirm-transaction
+    *ngIf="showConfirmForm && someDepositData"
+    [transactionData]="someDepositData"
+    (cancel)="onCancelConfirm()"
+  ></app-confirm-transaction>
+  <p-toast></p-toast>

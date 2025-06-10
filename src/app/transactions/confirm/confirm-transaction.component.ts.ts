@@ -31,7 +31,7 @@ import { TransactionResultComponent } from '../results/transaction-result.compon
 export class ConfirmTransactionComponent {
   constructor(private transactionService: TransactionService,
      private messageService: MessageService,private router: Router ) {}
-  @Input() transferData: {
+  @Input() transactionData: {
     fromAccountNumber: string;
     toAccountNumber: string;
     amount: number;
@@ -39,6 +39,7 @@ export class ConfirmTransactionComponent {
     referenceCode?: string;
     fromCustomerName: string | null;
     toCustomerName: string | null;
+    type: string;
   } = {
     fromAccountNumber: '',
     toAccountNumber: '',
@@ -47,6 +48,7 @@ export class ConfirmTransactionComponent {
     referenceCode: '',
     fromCustomerName: '',
     toCustomerName: '',
+    type: '',
   };
 
   otpCode: string = '';
@@ -58,8 +60,9 @@ export class ConfirmTransactionComponent {
     referenceCode: '',
     accountNumberRecipient: '',
   };
+  
   onConfirm() {
-    this.confirmTransactionRequest.referenceCode = this.transferData.referenceCode;
+    this.confirmTransactionRequest.referenceCode = this.transactionData.referenceCode;
     this.confirmTransactionRequest.otpCode = this.otpCode;
     this.transactionService.confirmTransaction(this.confirmTransactionRequest).subscribe({
       next: (res) => {
@@ -71,12 +74,15 @@ export class ConfirmTransactionComponent {
         } else {
           this.showError('Giao dịch không thành công: ' + res.message);
         }
-        this.router.navigate(['/transaction-result'], {
+        const finalMessage = this.buildResultMessage(isSuccess);
+        this.router.navigate(['/transactions/transaction-result'], {
           state: {
             success: isSuccess,
             transactionData: result,
-            fromCustomerName: this.transferData.fromCustomerName,
-            toCustomerName: this.transferData.toCustomerName
+            fromCustomerName: this.transactionData.fromCustomerName,
+            toCustomerName: this.transactionData.toCustomerName,
+            message: finalMessage,
+            type: this.transactionType,
           }
         });
       },
@@ -87,12 +93,15 @@ export class ConfirmTransactionComponent {
         const isSuccess = result?.status === 'COMPLETED';
         this.showError('Xác nhận giao dịch thất bại: ' + message);
         if(result?.status==='FAILED'){
+        const finalMessage = this.buildResultMessage(isSuccess);
           this.router.navigate(['/transaction-result'], {
             state: {
               success: isSuccess,
               transactionData: result,  
-              fromCustomerName: this.transferData.fromCustomerName,
-              toCustomerName: this.transferData.toCustomerName
+              fromCustomerName: this.transactionData.fromCustomerName,
+              toCustomerName: this.transactionData.toCustomerName,
+              message: finalMessage,
+              type: this.transactionType,
             }
           });
         }
@@ -120,8 +129,8 @@ export class ConfirmTransactionComponent {
 resendCountdown: number = 0;
 resendInterval: any;
   onResendOtp() {
-    this.resendOtpRequest.referenceCode = this.transferData.referenceCode;
-    this.resendOtpRequest.accountNumberRecipient = this.transferData.toAccountNumber;
+    this.resendOtpRequest.referenceCode = this.transactionData.referenceCode;
+    this.resendOtpRequest.accountNumberRecipient = this.transactionData.toAccountNumber;
     console.log('Gửi lại mã OTP',this.resendOtpRequest);
     this.transactionService.resendOtp(this.resendOtpRequest).subscribe({
       next: (res) => {
@@ -144,6 +153,23 @@ resendInterval: any;
     }
   }, 1000);
   }
+  get transactionType(): string {
+    switch (this.transactionData.type) {
+      case 'TRANSFER': return 'chuyển khoản';
+      case 'DEPOSIT': return 'nạp tiền';
+      case 'WITHDRAW': return 'rút tiền';
+      default: return 'không xác định';
+    }
+  }
+  private buildResultMessage(isSuccess: boolean): string {
+    if(this.transactionData.type === 'WITHDRAW'||this.transactionData.type === 'PAY_BILL'){
+      return `Giao dịch ${this.transactionType} từ ${this.transactionData.fromCustomerName ?? ''} - ${this.transactionData.fromAccountNumber} 
+       ${isSuccess ? 'thành công' : 'thất bại'}`;
+    }
+    else return `Giao dịch ${this.transactionType} tới ${this.transactionData.toCustomerName ?? ''} - ${this.transactionData.toAccountNumber} 
+       ${isSuccess ? 'thành công' : 'thất bại'}`;
+  }
+  
   onCancel(): void {
     this.cancel.emit();
   }

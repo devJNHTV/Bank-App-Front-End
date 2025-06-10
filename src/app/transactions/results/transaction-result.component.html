@@ -1,4 +1,4 @@
-<p-card class="result-card" [ngClass]="{ 'success-card': success, 'error-card': !success }">
+<p-card class="result-card" >
     <div class="result-content">
       <i
         class="pi"
@@ -6,10 +6,10 @@
         [style.color]="success ? '#2e7d32' : '#c62828'"
       ></i>
   
-      <h2>{{ success ? 'Giao dịch thành công!' : 'Giao dịch thất bại' }}</h2>
-        
+      <h2>{{ success ? 'Giao dịch ' + transactionType + ' thành công!' : 'Giao dịch ' + transactionType + ' thất bại' }}</h2>
+        <p style="font-size: 16px;">{{message}}</p>
       <div class="info-grid ">
-        <div class="field"><strong>
+        <div class="field" *ngIf="transactionData.type !== 'DEPOSIT'"><strong>
             <i class="pi pi-building-columns mr-2"></i> Từ tài khoản:</strong>
             <br>
             <small *ngIf="fromCustomerName" style="font-size: 14px;">
@@ -17,7 +17,7 @@
             </small>
              {{ transactionData.fromAccountNumber }}
         </div>
-        <div class="field"><strong>  
+        <div class="field" *ngIf="transactionData.type !== 'WITHDRAW'"><strong>  
             <i class="pi pi-building-columns mr-2"></i> Đến tài khoản:</strong> 
             <br>
             <small *ngIf="toCustomerName" style="font-size: 14px;">

@@ -60,6 +60,18 @@ confirmTransaction(payload: any): Observable<any> {
       headers: this.getAuthHeaders()
     });
   }
-
+// Deposit
+deposit(payload: any): Observable<any> {
+  return this.http.post(`${this.baseUrlTransaction}/deposit`, payload, {
+    headers: this.getAuthHeaders()
+  });
+}
+// Withdraw
+withdraw(payload: any): Observable<any> {
+  console.log(payload);
+  return this.http.post(`${this.baseUrlTransaction}/withdraw`, payload, {
+    headers: this.getAuthHeaders()
+  });
+}
   
 }
