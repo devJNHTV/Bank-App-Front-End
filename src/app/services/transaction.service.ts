@@ -30,6 +30,11 @@ export class TransactionService {
       headers: this.getAuthHeaders()
     });
   }
+  getTransactionByReferenceCode(referenceCode: string): Observable<any> {
+    return this.http.get(`${this.baseUrlTransaction}/${referenceCode}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
 // Create Transaction
 
 transfer(payload: any): Observable<any> {
@@ -73,5 +78,16 @@ withdraw(payload: any): Observable<any> {
     headers: this.getAuthHeaders()
   });
 }
-  
+// Get Transaction History
+  getTransactionHistory(params: any): Observable<any> {
+    return this.http.get(`${this.baseUrlTransaction}/getTransactionsAndFilter`, {
+      headers: this.getAuthHeaders(),
+      params: params
+    });
+  }
+  getFilterMetadata(): Observable<any> {
+    return this.http.get(`${this.baseUrlTransaction}/getFilterMetadata`, {
+      headers: this.getAuthHeaders()
+    });
+  }
 }

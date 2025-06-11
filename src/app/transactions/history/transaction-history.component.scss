@@ -1,0 +1,132 @@
+:host {
+  display: block;
+  max-width: 80%;
+  margin: 2rem auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header-title {
+  background-color: #2c3e50;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.card {
+  background-color: #4c6683;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.p-field {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+}
+
+// Transaction type badges
+.transaction-type-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.875rem;
+
+  &.transfer {
+    background-color: #2196f3;
+    color: white;
+  }
+
+  &.deposit {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  &.withdraw {
+    background-color: #afdc3b;
+    color: white;
+  }
+}
+
+// Status badges
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.875rem;
+
+  &.completed {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  &.pending {
+    background-color: #ff9800;
+    color: white;
+  }
+
+  &.failed {
+    background-color: #f44336;
+    color: white;
+  }
+}
+
+// Amount styling
+td {
+  &.credit {
+    color: #4caf50;
+    font-weight: 600;
+  }
+
+  &.debit {
+    color: #f44336;
+    font-weight: 600;
+  }
+}
+
+// Table customization
+::ng-deep {
+  .p-datatable {
+    .p-datatable-header {
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+    }
+
+    .p-datatable-thead > tr > th {
+      background: #2c3e50;
+      color: white;
+      padding: 0.75rem;
+      border: 1px solid #4c6683;
+    }
+
+    .p-datatable-tbody > tr {
+      &:nth-child(even) {
+        background: #f8f9fa;
+      }
+
+      > td {
+        padding: 0.75rem;
+        border: 1px solid #e0e0e0;
+      }
+    }
+  }
+
+  .p-calendar {
+    width: 100%;
+  }
+
+  .p-selectbutton {
+    .p-button {
+      padding: 0.5rem 1rem;
+      
+      &.p-highlight {
+        background: #2c3e50;
+        border-color: #2c3e50;
+      }
+    }
+  }
+}
