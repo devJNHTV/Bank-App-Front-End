@@ -13,15 +13,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import Swal from 'sweetalert2';
-import { AuthService } from '../../core/services/auth.service';
-
-interface CustomerData {
-  customerId: number;
-  fullName: string;
-  email: string;
-  phone: string;
-  status: string;
-}
+import { UserService } from '../../core/services/user.service';
+import { AdminService } from '../../core/services/admin.service';
+import { CustomerResponse } from '../../core/models/customer-response.dto'; 
 
 @Component({
   selector: 'app-customer-list',
@@ -44,42 +38,62 @@ interface CustomerData {
   ]
 })
 export class CustomerListComponent implements OnInit {
+  // Cập nhật displayedColumns để hiển thị tất cả các trường
   displayedColumns: string[] = [
-    'customerId',
+    'cifCode',
     'fullName',
+    'address',
     'email',
-    'phone',
+    'phoneNumber',
+    'identityNumber',
+    'dateOfBirth',
+    'gender',
     'status',
+    'kycStatus',
     'actions'
   ];
-  dataSource!: MatTableDataSource<CustomerData>;
+  dataSource!: MatTableDataSource<CustomerResponse>;
   isLoading = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<CustomerData>;
+  @ViewChild(MatTable) table!: MatTable<CustomerResponse>;
 
   constructor(
-    private authService: AuthService,
+    private userService: UserService,
+    private adminService: AdminService,
     private router: Router
   ) {
-    this.dataSource = new MatTableDataSource<CustomerData>();
+    this.dataSource = new MatTableDataSource<CustomerResponse>();
   }
 
   ngOnInit(): void {
     this.loadCustomers();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  ngAfterViewInit(): void {
+    // Kiểm tra paginator có tồn tại không trước khi sử dụng
+    if (this.paginator && this.sort) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+
+      this.paginator.page.subscribe(() => {
+        console.log('Page index:', this.paginator.pageIndex);
+        console.log('Page size:', this.paginator.pageSize);
+      });
+    }
   }
 
   loadCustomers(): void {
     this.isLoading = true;
-    this.authService.getCustomerList().subscribe({
-      next: (customers) => {
-        this.dataSource.data = customers;
+    this.adminService.getCustomerList().subscribe({
+      next: (response: any) => {
+        this.dataSource = new MatTableDataSource<CustomerResponse>(response.data.customers);
+
+        // Gán lại paginator & sort sau khi có dữ liệu
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
         if (this.table) {
           this.table.renderRows();
         }
@@ -87,8 +101,8 @@ export class CustomerListComponent implements OnInit {
       error: (error) => {
         Swal.fire({
           icon: 'error',
-          title: 'Error',
-          text: error.message || 'Failed to load customers'
+          title: 'Lỗi',
+          text: error.message || 'Không thể tải danh sách khách hàng'
         });
       },
       complete: () => {
@@ -96,6 +110,7 @@ export class CustomerListComponent implements OnInit {
       }
     });
   }
+
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -106,36 +121,36 @@ export class CustomerListComponent implements OnInit {
     }
   }
 
-  viewCustomerDetail(customerId: number): void {
-    this.router.navigate(['/admin/customers/detail'], { queryParams: { customerId } });
+  viewCustomerDetail(cifCode: string): void {
+    this.router.navigate(['customers/detail', cifCode]);
   }
 
-  async updateCustomerStatus(customerId: number, currentStatus: string): Promise<void> {
+  async updateCustomerStatus(cifCode: string, currentStatus: string): Promise<void> {
     const { value: newStatus } = await Swal.fire({
-      title: 'Update Customer Status',
+      title: 'Cập nhật trạng thái khách hàng',
       input: 'select',
       inputOptions: {
-        'ACTIVE': 'Active',
-        'INACTIVE': 'Inactive',
-        'BLOCKED': 'Blocked'
+        ACTIVE: 'Hoạt động',
+        SUSPENDED: 'Không hoạt động',
+        CLOSED: 'Bị khóa'
       },
       inputValue: currentStatus,
       showCancelButton: true,
       inputValidator: (value) => {
         if (!value) {
-          return 'Please select a status';
+          return 'Vui lòng chọn trạng thái';
         }
         return null;
       }
     });
 
     if (newStatus) {
-      this.authService.updateCustomerStatus(newStatus).subscribe({
+      this.adminService.updateCustomerStatus(cifCode, newStatus).subscribe({
         next: () => {
           Swal.fire({
             icon: 'success',
-            title: 'Success',
-            text: 'Customer status updated successfully',
+            title: 'Thành công',
+            text: 'Cập nhật trạng thái khách hàng thành công',
             timer: 1500
           });
           this.loadCustomers();
@@ -143,8 +158,8 @@ export class CustomerListComponent implements OnInit {
         error: (error) => {
           Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: error.message || 'Failed to update customer status'
+            title: 'Lỗi',
+            text: error.message || 'Không thể cập nhật trạng thái khách hàng'
           });
         }
       });

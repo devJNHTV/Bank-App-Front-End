@@ -15,6 +15,7 @@ import { AuthService } from '../../core/services/auth.service';
 import Swal from 'sweetalert2';
 import { CustomDateAdapter } from '../../shared/custom-date-adapter';
 import { MY_DATE_FORMATS } from '../../shared/date-formats';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-customer-update-dialog',
@@ -47,7 +48,7 @@ export class CustomerUpdateDialogComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
+    private userService: UserService,
     public dialogRef: MatDialogRef<CustomerUpdateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -88,7 +89,7 @@ export class CustomerUpdateDialogComponent {
 
       console.log('kycData:', updateData);
 
-      this.authService.updateCustomer(updateData).subscribe({
+      this.userService.updateCustomer(updateData).subscribe({
         next: () => {
           Swal.fire({
             icon: 'success',

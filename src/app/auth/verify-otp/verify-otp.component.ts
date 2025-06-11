@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../core/services/auth.service';
+import { RegistrationService } from '../../core/services/registration.service';
 
 @Component({
   selector: 'app-verify-otp',
@@ -37,7 +38,7 @@ export class VerifyOtpComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService,
+    private registrationService: RegistrationService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -64,7 +65,7 @@ export class VerifyOtpComponent implements OnInit {
 
     const { otp } = this.otpForm.value;
 
-    this.authService.verifyOtp(this.email, otp).subscribe({
+    this.registrationService.verifyOtp(this.email, otp).subscribe({
       next: () => {
         this.router.navigate(['/login']);
         this.isLoading = false;
@@ -84,7 +85,7 @@ export class VerifyOtpComponent implements OnInit {
     this.isResending = true;
     this.errorMessage = '';
 
-    this.authService.resendVerificationCode(this.email).subscribe({
+    this.registrationService.resendVerificationCode(this.email).subscribe({
       next: () => {
         this.isResending = false;
       },

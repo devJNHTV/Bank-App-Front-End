@@ -1,0 +1,107 @@
+.container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  background: #f9f9f9;
+}
+
+.glow-card {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 20px;
+  padding: 1.5rem;
+  background: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 128, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.glow-card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 25px rgba(0, 128, 255, 0.4);
+}
+
+.title-with-icon {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.title-icon {
+  margin-right: 10px;
+  color: #2196f3;
+}
+
+.back-button {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
+.customer-info {
+  margin-bottom: 1rem;
+  .info-item {
+    margin: 0.5rem 0;
+    font-size: 16px;
+  }
+}
+
+.accounts-section {
+  margin-top: 2rem;
+  h3 {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  background: #f0f8ff;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+  &:hover {
+    transform: scale(1.01);
+    background: #e6f2ff;
+  }
+}
+
+.account-icon {
+  font-size: 36px;
+  margin-right: 1rem;
+  color: #1976d2;
+}
+
+.account-content {
+  .account-number {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  .account-detail {
+    font-size: 14px;
+    color: #555;
+  }
+}
+
+.no-account-text {
+  color: #888;
+  text-align: center;
+  font-size: 16px;
+  margin: 1rem 0;
+}
+
+.glow-button {
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+  border-radius: 30px;
+  padding: 0.5rem 2rem;
+  font-weight: bold;
+}
+
+.add-account-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}

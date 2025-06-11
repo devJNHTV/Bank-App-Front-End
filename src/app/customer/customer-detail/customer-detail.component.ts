@@ -19,6 +19,7 @@ import Swal from 'sweetalert2';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { AuthService } from '../../core/services/auth.service';
 import { CustomerUpdateDialogComponent } from '../customer-update/customer-update.component';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-customer-detail',
@@ -51,7 +52,7 @@ export class CustomerDetailComponent implements OnInit {
   customerAccounts: any[] = [];
 
   constructor(
-    private authService: AuthService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog
@@ -64,7 +65,7 @@ export class CustomerDetailComponent implements OnInit {
 
   loadCustomerDetail(): void {
     this.isLoading = true;
-    this.authService.getCustomerDetail(this.userId).subscribe({
+    this.userService.getCustomerDetail(this.userId).subscribe({
       next: (customer) => {
         this.customer = customer.data;
         console.log(this.customer)
@@ -86,9 +87,9 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   loadCustomerAccounts(): void {
-    this.authService.getCustomerAccounts().subscribe({
+    this.userService.getCustomerAccounts().subscribe({
       next: (accounts) => {
-        this.customerAccounts = accounts;
+        this.customerAccounts = accounts.data;
       },
       error: (error) => {
         console.error('Lỗi khi tải danh sách tài khoản khách hàng:', error);

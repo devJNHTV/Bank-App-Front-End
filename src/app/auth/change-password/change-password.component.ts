@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../core/services/auth.service';
 import { MustMatch } from '../must-match.validator';
+import { PasswordService } from '../../core/services/password.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-change-password',
@@ -31,13 +33,15 @@ import { MustMatch } from '../must-match.validator';
 export class ChangePasswordComponent implements OnInit {
   changePasswordForm!: FormGroup;
   isLoading = false;
-  showPassword = false;
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmNewPassword = false;
   errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private passwordService: PasswordService
   ) {}
 
   ngOnInit(): void {
@@ -58,8 +62,14 @@ export class ChangePasswordComponent implements OnInit {
     });
   }
 
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
+  togglePasswordVisibility(field: 'currentPassword' | 'newPassword' | 'confirmNewPassword') {
+    if (field === 'currentPassword') {
+      this.showCurrentPassword = !this.showCurrentPassword;
+    } else if (field === 'newPassword') {
+      this.showNewPassword = !this.showNewPassword;
+    } else {
+      this.showConfirmNewPassword = !this.showConfirmNewPassword;
+    }
   }
 
   onSubmit(): void {
@@ -72,14 +82,20 @@ export class ChangePasswordComponent implements OnInit {
 
     const { currentPassword, newPassword, confirmNewPassword } = this.changePasswordForm.value;
 
-    this.authService.changePassword(currentPassword, newPassword, confirmNewPassword).subscribe({
+    this.passwordService.changePassword(currentPassword, newPassword, confirmNewPassword).subscribe({
       next: () => {
         this.router.navigate(['/dashboard']);
         this.isLoading = false;
       },
       error: (error: { message?: string }) => {
-        this.errorMessage = error.message || 'Không thể đổi mật khẩu. Vui lòng thử lại.';
         this.isLoading = false;
+        this.errorMessage = error.message || 'Không thể đổi mật khẩu. Vui lòng thử lại.';
+        Swal.fire({
+          icon: 'error',
+          title: 'Lỗi',
+          text: this.errorMessage,
+          confirmButtonText: 'OK'
+        });
       }
     });
   }

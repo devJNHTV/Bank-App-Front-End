@@ -11,7 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-import { AuthService } from '../../core/services/auth.service';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-customer-accounts',
@@ -109,7 +109,7 @@ export class CustomerAccountsComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    private authService: AuthService,
+    private userServie: UserService,
     private route: ActivatedRoute
   ) {}
 
@@ -119,7 +119,7 @@ export class CustomerAccountsComponent implements OnInit {
 
   loadCustomerAccounts(): void {
     this.isLoading = true;
-    this.authService.getCustomerAccounts().subscribe({
+    this.userServie.getCustomerAccounts().subscribe({
       next: (accounts) => {
         this.dataSource = new MatTableDataSource(accounts);
       },

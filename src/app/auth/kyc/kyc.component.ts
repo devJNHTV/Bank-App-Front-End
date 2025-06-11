@@ -21,6 +21,8 @@ import { CustomDateAdapter } from '../../shared/custom-date-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MY_DATE_FORMATS } from '../../shared/date-formats';
 import Swal from 'sweetalert2';
+import { KycService } from '../../core/services/kyc.service';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-kyc',
@@ -56,7 +58,8 @@ export class KycComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private kycService: KycService,
+    private userService: UserService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -66,27 +69,22 @@ export class KycComponent implements OnInit {
   ngOnInit(): void {
 
     this.route.queryParams.subscribe((params) => {
-      if (params['message'] != '') {
-        Swal.fire({
-          title: 'Thông báo',
-          text: 'Vui lòng xác minh danh tính người dùng!',
-          icon: 'info',
-          confirmButtonText: 'OK',
-          timer: 3000,
-          timerProgressBar: true,
-        });
-      }
+      const message = params['message'] != '' || undefined || null;
+
       Swal.fire({
-          title: 'Thông báo',
-          text: 'Bạn đã xác minh người dùng, không cần xác minh lại!',
-          icon: 'info',
-          confirmButtonText: 'OK',
-          timer: 3000,
-          timerProgressBar: true,
-        });
+        title: 'Thông báo',
+        text: message
+          ? 'Bạn đã xác minh người dùng, không cần xác minh lại!'
+          : 'Vui lòng xác minh danh tính người dùng!',
+        icon: 'info',
+        confirmButtonText: 'OK',
+        timer: 3000,
+        timerProgressBar: true,
+      });
     });
 
-    this.authService
+
+    this.kycService
       .isKycVerified()
       .pipe(take(1))
       .subscribe((isVerified) => {
@@ -99,7 +97,7 @@ export class KycComponent implements OnInit {
       this.message = params['message'] || null;
     });
 
-    const userInfo = this.authService.getUserInfo();
+    const userInfo = this.userService.getUserInfo();
     if (userInfo) {
       this.kycForm.patchValue({
         customerId: userInfo.sub || '',
@@ -136,16 +134,23 @@ export class KycComponent implements OnInit {
 
     const kycData = {
       ...this.kycForm.value,
-      customerId: this.authService.getUserInfo()?.sub,
+      customerId: this.userService.getUserInfo()?.sub,
       dateOfBirth: formattedDate,
     };
 
     console.log('kycData:', kycData);
 
-    this.authService.verifyKyc(kycData).subscribe({
+    this.kycService.verifyKyc(kycData).subscribe({
       next: () => {
-        this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+        Swal.fire({
+          icon: 'success',
+          title: 'Thành công',
+          text: 'Xác thực người dùng thành công!',
+          timer: 3000,
+         }).then(() => {
+          this.isLoading = false;
+          this.router.navigate(['/dashboard']);
+        });
       },
       error: (error) => {
         this.isLoading = false;

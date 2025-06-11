@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../core/services/auth.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { UserService } from '../../core/services/user.service';
 
 interface AccountData {
   accountNumber: string;
@@ -46,7 +47,7 @@ export class CustomerAccountsComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<AccountData>;
 
-  constructor(private authService: AuthService) {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
     this.loadAccounts();
@@ -54,7 +55,7 @@ export class CustomerAccountsComponent implements OnInit {
 
   loadAccounts(): void {
     this.isLoading = true;
-    this.authService.getCustomerAccounts().subscribe({
+    this.userService.getCustomerAccounts().subscribe({
       next: (accounts) => {
         this.accounts = accounts;
         if (this.table) {

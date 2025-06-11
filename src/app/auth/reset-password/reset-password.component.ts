@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../core/services/auth.service';
 import { MustMatch } from '../must-match.validator';
 import Swal from 'sweetalert2';
+import { PasswordService } from '../../core/services/password.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -33,6 +34,7 @@ export class ResetPasswordComponent implements OnInit {
   resetPasswordForm!: FormGroup;
   isLoading = false;
   showPassword = false;
+  showConfirmPassword = false;
   errorMessage = '';
   token: string = '';
 
@@ -40,7 +42,7 @@ export class ResetPasswordComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private passwordService: PasswordService
   ) {}
 
   ngOnInit(): void {
@@ -73,8 +75,12 @@ export class ResetPasswordComponent implements OnInit {
     });
   }
 
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
+  togglePasswordVisibility(field: 'password' | 'confirmPassword') {
+    if (field === 'password') {
+      this.showPassword = !this.showPassword;
+    } else {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
   }
 
   onSubmit(): void {
@@ -93,7 +99,7 @@ export class ResetPasswordComponent implements OnInit {
 
     const { password, confirmPassword } = this.resetPasswordForm.value;
 
-    this.authService.resetPassword(this.token, password, confirmPassword).subscribe({
+    this.passwordService.resetPassword(this.token, password, confirmPassword).subscribe({
       next: () => {
         this.isLoading = false;
         Swal.fire({

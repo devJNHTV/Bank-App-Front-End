@@ -14,6 +14,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AuthService } from '../../core/services/auth.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -48,7 +50,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -78,7 +82,11 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(username, password).subscribe({
       next: () => {
-        this.isLoading = false;
+        console.log(this.userService.getUserInfo())
+        this.notificationService.showSuccess('Chào mừng bạn đến với KienlongBank!', 'Xin chào!').then(() => {
+          this.isLoading = false;
+        });
+        
       },
       error: (error) => {
         this.loginError = error.message || 'Đăng nhập thất bại. Vui lòng thử lại.';

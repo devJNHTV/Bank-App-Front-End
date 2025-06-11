@@ -10,6 +10,9 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule, NgIf } from '@angular/common';
 import Swal from 'sweetalert2';
+import { Password } from 'primeng/password';
+import { PasswordService } from '../../core/services/password.service';
+import { RegistrationService } from '../../core/services/registration.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -37,7 +40,7 @@ export class ForgotPasswordComponent {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private registrationService: RegistrationService,
     private router: Router
   ) {
     this.forgotPasswordForm = this.fb.group({
@@ -57,7 +60,7 @@ export class ForgotPasswordComponent {
 
       const email = this.forgotPasswordForm.get('email')?.value;
 
-      this.authService.resendVerificationCode(email).subscribe({
+      this.registrationService.resendVerificationCode(email).subscribe({
         next: () => {
           this.isLoading = false;
           Swal.fire({

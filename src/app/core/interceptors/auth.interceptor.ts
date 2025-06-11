@@ -3,7 +3,7 @@ import { Observable, from, throwError } from 'rxjs';
 import { switchMap, catchError, retry } from 'rxjs/operators';
 import { inject, Injector } from '@angular/core';
 import Swal from 'sweetalert2';
-import { AuthService } from '../core/services/auth.service';
+import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,

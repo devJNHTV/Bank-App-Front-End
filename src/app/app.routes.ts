@@ -17,6 +17,7 @@ import { AdminGuard } from './core/guards/admin.guard';
 import { CustomerDetailComponent } from './customer/customer-detail/customer-detail.component';
 import { CustomerAccountsComponent } from './customer/customer-accounts/customer-accounts.component';
 import { KycGuard } from './core/guards/kyc.guard';
+import { CustomerDetailAdminComponent } from './admin/customer-detail/customer-detail-admin.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -33,12 +34,13 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent },
     { path: 'about', component: AboutComponent },
     { path: 'savings', component: SavingsComponent },
-    { 
-      path: 'admin',
-      canActivate: [AuthGuard, AdminGuard],
-      children: [
-        { path: 'customers', component: CustomerListComponent }
-      ]
-    },
+    // { 
+    //   path: 'admin',
+    //   canActivate: [AuthGuard, AdminGuard],
+    //   children: [
+        { path: 'customers', component: CustomerListComponent, canActivate: [AuthGuard] },
+        { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent, canActivate: [AuthGuard] },
+    //   ]
+    // },
     { path: '**', component: NotFoundComponent },
 ];

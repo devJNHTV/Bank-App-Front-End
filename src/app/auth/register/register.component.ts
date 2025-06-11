@@ -16,6 +16,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { MustMatch } from '../must-match.validator';
 import { CustomDateAdapter } from '../../shared/custom-date-adapter'; 
 import { MY_DATE_FORMATS } from '../../shared/date-formats';
+import { RegistrationService } from '../../core/services/registration.service';
 
 @Component({
   selector: 'app-register',
@@ -52,7 +53,7 @@ export class RegisterComponent {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private registrationService: RegistrationService,
     private dateAdapter: DateAdapter<Date>,
     private router: Router
   ) {
@@ -111,7 +112,7 @@ export class RegisterComponent {
         dateOfBirth: formattedDate,
       };
 
-      this.authService.register(userData).subscribe({
+      this.registrationService.register(userData).subscribe({
         next: () => {
           this.isLoading = false;
           this.router.navigate(['/verify-otp']);
