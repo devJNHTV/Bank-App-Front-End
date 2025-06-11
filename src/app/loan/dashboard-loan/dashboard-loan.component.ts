@@ -22,8 +22,16 @@ export class DashboardLoanComponent implements OnInit {
   constructor(private loanService: LoanService, private router: Router) {}
 
   ngOnInit(): void {
-    // Lấy tổng số tiền đã vay
+    this.loanService.getCustomerId().subscribe({
+      next: (response: ApiResponseWrapper<number>) => {
+        console.log("set id"+response.data.toString());
+        
+        localStorage.setItem('idCustomer', response.data.toString());
+      },
+      error: (error) => console.error(error)
+    });
     
+
     this.loanService.getTotalBorrowed().subscribe({
       next: (response: ApiResponseWrapper<number>) => {
         this.totalBorrowed = response.data || 0;
@@ -52,11 +60,7 @@ export class DashboardLoanComponent implements OnInit {
     this.router.navigate(['/loan/history']);
   }
 
-  navigateToCurrentLoan() {
-    this.router.navigate(['/loan/current']);
-  }
-
   navigateToCurrentRepayments() {
-    this.router.navigate(['/loan/current-repayments']);
+    this.router.navigate(['loan/current']);
   }
 }

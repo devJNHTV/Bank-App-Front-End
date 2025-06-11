@@ -1,0 +1,244 @@
+<div class="apply-loan-wrapper">
+  <p-card class="apply-loan-card">  
+    <div class="card-header">
+      <h2>Đăng Ký Khoản Vay Mới</h2>
+      <p-button
+        icon="pi pi-times"
+        styleClass="p-button-text p-button-danger cancel-button"
+        (click)="cancel()"
+      ></p-button>
+    </div>
+    <div class="income-note">
+      <p><strong>Lưu ý:</strong> Thu nhập tối thiểu để đăng ký là <strong>{{  5_000_000 | number: '1.0-0' }} VND</strong></p>
+    </div>
+
+    <!-- BẢNG ĐIỀU KIỆN VAY (THÊM CỘT Thu nhập tối thiểu) -->
+    <div class="loan-conditions">
+      <h3>Điều kiện vay</h3>
+      <div class="table-wrapper">
+        <table class="condition-table">
+          <thead>
+            <tr>
+              <th>Số tiền vay (VND)</th>
+              <th>Thời hạn tối đa (tháng)</th>
+              <th>Lãi suất (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>≤ 50.000.000</td>
+              <td>60</td>
+              <td>5,0 – 10,0 + điều chỉnh</td>
+            </tr>
+            <tr>
+              <td>50.000.001 – 200.000.000</td>
+              <td>120</td>
+              <td>10,0 – 15,0 + điều chỉnh</td>
+            </tr>
+            <tr>
+              <td>> 200.000.000</td>
+              <td>240</td>
+              <td>15,0 – 20,0 + điều chỉnh</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">
+        <small>
+          * Lãi suất chính xác sẽ được tính tự động dựa vào số tiền và thời hạn vay.
+        </small>
+      </p>
+    </div>
+
+    <form [formGroup]="loanForm" (ngSubmit)="onSubmit()" class="apply-loan-form">
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="accountNumber">Tài khoản giải ngân</label>
+          <p-dropdown
+            id="accountNumber"
+            formControlName="accountNumber"
+            [options]="accounts"
+            optionLabel="accountNumber"
+            optionValue="accountNumber"
+            placeholder="Chọn tài khoản"
+            [class.invalid]="
+              loanForm.get('accountNumber')?.touched &&
+              loanForm.get('accountNumber')?.invalid
+            "
+          ></p-dropdown>
+          <small
+            class="p-error"
+            *ngIf="
+              loanForm.get('accountNumber')?.touched &&
+              loanForm.get('accountNumber')?.hasError('required')
+            "
+          >
+            Vui lòng chọn tài khoản.
+          </small>
+        </div>
+
+        <!-- Thu nhập cá nhân -->
+        <div class="form-field">
+          <label for="declaredIncome">Tổng thu nhập cá nhân (VND/tháng)</label>
+          <p-inputNumber
+            id="declaredIncome"
+            formControlName="declaredIncome"
+            placeholder="Nhập thu nhập"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            [class.invalid]="
+              loanForm.get('declaredIncome')?.touched &&
+              loanForm.get('declaredIncome')?.invalid
+            "
+            mode="currency"
+            currency="VND"
+            locale="vi-VN"
+          ></p-inputNumber>
+          <small
+            class="p-error"
+            *ngIf="
+              loanForm.get('declaredIncome')?.touched &&
+              loanForm.get('declaredIncome')?.hasError('required')
+            "
+          >
+            Vui lòng nhập thu nhập.
+          </small>
+          <small
+            class="p-error"
+            *ngIf="
+              loanForm.get('declaredIncome')?.touched &&
+              loanForm.get('declaredIncome')?.hasError('min')
+            "
+          >
+            Thu nhập tối thiểu là {{  5_000_000 | number: '1.0-0' }} VND.
+          </small>
+        </div>
+
+        <!-- Số tiền vay -->
+        <div class="form-field">
+          <label for="amount">Số tiền vay (VND)</label>
+          <p-inputNumber
+            id="amount"
+            formControlName="amount"
+            placeholder="Nhập số tiền"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            [class.invalid]="
+              loanForm.get('amount')?.touched && loanForm.get('amount')?.invalid
+            "
+            mode="currency"
+            currency="VND"
+            locale="vi-VN"
+          ></p-inputNumber>
+          <small
+            class="p-error"
+            *ngIf="
+              loanForm.get('amount')?.touched && loanForm.get('amount')?.hasError('required')
+            "
+          >
+            Vui lòng nhập số tiền.
+          </small>
+          <small
+            class="p-error"
+            *ngIf="
+              loanForm.get('amount')?.touched && loanForm.get('amount')?.hasError('min')
+            "
+          >
+            Số tiền tối thiểu là 1.000.000 VND.
+          </small>
+        </div>
+
+        <!-- Thời gian vay -->
+        <div class="form-field">
+          <label for="termMonths">Thời gian vay (tháng)</label>
+          <p-inputNumber
+            id="termMonths"
+            formControlName="termMonths"
+            placeholder="Nhập số tháng"
+            [min]="1"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            [class.invalid]="
+              loanForm.get('termMonths')?.touched &&
+              loanForm.get('termMonths')?.invalid
+            "
+          ></p-inputNumber>
+          <small
+            class="p-error"
+            *ngIf="
+              loanForm.get('termMonths')?.touched &&
+              loanForm.get('termMonths')?.hasError('required')
+            "
+          >
+            Vui lòng nhập thời gian vay.
+          </small>
+          <small
+            class="p-error"
+            *ngIf="
+              loanForm.get('termMonths')?.touched &&
+              loanForm.get('termMonths')?.hasError('min')
+            "
+          >
+            Thời gian tối thiểu là 1 tháng.
+          </small>
+          <small
+            class="p-error"
+            *ngIf="
+              loanForm.get('termMonths')?.touched &&
+              loanForm.get('termMonths')?.hasError('termTooLong')
+            "
+          >
+            Thời gian vay tối đa dựa trên số tiền:
+            <strong>
+              {{
+                loanForm
+                  .get('termMonths')
+                  ?.getError('termTooLong')
+                  ?.maxTerm
+              }}
+              tháng
+            </strong>
+            .
+          </small>
+        </div>
+
+        <!-- Lãi suất vay (tự tính, readonly) -->
+        <div class="form-field">
+          <label for="interestRate">Lãi suất tự tính (%/năm)</label>
+          <p-inputNumber
+            id="interestRate"
+            formControlName="interestRate"
+            placeholder="Lãi suất"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            [disabled]="true"
+            mode="decimal"
+            suffix="%"
+          ></p-inputNumber>
+          <small class="note-rate">
+            <i>(Lãi suất sẽ được tính tự động)</i>
+          </small>
+        </div>
+      </div>
+
+      <!-- NÚT HÀNH ĐỘNG -->
+      <div class="form-actions">
+        <p-button
+          type="submit"
+          label="Gửi Đăng Ký"
+          icon="pi pi-check"
+          styleClass="p-button-raised p-button-success modern-button"
+          [disabled]="loanForm.invalid || loading"
+          [loading]="loading"
+        ></p-button>
+        <p-button
+          label="Hủy"
+          icon="pi pi-times"
+          styleClass="p-button-raised p-button-secondary modern-button"
+          (click)="cancel()"
+          [disabled]="loading"
+        ></p-button>
+      </div>
+    </form>
+  </p-card>
+</div>

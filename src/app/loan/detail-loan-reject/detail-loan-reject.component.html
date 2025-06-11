@@ -1,0 +1,125 @@
+<div class="container">
+  <p-toast></p-toast>
+  
+  <div *ngIf="loading" class="loading-container">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error && loanDetail" class="loan-detail">
+    <!-- Loan Status Card -->
+    <p-card header="Loan Status" [style]="{'margin-bottom': '1rem'}">
+      <div class="status-info">
+        <p-tag severity="danger" [value]="loanDetail.status ?? undefined"></p-tag>
+        <span class="date-info">Created: {{ formatDate(loanDetail.createdAt) }}</span>
+      </div>
+    </p-card>
+
+    <!-- Rejection Reasons Section -->
+    <p-card *ngIf="loanDetail.rejectionReasons?.length" 
+            header="Rejection Reasons" 
+            [style]="{'margin-bottom': '1rem'}">
+      <div class="rejection-reasons">
+        <div *ngFor="let reason of loanDetail.rejectionReasons" class="rejection-reason">
+          <p>{{ reason.reason }}</p>
+          s<small>Rejected on: {{ formatDate(reason.createdAt) }}</small>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Loan Details Card -->
+    <p-card header="Loan Details" [style]="{'margin-bottom': '1rem'}">
+      <form [formGroup]="loanForm" class="loan-form">
+        <div class="form-field">
+          <label for="amount">Loan Amount (VND)</label>
+          <p-inputNumber 
+            id="amount" 
+            formControlName="amount" 
+            [min]="1000000"
+            [showButtons]="true"
+            mode="currency" 
+            currency="VND" 
+            locale="vi-VN">
+          </p-inputNumber>
+          <small *ngIf="loanForm.get('amount')?.errors?.['required'] && loanForm.get('amount')?.touched" class="error-text">
+            Loan amount is required
+          </small>
+          <small *ngIf="loanForm.get('amount')?.errors?.['min'] && loanForm.get('amount')?.touched" class="error-text">
+            Minimum loan amount is 1,000,000 VND
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="interestRate">Interest Rate (%)</label>
+          <p-inputNumber 
+            id="interestRate" 
+            formControlName="interestRate" 
+            [min]="0"
+            [max]="100"
+            [showButtons]="true"
+            suffix="%">
+          </p-inputNumber>
+          <small *ngIf="loanForm.get('interestRate')?.errors?.['required'] && loanForm.get('interestRate')?.touched" class="error-text">
+            Interest rate is required
+          </small>
+          <small *ngIf="loanForm.get('interestRate')?.errors?.['min'] && loanForm.get('interestRate')?.touched" class="error-text">
+            Interest rate must be at least 0%
+          </small>
+          <small *ngIf="loanForm.get('interestRate')?.errors?.['max'] && loanForm.get('interestRate')?.touched" class="error-text">
+            Interest rate cannot exceed 100%
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="termMonths">Term (months)</label>
+          <p-inputNumber 
+            id="termMonths" 
+            formControlName="termMonths" 
+            [min]="1"
+            [showButtons]="true">
+          </p-inputNumber>
+          <small *ngIf="loanForm.get('termMonths')?.errors?.['required'] && loanForm.get('termMonths')?.touched" class="error-text">
+            Term is required
+          </small>
+          <small *ngIf="loanForm.get('termMonths')?.errors?.['min'] && loanForm.get('termMonths')?.touched" class="error-text">
+            Term must be at least 1 month
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="declaredIncome">Declared Income (VND)</label>
+          <p-inputNumber 
+            id="declaredIncome" 
+            formControlName="declaredIncome" 
+            [min]="0"
+            [showButtons]="true"
+            mode="currency" 
+            currency="VND" 
+            locale="vi-VN">
+          </p-inputNumber>
+          <small *ngIf="loanForm.get('declaredIncome')?.errors?.['required'] && loanForm.get('declaredIncome')?.touched" class="error-text">
+            Declared income is required
+          </small>
+          <small *ngIf="loanForm.get('declaredIncome')?.errors?.['min'] && loanForm.get('declaredIncome')?.touched" class="error-text">
+            Declared income must be at least 0 VND
+          </small>
+        </div>
+      </form>
+    </p-card>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <p-button 
+        label="Update and Resubmit" 
+        icon="pi pi-check" 
+        severity="success" 
+        (onClick)="updateAndResubmitLoan()"
+        [loading]="processingAction"
+        [disabled]="!loanForm.valid">
+      </p-button>
+    </div>
+  </div>
+</div> 

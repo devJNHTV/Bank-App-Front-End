@@ -1,0 +1,37 @@
+::ng-deep .approved-panel .p-panel-header {
+  background-color: #e0f8ec;
+  color: #228B22;
+}
+
+::ng-deep .pending-panel .p-panel-header {
+  background-color: #fff6e5;
+  color: #ff9800;
+}
+
+::ng-deep .rejected-panel .p-panel-header {
+  background-color: #ffe5e5;
+  color: #d32f2f;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.approved {
+  background-color: #a5d6a7;
+  color: #2e7d32;
+}
+
+.pending {
+  background-color: #ffe082;
+  color: #f57c00;
+}
+
+.rejected {
+  background-color: #ef9a9a;
+  color: #c62828;
+}

@@ -3,7 +3,7 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Loan} from '../models/loan.model';
 import { ApiResponseWrapper} from '../models/api-response-wrapper.model';
-
+import { LoanRejectionReason } from '../models/LoanRejectionReason.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -42,8 +42,8 @@ export class LoanService {
   }
 
   // 5. POST: Từ chối khoản vay
-  rejectLoan(loanId: number): Observable<ApiResponseWrapper<Loan>> {
-    return this.http.post<ApiResponseWrapper<Loan>>(`${this.baseUrl}/${loanId}/reject`, { headers: this.getAuthHeaders() });
+  rejectLoan(loanId: number, rejection: LoanRejectionReason): Observable<ApiResponseWrapper<Loan>> {
+    return this.http.post<ApiResponseWrapper<Loan>>(`${this.baseUrl}/${loanId}/reject`, rejection,{ headers: this.getAuthHeaders() });
   }
 
   // 6. GET: Lấy khoản vay theo ID
@@ -63,7 +63,7 @@ export class LoanService {
 
   // 9. GET: Lấy tất cả khoản vay
   getAllLoans(): Observable<ApiResponseWrapper<Loan[]>> {
-    return this.http.get<ApiResponseWrapper<Loan[]>>(`${this.baseUrl}`,{ headers: this.getAuthHeaders() });
+    return this.http.get<ApiResponseWrapper<Loan[]>>(`${this.baseUrl}/getAllloans`,{ headers: this.getAuthHeaders() });
   }
 
   // 10. GET: Lấy tổng số tiền đã vay
@@ -74,5 +74,9 @@ export class LoanService {
   // 11. GET: Lấy tổng số tiền chưa thanh toán
   getTotalOutstanding(): Observable<ApiResponseWrapper<number>> {
     return this.http.get<ApiResponseWrapper<number>>(`${this.baseUrl}/total-outstanding`,{ headers: this.getAuthHeaders() });
+  }
+
+  getCustomerId(): Observable<ApiResponseWrapper<number>> {
+    return this.http.get<ApiResponseWrapper<number>>(`${this.baseUrl}/getCustomerId`,{ headers: this.getAuthHeaders() });
   }
 }

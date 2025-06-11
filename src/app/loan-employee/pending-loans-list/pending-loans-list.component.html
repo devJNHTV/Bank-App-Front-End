@@ -1,0 +1,50 @@
+<div class="loan-detail-view-container">
+    <div class="header">
+      <h1>Pending Loan Applications</h1>
+      <div class="refresh-button" (click)="loadPendingLoans()">
+        <i class="fas fa-sync-alt"></i> Refresh
+      </div>
+    </div>
+  
+    <div class="loading-spinner" *ngIf="loading">
+      <div class="spinner"></div>
+    </div>
+  
+    <div class="error-message" *ngIf="error">
+      {{ error }}
+    </div>
+  
+    <div class="no-loans-message" *ngIf="!loading && pendingLoans.length === 0">
+      No pending loan applications found.
+    </div>
+  
+    <table class="loans-table" *ngIf="!loading && pendingLoans.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Account #</th>
+          <th>Amount</th>
+          <th>Interest Rate</th>
+          <th>Term (mo)</th>
+          <th>Created</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let loan of pendingLoans">
+          <td>{{ loan.loanId }}</td>
+          <td>{{ loan.accountNumber }}</td>
+          <td>{{ formatCurrency(loan.amount) }}</td>
+          <td>{{ loan.interestRate }}%</td>
+          <td>{{ loan.termMonths }}</td>
+          <td>{{ formatDate(loan.createdAt) }}</td>
+          <td>
+            <button class="details-button" (click)="goToLoanDetail(loan.loanId!)">
+              View Details
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

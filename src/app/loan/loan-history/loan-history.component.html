@@ -1,0 +1,147 @@
+<p-toast></p-toast>
+
+<div class="container">
+  <p-card header="Loan Repayment History" styleClass="shadow-2">
+    <div class="flex flex-column gap-4">
+      <!-- Date Filter Section -->
+      <div class="flex flex-column md:flex-row gap-3 align-items-center">
+        <span class="p-input-icon-right">
+          <i class="pi pi-calendar"></i>
+          <p-calendar
+            [(ngModel)]="dateRange"
+            selectionMode="range"
+            [showButtonBar]="true"
+            [readonlyInput]="true"
+            placeholder="Select date range"
+            styleClass="w-full md:w-25rem"
+          ></p-calendar>
+        </span>
+        <div class="flex gap-2">
+          <p-button
+            label="Apply Filter"
+            icon="pi pi-filter"
+            (onClick)="applyDateFilter()"
+            [disabled]="!dateRange || dateRange.length !== 2"
+          ></p-button>
+          <p-button
+            label="Clear"
+            icon="pi pi-times"
+            severity="secondary"
+            (onClick)="clearDateFilter()"
+            [disabled]="!dateRange || dateRange.length === 0"
+          ></p-button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <ng-container *ngIf="loading">
+        <div class="flex justify-content-center">
+          <p-progressSpinner></p-progressSpinner>
+        </div>
+      </ng-container>
+
+      <!-- Error State -->
+      <ng-container *ngIf="!loading && error">
+        <div class="flex justify-content-center">
+          <span class="text-red-500">{{ error }}</span>
+        </div>
+      </ng-container>
+
+      <!-- Repayment History Table -->
+      <ng-container *ngIf="!loading && !error">
+        <p-table
+          [value]="filteredRepayments"
+          [paginator]="true"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          styleClass="p-datatable-sm"
+          [expandedRowKeys]="expandedRows"
+          [rowHover]="true"
+          dataKey="repaymentId"
+        >
+          <!-- Basic Info Columns -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem"></th>
+              <th>ID</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Total Amount</th>
+              <th>Paid Amount</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-repayment>
+            <tr>
+              <td>
+                <button
+                  type="button"
+                  pButton
+                  pRipple
+                  [pRowToggler]="repayment"
+                  class="p-button-text p-button-rounded p-button-plain"
+                  [icon]="expandedRows[repayment.repaymentId] ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                ></button>
+              </td>
+              <td>{{ repayment.repaymentId }}</td>
+              <td>{{ repayment.dueDate | date:'mediumDate' }}</td>
+              <td>
+                <!-- <span
+                  [pBadge]="repayment.status"
+                  [severity]="getStatusSeverity(repayment.status)"
+                  styleClass="p-badge-sm"
+                ></span> -->
+                <span
+                pBadge="New" 
+                severity="success"
+                styleClass="p-badge-sm"
+              ></span>
+              </td>
+              <td>{{ calculateTotalAmount(repayment) | currency:'VND':'symbol-narrow':'1.0-0' }}</td>
+              <td>{{ repayment.paidAmount | currency:'VND':'symbol-narrow':'1.0-0' }}</td>
+            </tr>
+          </ng-template>
+
+          <!-- Expanded Row Template -->
+          <ng-template pTemplate="rowexpansion" let-repayment>
+            <tr>
+              <td colspan="6">
+                <div class="p-3">
+                  <div class="grid">
+                    <div class="col-12 md:col-6">
+                      <div class="flex flex-column gap-2">
+                        <div class="flex justify-content-between">
+                          <span class="font-semibold">Principal Amount:</span>
+                          <span>{{ repayment.principal | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+                        </div>
+                        <div class="flex justify-content-between">
+                          <span class="font-semibold">Interest Amount:</span>
+                          <span>{{ repayment.interest | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+                        </div>
+                        <div class="flex justify-content-between">
+                          <span class="font-semibold">Remaining Amount:</span>
+                          <span>{{ calculateRemainingAmount(repayment) | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+
+          <!-- Empty Message Template -->
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" class="text-center p-4">
+                No repayment records found
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </ng-container>
+    </div>
+  </p-card>
+</div> 

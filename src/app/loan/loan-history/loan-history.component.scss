@@ -1,0 +1,46 @@
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+:host ::ng-deep {
+  .p-card {
+    .p-card-body {
+      padding: 2rem;
+    }
+  }
+
+  .p-datatable {
+    .p-datatable-thead > tr > th {
+      background: var(--surface-section);
+      color: var(--text-color);
+      font-weight: 600;
+    }
+
+    .p-datatable-tbody > tr {
+      transition: background-color 0.2s;
+
+      &:hover {
+        background: var(--surface-hover);
+      }
+    }
+
+    .p-datatable-row-expansion {
+      background: var(--surface-ground);
+    }
+  }
+
+  .p-badge {
+    &.p-badge-sm {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  .p-calendar {
+    .p-inputtext {
+      width: 100%;
+    }
+  }
+} 

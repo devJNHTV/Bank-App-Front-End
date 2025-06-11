@@ -1,0 +1,69 @@
+<div class="current-repayment-container">
+  <p-toast></p-toast>
+  
+  <div *ngIf="loading" class="loading-container">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="repayment-content">
+    <p-card header="Current Repayment Schedule" [style]="{'margin-bottom': '1rem'}">
+      <div *ngIf="currentRepayment" class="repayment-info">
+        <div class="info-row">
+          <span class="label">Due Date:</span>
+          <span class="value">{{currentRepayment.dueDate | date:'mediumDate'}}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Principal Amount:</span>
+          <span class="value">{{currentRepayment.principal | currency}}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Interest Amount:</span>
+          <span class="value">{{currentRepayment.interest | currency}}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Total Amount:</span>
+          <span class="value">{{calculateTotalAmount() | currency}}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Paid Amount:</span>
+          <span class="value">{{currentRepayment.paidAmount | currency}}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Remaining Amount:</span>
+          <span class="value">{{calculateRemainingAmount() | currency}}</span>
+        </div>
+        
+        <div class="info-row">
+          <span class="label">Status:</span>
+          <p-tag 
+            [value]="currentRepayment.status"
+            [severity]="getStatusSeverity(currentRepayment.status)">
+          </p-tag>
+        </div>
+
+        <div class="payment-actions">
+          <p-button 
+            label="Make Payment" 
+            icon="pi pi-credit-card"
+            (onClick)="handlePayment()"
+            [disabled]="currentRepayment.status === 'PAID'"
+            styleClass="p-button-success">
+          </p-button>
+        </div>
+      </div>
+
+      <div *ngIf="!currentRepayment" class="no-data">
+        <p>No current repayment schedule available.</p>
+      </div>
+    </p-card>
+  </div>
+</div> 

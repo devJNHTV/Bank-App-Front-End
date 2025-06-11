@@ -1,0 +1,67 @@
+<div class="current-repayment-container">
+  <p-toast></p-toast>
+  
+  <div *ngIf="loading" class="loading-container">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="repayment-content">
+    <p-card header="Chi tiết kỳ trả nợ hiện tại" [style]="{'margin-bottom': '1rem'}">
+      <div *ngIf="currentRepayment; else noData" class="repayment-info">
+        
+        <div class="info-row">
+          <span class="label">Mã kỳ trả:</span>
+          <span class="value">{{ currentRepayment.repaymentId }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Ngày đến hạn:</span>
+          <span class="value">{{ currentRepayment.dueDate | date:'dd/MM/yyyy' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Số gốc:</span>
+          <span class="value">{{ currentRepayment.principal | currency:'VND' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Lãi:</span>
+          <span class="value">{{ currentRepayment.interest | currency:'VND' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Đã thanh toán:</span>
+          <span class="value">{{ currentRepayment.paidAmount | currency:'VND' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Trạng thái:</span>
+          <p-tag 
+            [value]="currentRepayment.status" 
+            [severity]="getStatusSeverity(currentRepayment.status) ? undefined : 'info' ">
+          </p-tag>
+        </div>
+
+        <div class="payment-actions">
+          <p-button 
+            label="Thanh toán" 
+            icon="pi pi-credit-card"
+            (onClick)="handlePayment()"
+            [disabled]="currentRepayment.status === 'PAID'"
+            styleClass="p-button-success">
+          </p-button>
+        </div>
+      </div>
+
+      <ng-template #noData>
+        <div class="no-data">
+          <p>Chưa có lịch trả nợ nào đang chờ.</p>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</div>

@@ -55,22 +55,17 @@ export class RepaymentService {
   }
   
   // 7. GET: Lấy lịch sử repayments của một khoản vay
-  getRepaymentHistory(loanId: number): Observable<ApiResponseWrapper<Repayment[]>> {
-    return this.http.get<ApiResponseWrapper<Repayment[]>>(`${this.apiUrl}/history/${loanId}`,{ headers: this.getAuthHeaders() });
+  getRepaymentHistory(): Observable<ApiResponseWrapper<Repayment[]>> {
+    return this.http.get<ApiResponseWrapper<Repayment[]>>(`${this.apiUrl}/history`,{ headers: this.getAuthHeaders() });
   }
 
   // 8. GET: Lấy repayment hiện tại của một khoản vay
-  getCurrentRepayment(loanId: number): Observable<ApiResponseWrapper<Repayment>> {
-    return this.http.get<ApiResponseWrapper<Repayment>>(`${this.apiUrl}/current/${loanId}`,{ headers: this.getAuthHeaders() });
+  getCurrentRepayment(): Observable<ApiResponseWrapper<Repayment>> {
+    return this.http.get<ApiResponseWrapper<Repayment>>(`${this.apiUrl}/current`,{ headers: this.getAuthHeaders() });
   }
 
   // 9. DELETE: Xóa tất cả repayments của một khoản vay
   deleteRepaymentsByLoanId(loanId: number): Observable<ApiResponseWrapper<void>> {
     return this.http.delete<ApiResponseWrapper<void>>(`${this.apiUrl}/loan/${loanId}`,{ headers: this.getAuthHeaders() });
-  }
-
-  // 10. GET: Lấy danh sách các repayment hiện tại của một khoản vay
-  getCurrentRepayments(loanId: number): Observable<ApiResponseWrapper<Repayment[]>> {
-    return this.http.get<ApiResponseWrapper<Repayment[]>>(`${this.apiUrl}/currents/${loanId}`,{ headers: this.getAuthHeaders() });
   }
 }

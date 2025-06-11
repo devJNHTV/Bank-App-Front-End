@@ -1,0 +1,83 @@
+.current-repayment-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.error-message {
+  background: var(--p-red-50);
+  color: var(--p-red-700);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.repayment-content {
+  :host ::ng-deep {
+    .p-card {
+      .p-card-header {
+        padding: 1.5rem;
+        background: var(--p-surface-50);
+        border-bottom: 1px solid var(--p-surface-200);
+      }
+
+      .p-card-body {
+        padding: 1.5rem;
+      }
+    }
+  }
+}
+
+.repayment-info {
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--p-surface-200);
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+
+    .label {
+      color: var(--p-text-color-secondary);
+      font-weight: 500;
+    }
+
+    .value {
+      color: var(--p-text-color);
+      font-weight: 600;
+    }
+  }
+}
+
+.payment-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+
+  :host ::ng-deep {
+    .p-button {
+      min-width: 200px;
+      
+      .p-button-icon {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  color: var(--p-text-color-secondary);
+} 

@@ -1,0 +1,87 @@
+.container {
+  padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.error-message {
+  color: var(--red-500);
+  padding: 1rem;
+  background-color: var(--red-50);
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.loan-detail {
+  .status-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    
+    .date-info {
+      color: var(--text-color-secondary);
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.rejection-reasons {
+  .rejection-reason {
+    padding: 1rem;
+    border-left: 4px solid var(--red-500);
+    background-color: var(--red-50);
+    margin-bottom: 1rem;
+    border-radius: 0 4px 4px 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    p {
+      margin: 0.5rem 0;
+      color: var(--text-color);
+    }
+
+    small {
+      color: var(--text-color-secondary);
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.loan-form {
+  .form-field {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-color-secondary);
+      font-weight: 500;
+    }
+
+    p-inputNumber {
+      width: 100%;
+    }
+
+    .error-text {
+      color: var(--red-500);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: block;
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+} 

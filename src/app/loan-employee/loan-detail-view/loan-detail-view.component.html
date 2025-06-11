@@ -1,0 +1,131 @@
+<div class="container">
+  <p-toast></p-toast>
+  
+  <div *ngIf="loading" class="loading-container">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error && loanDetail" class="loan-detail">
+    <p-card header="Loan Status" [style]="{'margin-bottom': '1rem'}">
+      <div class="status-info">
+
+        <span class="date-info">Created: {{ formatDate(loanDetail.createdAt) }}</span>
+        <span *ngIf="loanDetail.approvedAt" class="date-info">Approved: {{ formatDate(loanDetail.approvedAt) }}</span>
+      </div>
+    </p-card>
+
+
+    <!-- Loan Details Card -->
+    <p-card header="Loan Details" [style]="{'margin-bottom': '1rem'}">
+      <div class="loan-info">
+        <div class="info-row">
+          <span class="label">Amount:</span>
+          <span class="value">{{ formatCurrency(loanDetail.amount) }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Interest Rate:</span>
+          <span class="value">{{ loanDetail.interestRate }}%</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Term:</span>
+          <span class="value">{{ loanDetail.termMonths }} months</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Declared Income:</span>
+          <span class="value">{{ formatCurrency(loanDetail.declaredIncome) }}</span>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Customer Info Card -->
+    <p-card *ngIf="customerInfo" header="Customer Information" [style]="{'margin-bottom': '1rem'}">
+      <div class="customer-info">
+        <div class="info-row">
+          <span class="label">CIF Code:</span>
+          <span class="value">{{ customerInfo.cifCode }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Full Name:</span>
+          <span class="value">{{ customerInfo.fullName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Email:</span>
+          <span class="value">{{ customerInfo.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Phone:</span>
+          <span class="value">{{ customerInfo.phoneNumber }}</span>
+        </div>
+      </div>
+    </p-card>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <!-- For rejected loans -->
+      <ng-container *ngIf="loanDetail.status === 'REJECTED'">
+        <p-button 
+          label="Edit and Resubmit" 
+          icon="pi pi-pencil" 
+          (onClick)="openEditDialog()"
+          [loading]="processingAction">
+        </p-button>
+      </ng-container>
+
+      <!-- For pending loans (employee view) -->
+      <ng-container *ngIf="loanDetail.status === 'PENDING'">
+        <p-button 
+          label="Approve" 
+          icon="pi pi-check" 
+          severity="success" 
+          (onClick)="approveLoan()"
+          [loading]="processingAction">
+        </p-button>
+        <p-button 
+          label="Reject" 
+          icon="pi pi-times" 
+          severity="danger" 
+          (onClick)="openRejectDialog()"
+          [loading]="processingAction">
+        </p-button>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Reject Dialog -->
+  <p-dialog 
+    header="Reject Loan" 
+    [(visible)]="showRejectDialog" 
+    [style]="{width: '450px'}"
+    [modal]="true">
+    <div class="reject-dialog-content">
+      <p>Please provide a reason for rejecting this loan:</p>
+      <textarea 
+        pInputTextarea 
+        [rows]="5" 
+        [formControl]="rejectionReasonControl"
+        placeholder="Enter rejection reason...">
+      </textarea>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button 
+        label="Cancel" 
+        icon="pi pi-times" 
+        (onClick)="closeRejectDialog()" 
+        [style]="{'margin-right': '.5em'}">
+      </p-button>
+      <p-button 
+        label="Reject" 
+        icon="pi pi-check" 
+        severity="danger" 
+        (onClick)="rejectLoan()"
+        [loading]="processingAction">
+      </p-button>
+    </ng-template>
+  </p-dialog>
+
+
+</div> 
