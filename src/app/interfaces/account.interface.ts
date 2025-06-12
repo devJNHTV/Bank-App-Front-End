@@ -20,6 +20,15 @@ export interface Transaction {
     type: string;
     currency: string;
     referenceCode: string;
-
-   
+}
+export interface AccountSavings {
+    accountNumber: string;
+    cifCode: string;
+    accountType: string;
+    balance: number;
+    status: string;
+    openedDate: Date;
+    interestRate: number;
+    initialDeposit: number;
+    termValueMonths: number;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Account, Term, Transaction } from '../../interfaces/account.interface';
+import { Account, AccountSavings, Term, Transaction } from '../../interfaces/account.interface';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -91,11 +91,37 @@ export class AccountService {
       }
     }); 
   }
-  getTransactions(accountNumber: string): Observable<any> {
-    return this.http.get<Transaction[]>(`${this.apiUrlTransaction}/account/${accountNumber}`, {
+  getTransactions(accountNumber: string, page: number = 0, size: number = 2): Observable<any> {
+    console.log('page', page);
+    console.log('size', size);
+    return this.http.get<Transaction[]>(`${this.apiUrlTransaction}/account/${accountNumber}?page=${page}&size=${size}`, {
       headers: {
         'Authorization': `Bearer ${this.token}`
       }
     });
   }
-}     
+  getSavingsAccounts(): Observable<AccountSavings[]> {
+    return this.http.get<AccountSavings[]>(`${this.apiUrl}/getAllSavingAccount`, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+  } 
+  createWithdrawTransaction(formData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/create-request-withdraw-fromSaving`, formData, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+  } 
+  verifyWithdrawOtp(otpCode: string, savingRequestID: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/confirm-otp-withdraw-saving`, {
+      otpCode: otpCode,
+      savingRequestID: savingRequestID
+    }, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+  }
+  }     

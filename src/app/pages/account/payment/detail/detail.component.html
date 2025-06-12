@@ -49,7 +49,7 @@
               <div class="value-with-action">
                 <span class="value masked" id="accountNumber">{{ account.accountNumber }}</span>
                 <p-button icon="pi pi-copy" styleClass="p-button-text p-button-sm" 
-                         pTooltip="Sao chép"></p-button>
+                         pTooltip="Sao chép" (onClick)="copyAccountNumber()"></p-button>
               </div>
             </div>
             
@@ -153,22 +153,7 @@
           <p-dropdown placeholder="Tất cả loại GD" styleClass="type-filter"></p-dropdown>
         </div>
 
-        <div class="transaction-summary">
-          <div class="summary-item income">
-            <i class="pi pi-arrow-down"></i>
-            <div>
-              <span class="label">Tiền vào</span>
-              <span class="amount">+150,000,000 VNĐ</span>
-            </div>
-          </div>
-          <div class="summary-item outcome">
-            <i class="pi pi-arrow-up"></i>
-            <div>
-              <span class="label">Tiền ra</span>
-              <span class="amount">-45,000,000 VNĐ</span>
-            </div>
-          </div>
-        </div>
+      
 
         <p-table [value]="transactions" [tableStyle]="{'min-width': '100%'}" styleClass="transaction-table">
           <ng-template pTemplate="header">
@@ -176,7 +161,7 @@
               <th>Ngày giờ</th>
               <th>Mô tả giao dịch</th>
               <th>Số tiền</th>
-              <th>Số dư</th>
+              <!-- <th>Số dư</th> -->
               <th>Trạng thái</th>
               <th></th>
             </tr>
@@ -196,17 +181,17 @@
                 </div>
               </td>
               <td>
-                <span class="amount" [ngClass]="transaction.type === 'DEPOSIT' ? 'positive' : 'negative'">
-                  {{ transaction.type === 'DEPOSIT' ? '+' : '-' }}{{ transaction.amount }}
+                <span class="amount" [ngClass]="transaction.toAccountNumber === account.accountNumber ? 'positive' : 'negative'">
+                  {{ transaction.toAccountNumber === account.accountNumber ? '+ ' : '- ' }}{{ formatCurrency(transaction.amount) }}
                 </span>
               </td>
-              <td>
+              <!-- <td>
                 <span class="balance">{{ formatCurrency(transaction.balance) }}</span>
-              </td>
+              </td> -->
               <td>
                 <span class="status success">
                   <i class="pi pi-check-circle"></i>
-                  {{ transaction.status }}
+                  {{ transaction.status ? 'Thành công' : 'Thất bại' }}
                 </span>
               </td>
               <td>
@@ -216,6 +201,18 @@
             </tr>
           </ng-template>
         </p-table>
+        
+        <!-- Pagination -->
+        <div class="pagination-section">
+          <p-paginator 
+            [first]="first" 
+            [rows]="rows" 
+            [totalRecords]="totalRecords" 
+            (onPageChange)="onPageChange($event)"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Hiển thị {first} - {last} của {totalRecords} giao dịch">
+          </p-paginator>
+        </div>
       </div>
 
       <div class="loans-section">

@@ -188,22 +188,22 @@
               }
             }
 
-            .account-actions {
-              display: flex;
-              gap: 8px;
-              flex-wrap: wrap;
+                      .account-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
 
-              :host ::ng-deep .p-button {
-                flex: 1;
-                min-width: 100px;
-                justify-content: center;
+            .p-button {
+              flex: 1;
+              min-width: 100px;
+              justify-content: center;
 
-                @media (max-width: 480px) {
-                  font-size: 0.875rem;
-                  padding: 8px 12px;
-                }
+              @media (max-width: 480px) {
+                font-size: 0.875rem;
+                padding: 8px 12px;
               }
             }
+          }
           }
         }
       }
@@ -521,4 +521,347 @@
       }
     }
   }
+  
+// Navigation styles
+.savings-container {
+  padding: 1rem;
+}
+
+.savings-navigation {
+  margin-bottom: 3rem;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.nav-item {
+  background: linear-gradient(135deg, #659fceb5 0%, #0056b3 100%);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.nav-item:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.nav-item:hover:before {
+  left: 100%;
+}
+
+.nav-icon {
+  margin-bottom: 1rem;
+}
+
+.nav-icon i {
+  font-size: 2.5rem;
+  display: block;
+}
+
+.nav-label {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+// Page header styles
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.page-header h2 {
+  margin: 0;
+}
+
+// Savings accounts section
+.savings-accounts-section {
+  margin-top: 2rem;
+
+  .savings-accounts-container {
+    .accounts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .account-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .p-card {
+          border-radius: 12px;
+          border: 1px solid #e9ecef;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+
+          .p-card-header {
+            padding: 0;
+          }
+
+          .p-card-body {
+            padding: 0;
+          }
+
+          .p-card-content {
+            padding: 0;
+          }
+        }
+
+        .card-header {
+          background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+          color: white;
+          padding: 20px 24px;
+          position: relative;
+          overflow: hidden;
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50px;
+            width: 100px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: skewX(-20deg);
+          }
+
+          .account-info {
+            .account-number {
+              font-size: 1.25rem;
+              font-weight: 700;
+              margin: 0;
+              font-family: 'Courier New', monospace;
+            }
+
+            .account-type {
+              margin: 4px 0 0 0;
+              opacity: 0.9;
+              font-size: 0.9rem;
+            }
+          }
+
+          .account-status {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+
+            .p-tag {
+              font-size: 0.75rem;
+              padding: 4px 8px;
+            }
+          }
+        }
+
+        .card-content {
+          padding: 24px;
+
+          .balance-section {
+            margin-bottom: 20px;
+            text-align: center;
+
+            .balance-label {
+              display: block;
+              color: #6c757d;
+              font-size: 0.9rem;
+              margin-bottom: 8px;
+              font-weight: 500;
+            }
+
+            .balance-amount {
+              font-size: 2rem;
+              font-weight: 700;
+              font-family: 'Courier New', monospace;
+
+              &.balance-success {
+                color: #28a745;
+              }
+
+              &.balance-warn {
+                color: #ffc107;
+              }
+
+              &.balance-danger {
+                color: #dc3545;
+              }
+            }
+          }
+
+          .savings-info {
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #28a745;
+
+            .info-row {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 8px;
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+
+              .label {
+                font-size: 0.9rem;
+                color: #6c757d;
+                font-weight: 500;
+              }
+
+              .value {
+                font-weight: 600;
+                color: #2c3e50;
+                font-family: 'Courier New', monospace;
+
+                &.rate {
+                  color: #28a745;
+                }
+              }
+            }
+          }
+
+          .account-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            :host ::ng-deep .p-button {
+              flex: 1;
+              min-width: 100px;
+              justify-content: center;
+
+              @media (max-width: 480px) {
+                font-size: 0.875rem;
+                padding: 8px 12px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 64px 24px;
+      color: #6c757d;
+
+      i {
+        display: block;
+        font-size: 4rem;
+        margin-bottom: 16px;
+        color: #28a745;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        margin: 0 0 12px 0;
+        color: #495057;
+      }
+
+      p {
+        font-size: 1rem;
+        margin: 0 0 24px 0;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+}
+
+// Placeholder content styles
+.placeholder-container {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.placeholder-content {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.placeholder-content i {
+  font-size: 4rem;
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+}
+
+.placeholder-content h3 {
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.placeholder-content p {
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .nav-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .nav-item {
+    padding: 1.5rem 1rem;
+    min-height: 120px;
+  }
+  
+  .nav-icon i {
+    font-size: 2rem;
+  }
+  
+  .nav-label {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-grid {
+    grid-template-columns: 1fr;
+  }
+}
   

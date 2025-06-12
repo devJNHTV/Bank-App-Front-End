@@ -11,6 +11,7 @@ import { TableModule } from 'primeng/table';
 import { MenubarModule } from 'primeng/menubar';                         
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';  
+import { PaginatorModule } from 'primeng/paginator';
 import { Account } from '../../../../interfaces/account.interface';
 import { AccountService } from '../../../../services/account/account.service';
 import { Customer } from '../../../../interfaces/customer.inteface';
@@ -20,7 +21,7 @@ import { Transaction } from '../../../../interfaces/account.interface';
   @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardModule, ButtonModule, InputTextModule, DropdownModule, TableModule, MenubarModule, TagModule, TooltipModule],
+  imports: [CommonModule, FormsModule, CardModule, ButtonModule, InputTextModule, DropdownModule, TableModule, MenubarModule, TagModule, TooltipModule, PaginatorModule],
     templateUrl: './detail.component.html',
   styleUrl: './detail.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -47,6 +48,11 @@ export class DetailComponent {
   transactions : Transaction[] = [];
   accountNumber: string = '';
 
+  // Pagination properties
+  first: number = 0;
+  rows: number = 8;
+  totalRecords: number = 0;
+  currentPage: number = 0;
 
   // selectedTimeFilter = this.timeFilters[0];
 
@@ -66,11 +72,25 @@ export class DetailComponent {
       this.customer = res.data;
       console.log(this.customer);
     });
-    this.accountService.getTransactions(this.accountNumber).subscribe((res : any) => {
-      console.log(res.result.content);
+    this.loadTransactions();
+  }
+
+  loadTransactions() {
+    this.accountService.getTransactions(this.accountNumber, this.currentPage, this.rows).subscribe((res : any) => {
+      console.log('Transaction response:', res.result);
       this.transactions = res.result.content;
-      console.log(this.transactions);
+      //tong giao dich
+      this.totalRecords = res.result.totalElements;
+      console.log('Transactions:', this.transactions);
+      console.log('Total records:', this.totalRecords);
     });
+  }
+
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+    this.currentPage = event.page;
+    this.loadTransactions();
   }
   transfer() {
     this.router.navigate(['/transfer']);
@@ -119,4 +139,8 @@ export class DetailComponent {
   formatTime(date: Date): string {
     return date.toLocaleTimeString('vi-VN');
   }
+  copyAccountNumber() {
+    navigator.clipboard.writeText(this.accountNumber);
+  }
+  
 }

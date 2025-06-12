@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -8,11 +8,16 @@ import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { StepperComponent } from '../../components/stepper/stepper.component';
-import { Account, Term } from '../../interfaces/account.interface';
+import { Account, AccountSavings, Term } from '../../interfaces/account.interface';
 import { AccountService } from '../../services/account/account.service';
 import { Step1FormComponent } from './steps/step1-form.component';
 import { Step2ConfirmationComponent } from './steps/step2-confirmation.component';
 import { Step3OtpComponent } from './steps/step3-otp.component';
+import { WithdrawStep1Component } from './steps/withdraw-step1.component';
+import { WithdrawStep2Component } from './steps/withdraw-step2.component';
+import { WithdrawStep3Component } from './steps/withdraw-step3.component';
+import { MessageService } from 'primeng/api';
+import { Customer } from '../../interfaces/customer.inteface';
 
 @Component({
   selector: 'app-about',
@@ -28,25 +33,53 @@ import { Step3OtpComponent } from './steps/step3-otp.component';
     StepperComponent,
     Step1FormComponent,
     Step2ConfirmationComponent,
-    Step3OtpComponent
+    Step3OtpComponent,
+    WithdrawStep1Component,
+    WithdrawStep2Component,
+    WithdrawStep3Component
   ],
-  templateUrl: './savings.component.html',
-  styleUrl: './savings.component.scss'
+  templateUrl:  './savings.component.html',
+  styleUrl: './savings.component.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class SavingsComponent {
   @ViewChild(Step3OtpComponent) step3Component!: Step3OtpComponent;
+  @ViewChild(WithdrawStep3Component) withdrawStep3Component!: WithdrawStep3Component;
   
+  // Navigation
+  currentView: string = 'main';
+  
+  // Create account flow
   currentStep: number = 1;
-  accounts: Account[] = [];
-  savingsAccounts: Account[] = [];
-  terms: Term[] = [];
   formData: any = null;
   transactionId: string = '';
-  loading: boolean = false;
   
+  // Withdraw flow
+  withdrawStep: number = 1;
+  withdrawFormData: any = null;
+  withdrawTransactionId: string = '';
+  
+  // Data
+  accounts: Account[] = [];
+  savingsAccounts: AccountSavings[] = [];
+  terms: Term[] = [];
+  loading: boolean = false;
+  customer: Customer = {
+    cifCode: '',
+    fullName: '',
+    address: '',
+    email: '',
+    dateOfBirth: new Date(),
+    phoneNumber: '',
+    status: '',
+    identityNumber: ''
+  } 
   constructor(
     private accountService: AccountService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -57,11 +90,10 @@ export class SavingsComponent {
     this.accountService.getAccounts().subscribe((res: any) => {
       this.accounts = res.data;
       // Giả lập tài khoản tiết kiệm (trong thực tế sẽ có API riêng)
-      this.savingsAccounts = res.data?.map((acc: Account) => ({
-        ...acc,
-        accountNumber: acc.accountNumber.replace(/^(\d{3})/, '$1-TK'),
-        balance: acc.balance * 0.8 // Giả lập số dư tiết kiệm
-      })) || [];
+      this.accountService.getSavingsAccounts().subscribe((res: any) => {
+        this.savingsAccounts = res.data;
+        console.log(this.savingsAccounts);
+      });
       console.log(this.accounts);
     });
     
@@ -69,6 +101,53 @@ export class SavingsComponent {
       this.terms = res.data;
       console.log(this.terms);
     });
+  }
+
+  // Navigation methods
+  setCurrentView(view: string): void {
+    this.currentView = view;
+    if (view === 'main') {
+      this.resetSteps();
+    }
+  }
+
+  getViewTitle(view: string): string {
+    const titles: {[key: string]: string} = {
+      'deposit': 'Nộp thêm vào tiết kiệm',
+      'close-account': 'Tất toán tiết kiệm',
+      'auto-savings': 'Tiết kiệm tự động',
+      'cancel-auto': 'Hủy tiết kiệm tự động'
+    };
+    return titles[view] || '';
+  }
+
+  resetSteps(): void {
+    this.currentStep = 1;
+    this.formData = null;
+    this.transactionId = '';
+    this.withdrawStep = 1;
+    this.withdrawFormData = null;
+    this.withdrawTransactionId = '';
+  }
+
+  resetAndGoHome(): void {
+    this.resetSteps();
+    this.setCurrentView('main');
+    this.loadData(); // Reload data to show updated accounts
+  }
+
+  resetWithdrawAndGoHome(): void {
+    this.resetSteps();
+    this.setCurrentView('main');
+    this.loadData(); // Reload data to show updated accounts
+  }
+
+  // Withdraw from account card button
+  withdrawFromAccount(account: AccountSavings): void {
+    this.setCurrentView('withdraw');
+    this.withdrawFormData = {
+      selectedSavingsAccount: account.accountNumber
+    };
   }
 
   // Handle form submission from Step 1
@@ -116,15 +195,15 @@ export class SavingsComponent {
     this.accountService.verifyOtp(data.otpCode, data.savingRequestID).subscribe({
       next: (res: any) => {
         console.log('OTP verification response:', res);
-        
-        if (res.data && res.data.success) {
-          // Chuyển sang step 4 (Success)
-          this.currentStep = 4;
-        } else {
-          // Hiển thị lỗi OTP không đúng
-          let errorMessage = res.message || 'Mã OTP không đúng. Vui lòng thử lại.';
-          this.step3Component.showError(errorMessage);
-        }
+        this.currentStep = 4;
+        // if (res.data && res.data.success) {
+        //   // Chuyển sang step 4 (Success)
+        //   this.currentStep = 4;
+        // } else {
+        //   // Hiển thị lỗi OTP không đúng
+        //   let errorMessage = res.message || 'Mã OTP không đúng. Vui lòng thử lại.';
+        //   this.step3Component.showError(errorMessage);
+        // }
       },
       error: (error) => {
         console.error('Lỗi khi xác thực OTP:', error);
@@ -154,6 +233,80 @@ export class SavingsComponent {
         this.step3Component.showError('Có lỗi xảy ra khi gửi lại OTP.');
       }
     });
+  }
+
+  // Withdraw flow methods
+  onWithdrawStep1Submit(formData: any): void {
+    console.log('Withdraw Step 1 form submitted:', formData);
+    this.withdrawFormData = formData;
+    this.withdrawStep = 2;
+  }
+
+  onWithdrawStep2Confirm(formData: any): void {
+    console.log('Withdraw Step 2 confirmed, final data:', formData);
+    this.withdrawFormData = formData;
+    // TODO: Call API to create withdraw transaction
+    this.accountService.createWithdrawTransaction(this.withdrawFormData).subscribe({
+      next: (res: any) => {
+        console.log('Withdraw Step 2 API response:', res.data);
+        this.withdrawTransactionId = res.data.id;
+        this.withdrawStep = 3;
+      },
+      error: (error) => {
+        console.error('Lỗi khi tạo giao dịch rút tiền:', error);
+      }
+    });
+  }
+
+  onWithdrawStep2Back(): void {
+    this.withdrawStep = 1;
+  }
+
+  onWithdrawOtpSubmit(data: {transactionId: string, otpCode: string}): void {
+    console.log('Withdraw OTP submitted:', data);
+    // TODO: Call API to verify withdraw OTP
+    this.accountService.verifyWithdrawOtp(data.otpCode, data.transactionId).subscribe({
+      next: (res: any) => {
+        console.log('Withdraw OTP verification response:', res);
+        this.withdrawStep = 4;
+      },
+      error: (error) => {
+        this.withdrawStep3Component.isLoading = false;
+        console.error('Lỗi khi xác thực OTP rút tiền:', error);
+        let errorMessage = 'Có lỗi khi xác thực OTP rút tiền. Vui lòng thử lại.';
+          if(error.error.status === 1023) {
+            errorMessage = 'Mã OTP đã hết hạn. Vui lòng thử lại.';
+          }
+          if(error.error.status === 1024) {
+            errorMessage = 'Bạn đã nhập sai OTP quá nhiều lần. Vui lòng thử lại.';
+            this.currentStep = 1;
+          }
+          if(error.error.status === 1025) {
+            errorMessage = 'Mã OTP không đúng. Vui lòng thử lại.';
+          }
+         this.withdrawStep3Component.showError(errorMessage);
+
+      }
+    });
+
+  }
+
+  onWithdrawStep3Back(): void {
+    this.withdrawStep = 2;
+  }
+
+  onWithdrawResendOtp(transactionId: string): void {
+    console.log('Resending withdraw OTP for:', transactionId);
+    
+      // TODO: Call API to resend withdraw OTP
+      this.accountService.resendOtp(transactionId).subscribe({
+        next: (res: any) => {
+          console.log('Resend withdraw OTP response:', res);
+        },
+        error: (error) => {
+          console.error('Lỗi khi gửi lại OTP rút tiền:', error);
+        }
+      });
   }
 
   // Utility methods for savings account list

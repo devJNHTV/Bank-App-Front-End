@@ -1,140 +1,257 @@
-<div class="savings-account-form">
-    <h1 class="text-3xl font-bold mb-2">Quản lý tài khoản tiết kiệm</h1>
-    
-    <div class="breadcrumb text-sm mb-4">
-      <span>Trang chủ</span>
-      <span class="mx-1">></span>
-      <span>Tài khoản</span>
-      <span class="mx-1">></span>
-      <span class="text-primary">Tiết kiệm</span>
-    </div>
-  
-    <p-tabView>
-      <p-tabPanel header="Danh sách tài khoản tiết kiệm" leftIcon="pi pi-list">
-        <div class="savings-accounts-container">
-          <!-- Danh sách tài khoản tiết kiệm dạng card dọc -->
-          <div class="accounts-grid" *ngIf="!loading">
-            <div class="account-card" *ngFor="let account of savingsAccounts; trackBy: trackByAccountNumber">
-              <p-card>
-                <ng-template pTemplate="header">
-                  <div class="card-header">
-                    <div class="account-info">
-                      <h3 class="account-number">{{ account.accountNumber }}</h3>
-                      <p class="account-type">Tài khoản tiết kiệm</p>
-                    </div>
-                    <div class="account-status">
-                      <p-tag 
-                        [value]="getSavingsStatus(account.balance) === 'success' ? 'Phát triển tốt' : 
-                                getSavingsStatus(account.balance) === 'warn' ? 'Ổn định' : 'Cần quan tâm'"
-                        [severity]="getSavingsStatus(account.balance)">
-                      </p-tag>
-                    </div>
-                  </div>
-                </ng-template>
+<div class="savings-container">
 
-                <div class="card-content">
-                  <div class="balance-section">
-                    <label class="balance-label">Số dư tiết kiệm:</label>
-                    <div class="balance-amount" [ngClass]="'balance-' + getSavingsStatus(account.balance)">
-                      {{ formatCurrency(account.balance) }}
-                    </div>
-                  </div>
-
-                  <div class="savings-info">
-                    <div class="info-row">
-                      <span class="label">Kỳ hạn:</span>
-                      <span class="value">12 tháng</span>
-                    </div>
-                    <div class="info-row">
-                      <span class="label">Lãi suất:</span>
-                      <span class="value rate">6.5%/năm</span>
-                    </div>
-                    <div class="info-row">
-                      <span class="label">Ngày mở:</span>
-                      <span class="value">{{ getCurrentDate() }}</span>
-                    </div>
-                  </div>
-
-                  <div class="account-actions">
-                    <p-button 
-                      label="Gia hạn" 
-                      icon="pi pi-calendar-plus"
-                      styleClass="p-button-success p-button-sm">
-                    </p-button>
-                    <p-button 
-                      label="Rút tiền" 
-                      icon="pi pi-minus"
-                      styleClass="p-button-warning p-button-sm">
-                    </p-button>
-                    <p-button 
-                      label="Chi tiết" 
-                      icon="pi pi-eye"
-                      styleClass="p-button-info p-button-sm">
-                    </p-button>
-                  </div>
-                </div>
-              </p-card>
-            </div>
-          </div>
-
-          <!-- Empty state -->
-          <div class="empty-state" *ngIf="!loading && savingsAccounts.length === 0">
-            <i class="pi pi-wallet"></i>
-            <h3>Chưa có tài khoản tiết kiệm</h3>
-            <p>Bạn chưa có tài khoản tiết kiệm nào. Hãy mở tài khoản để bắt đầu tiết kiệm!</p>
-          </div>
+  <!-- Navigation Menu -->
+  <div class="savings-navigation" *ngIf="currentView === 'main'">
+    <div class="nav-grid">
+      <div class="nav-item" (click)="setCurrentView('open-account')">
+        <div class="nav-icon">
+          <i class="pi pi-plus-circle"></i>
         </div>
-      </p-tabPanel>
-
-      <p-tabPanel header="Mở tài khoản tiết kiệm mới" leftIcon="pi pi-plus">
-        <app-stepper [currentStep]="currentStep"></app-stepper>
+        <span class="nav-label">Mở tiết kiệm</span>
+      </div>
       
-        <!-- Step 1: Form nhập thông tin -->
-        <app-step1-form 
-          *ngIf="currentStep === 1"
-          [accounts]="accounts"
-          [terms]="terms"
-          (formSubmit)="onStep1Submit($event)">
-        </app-step1-form>
-     
-        <!-- Step 2: Xác nhận thông tin -->
-        <app-step2-confirmation 
-          *ngIf="currentStep === 2"
-          [formData]="formData"
-          [accounts]="accounts"
-          [terms]="terms"
-          (confirmSubmit)="onStep2Confirm()"
-          (backToPrevious)="onStep2Back()">
-        </app-step2-confirmation>
-
-        <!-- Step 3: OTP Verification -->
-        <app-step3-otp
-          *ngIf="currentStep === 3"
-          [transactionId]="transactionId"
-          (otpSubmit)="onOtpSubmit($event)"
-          (backToPrevious)="onStep3Back()"
-          (resendOtp)="onResendOtp($event)">
-        </app-step3-otp>
-        
-        <div *ngIf="currentStep === 4" class="success-container">
-          <div class="success-content">
-            <i class="pi pi-check-circle success-icon"></i>
-            <h2 class="text-2xl font-bold mb-4">Mở tài khoản tiết kiệm thành công!</h2>
-            <p class="text-gray-600 mb-6">
-              Tài khoản tiết kiệm của bạn đã được tạo thành công. 
-              Thông tin chi tiết sẽ được gửi qua email và SMS.
-            </p>
-            <div class="button-group">
-              <button 
-                pButton 
-                type="button" 
-                label="Quay về danh sách"
-                class="p-button"
-                (click)="currentStep = 1; formData = null;">
-              </button>
-            </div>
-          </div>
+      <div class="nav-item" (click)="setCurrentView('deposit')">
+        <div class="nav-icon">
+          <i class="pi pi-wallet"></i>
         </div>
-      </p-tabPanel>
-    </p-tabView>
+        <span class="nav-label">Nộp thêm vào tiết kiệm</span>
+      </div>
+      
+      <div class="nav-item" (click)="setCurrentView('withdraw')">
+        <div class="nav-icon">
+          <i class="pi pi-minus-circle"></i>
+        </div>
+        <span class="nav-label">Rút tiền từ tiết kiệm</span>
+      </div>
+      
+      <div class="nav-item" (click)="setCurrentView('close-account')">
+        <div class="nav-icon">
+          <i class="pi pi-times-circle"></i>
+        </div>
+        <span class="nav-label">Tất toán tiết kiệm</span>
+      </div>
+      
+      <div class="nav-item" (click)="setCurrentView('auto-savings')">
+        <div class="nav-icon">
+          <i class="pi pi-clock"></i>
+        </div>
+        <span class="nav-label">Tiết kiệm tự động</span>
+      </div>
+      
+      <div class="nav-item" (click)="setCurrentView('cancel-auto')">
+        <div class="nav-icon">
+          <i class="pi pi-ban"></i>
+        </div>
+        <span class="nav-label">Hủy tiết kiệm tự động</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danh sách tài khoản tiết kiệm -->
+  <div class="savings-accounts-section" *ngIf="currentView === 'main'">
+    <h2 class="text-2xl font-bold mb-4">Danh sách tài khoản tiết kiệm</h2>
+    
+    <div class="savings-accounts-container">
+      <!-- Danh sách tài khoản tiết kiệm dạng card dọc -->
+      <div class="accounts-grid" *ngIf="!loading">
+        <div class="account-card" *ngFor="let accountSavings of savingsAccounts; trackBy: trackByAccountNumber">
+          <p-card>
+            <ng-template pTemplate="header">
+              <div class="card-header">
+                <div class="account-info">
+                  <h3 class="account-number">{{ accountSavings.accountNumber }}</h3>
+                  <p class="account-type">Tài khoản tiết kiệm</p>
+                </div>
+                <div class="account-status">
+                  <p-tag 
+                    [value]="getSavingsStatus(accountSavings.balance) === 'success' ? 'Phát triển tốt' : 
+                            getSavingsStatus(accountSavings.balance) === 'warn' ? 'Ổn định' : 'Cần quan tâm'"
+                    [severity]="getSavingsStatus(accountSavings.balance)">
+                  </p-tag>
+                </div>
+              </div>
+            </ng-template>
+
+            <div class="card-content">
+              <div class="balance-section">
+                <label class="balance-label">Số dư tiết kiệm:</label>
+                  <div class="balance-amount" [ngClass]="'balance-' + getSavingsStatus(accountSavings.balance)">
+                  {{ formatCurrency(accountSavings.balance) }}
+                </div>
+              </div>
+
+              <div class="savings-info">
+                <div class="info-row">
+                  <span class="label">Kỳ hạn:</span>
+                  <span class="value">{{ accountSavings.termValueMonths }} tháng</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Lãi suất:</span>
+                  <span class="value rate">{{ accountSavings.interestRate * 100 }}%/năm</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Ngày mở:</span>
+                  <span class="value">{{ accountSavings.openedDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+
+              <!-- <div class="account-actions">
+                <p-button 
+                  label="Gia hạn" 
+                  icon="pi pi-calendar-plus"
+                  styleClass="p-button-success p-button-sm">
+                </p-button>
+                <p-button 
+                  label="Rút tiền" 
+                  icon="pi pi-minus"
+                  styleClass="p-button-warning p-button-sm"
+                  (click)="withdrawFromAccount(accountSavings)">
+                </p-button>
+                <p-button 
+                  label="Chi tiết" 
+                  icon="pi pi-eye"
+                  styleClass="p-button-info p-button-sm">
+                </p-button>
+              </div> -->
+            </div>
+          </p-card>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="!loading && savingsAccounts.length === 0">
+        <i class="pi pi-wallet"></i>
+        <h3>Chưa có tài khoản tiết kiệm</h3>
+        <p>Bạn chưa có tài khoản tiết kiệm nào. Hãy mở tài khoản để bắt đầu tiết kiệm!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mở tài khoản tiết kiệm mới -->
+  <div class="open-account-container" *ngIf="currentView === 'open-account'">
+    <div class="page-header">
+      <button pButton type="button" icon="pi pi-arrow-left" class="p-button-text" (click)="setCurrentView('main')"></button>
+      <h2 class="text-2xl font-bold">Mở tài khoản tiết kiệm mới</h2>
+    </div>
+    
+    <app-stepper [currentStep]="currentStep"></app-stepper>
+  
+    <!-- Step 1: Form nhập thông tin -->
+    <app-step1-form 
+      *ngIf="currentStep === 1"
+      [accounts]="accounts"
+      [terms]="terms"
+      (formSubmit)="onStep1Submit($event)">
+    </app-step1-form>
+ 
+    <!-- Step 2: Xác nhận thông tin -->
+    <app-step2-confirmation 
+      *ngIf="currentStep === 2"
+      [formData]="formData"
+      [accounts]="accounts"
+      [terms]="terms"
+      (confirmSubmit)="onStep2Confirm()"
+      (backToPrevious)="onStep2Back()">
+    </app-step2-confirmation>
+
+    <!-- Step 3: OTP Verification -->
+    <app-step3-otp
+      *ngIf="currentStep === 3"
+      [transactionId]="transactionId"
+      (otpSubmit)="onOtpSubmit($event)"
+      (backToPrevious)="onStep3Back()"
+      (resendOtp)="onResendOtp($event)">
+    </app-step3-otp>
+    
+    <div *ngIf="currentStep === 4" class="success-container">
+      <div class="success-content">
+        <i class="pi pi-check-circle success-icon"></i>
+        <h2 class="text-2xl font-bold mb-4">Mở tài khoản tiết kiệm thành công!</h2>
+        <p class="text-gray-600 mb-6">
+          Tài khoản tiết kiệm của bạn đã được tạo thành công. 
+          Thông tin chi tiết sẽ được gửi qua email và SMS.
+        </p>
+        <div class="button-group">
+          <button 
+            pButton 
+            type="button" 
+            label="Quay về trang chính"
+            class="p-button"
+            (click)="resetAndGoHome()">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rút tiền từ tiết kiệm -->
+  <div class="withdraw-container" *ngIf="currentView === 'withdraw'">
+    <div class="page-header">
+      <button pButton type="button" icon="pi pi-arrow-left" class="p-button-text" (click)="setCurrentView('main')"></button>
+      <h2 class="text-2xl font-bold">Rút tiền từ tiết kiệm</h2>
+    </div>
+    
+    <app-stepper [currentStep]="withdrawStep"></app-stepper>
+    
+    <!-- Step 1: Chọn tài khoản và số tiền -->
+    <app-withdraw-step1
+      *ngIf="withdrawStep === 1"
+      [savingsAccounts]="savingsAccounts"
+      [paymentAccounts]="accounts"
+      (formSubmit)="onWithdrawStep1Submit($event)">
+    </app-withdraw-step1>
+
+    <!-- Step 2: Xác nhận thông tin rút tiền -->
+    <app-withdraw-step2
+      *ngIf="withdrawStep === 2"
+      [withdrawData]="withdrawFormData"
+      [savingsAccounts]="savingsAccounts"
+      [paymentAccounts]="accounts"
+      (confirmSubmit)="onWithdrawStep2Confirm($event)"
+      (backToPrevious)="onWithdrawStep2Back()">
+    </app-withdraw-step2>
+
+    <!-- Step 3: OTP Verification -->
+    <app-withdraw-step3
+      *ngIf="withdrawStep === 3"
+      [transactionId]="withdrawTransactionId"
+      (otpSubmit)="onWithdrawOtpSubmit($event)"
+      (backToPrevious)="onWithdrawStep3Back()"
+      (resendOtp)="onWithdrawResendOtp($event)">
+    </app-withdraw-step3>
+
+    <!-- Step 4: Success -->
+    <div *ngIf="withdrawStep === 4" class="success-container">
+      <div class="success-content">
+        <i class="pi pi-check-circle success-icon"></i>
+        <h2 class="text-2xl font-bold mb-4">Rút tiền thành công!</h2>
+        <p class="text-gray-600 mb-6">
+          Giao dịch rút tiền từ tài khoản tiết kiệm đã được thực hiện thành công.
+          Thông tin chi tiết sẽ được gửi qua email và SMS.
+        </p>
+        <div class="button-group">
+          <button 
+            pButton 
+            type="button" 
+            label="Quay về trang chính"
+            class="p-button"
+            (click)="resetWithdrawAndGoHome()">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Placeholder cho các view khác -->
+  <div class="placeholder-container" *ngIf="['deposit', 'close-account', 'auto-savings', 'cancel-auto'].includes(currentView)">
+    <div class="page-header">
+      <button pButton type="button" icon="pi pi-arrow-left" class="p-button-text" (click)="setCurrentView('main')"></button>
+      <h2 class="text-2xl font-bold">{{ getViewTitle(currentView) }}</h2>
+    </div>
+    <div class="placeholder-content">
+      <i class="pi pi-cog"></i>
+      <h3>Tính năng đang phát triển</h3>
+      <p>Tính năng này sẽ được cập nhật trong phiên bản tiếp theo.</p>
+    </div>
+  </div>
 </div>
