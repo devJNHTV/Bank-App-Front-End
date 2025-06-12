@@ -24,8 +24,8 @@ export class ApiEndpointsService {
     return `${this.apiUrl}/kyc/verify`;
   }
 
-  getCustomerListEndpoint(): string {
-    return `${this.apiUrl}/list`;
+  getCustomerListEndpoint(page: number, size: number, keyword: string): string {
+    return `${this.apiUrl}/list?page=${page}&size=${size}&keyword=${keyword}`;
   }
 
   getCustomerDetailEndpoint(): string {

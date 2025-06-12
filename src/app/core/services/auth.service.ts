@@ -64,7 +64,7 @@ export class AuthService {
           next: ({ verified }) => {
             console.log('KYC Check after login:', verified);
             this.isKycVerifiedSubject.next(verified);
-            this.router.navigate([verified ? '/dashboard' : '/kyc'], {
+            this.router.navigate([verified ? '/customer-dashboard' : '/kyc'], {
               queryParams: !verified ? { message: 'Vui lòng xác minh danh tính' } : {},
             });
           },

@@ -1,131 +1,160 @@
+@import 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #ffffff);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1976d2;
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.navbar .nav-logo {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.navbar .nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+}
+
+.navbar .nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.navbar .nav-links a::after {
+  content: "";
+  display: block;
+  height: 2px;
+  background: white;
+  width: 0;
+  transition: width 0.3s ease-in-out;
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+}
+
+.navbar .nav-links a:hover::after {
+  width: 100%;
+}
+
 .container {
-  padding: 30px;
-  background: linear-gradient(to right, #f5f7fa, #c3cfe2);
-  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  box-sizing: border-box;
 }
 
 .customer-card {
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  transition: box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 1600px; /* Bạn có thể tăng số này nếu muốn rộng hơn */
+  padding: 2rem;
+  box-sizing: border-box;
 }
 
-.customer-card:hover {
-  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
-}
 
 .card-title {
-  font-size: 24px;
+  font-size: 1.7rem;
   font-weight: bold;
-  color: #2c3e50;
-  text-align: center;
+  color: #1976d2;
+}
+
+.back-button {
+  margin-left: auto;
+  animation-delay: 0.5s;
 }
 
 .filter-field {
   width: 100%;
-  margin: 20px 0;
+  margin: 1rem 0;
 }
 
 .table-container {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: white;
+  overflow-x: auto;
+  border-radius: 15px;
 }
 
 .spinner-center {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  margin: 2rem;
 }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.mat-header-cell {
-  background-color: #1976d2;
-  color: white;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.mat-cell {
-  font-size: 14px;
-  padding: 12px;
-  transition: background-color 0.2s ease;
-}
-
-.mat-row:hover .mat-cell {
-  background-color: rgba(25, 118, 210, 0.1);
-}
-
-.mat-column-actions {
-  width: 120px;
-  text-align: center;
-}
-
-.mat-chip.mat-primary {
-  background-color: #4CAF50 !important;
-  color: white;
-}
-
-.mat-chip.mat-warn {
-  background-color: #f44336 !important;
-  color: white;
-}
-
-.no-data-row {
-  text-align: center;
-  font-style: italic;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.54);
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.status-header,
-.mat-column-status {
-  width: 160px;
-  text-align: center;
-}
-
-.status-cell {
-  text-align: center;
-}
-
-.status-chip {
-  display: inline-block;
-  min-width: 120px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 5px 12px;
-  border-radius: 20px;
-}
-
-.status-chip:hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
 
 .chip-active {
-  background-color: #4CAF50;
-  color: white;
+  background-color: #c8e6c9;
+  color: #2e7d32;
+  font-weight: bold;
 }
 
 .chip-inactive {
-  background-color: #f44336;
-  color: white;
+  background-color: #ffcdd2;
+  color: #c62828;
+  font-weight: bold;
 }
 
+.no-data-row td {
+  text-align: center;
+  font-style: italic;
+  color: gray;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  text-align: center;
+  padding: 12px;
+}
+
+td {
+  padding: 10px;
+  vertical-align: middle;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  white-space: normal; /* Cho phép ngắt dòng */
+  word-break: break-word; /* Ngắt từ nếu quá dài */
+  max-width: 200px; /* Giới hạn độ rộng để ngắt dòng */
+}
+
+
+button.status-active {
+  background-color: #e0f7fa;
+  color: #00796b;
+  border: 1px solid #b2dfdb;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+tr:hover {
+  background-color: #f0f8ff;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.wrap-cell {
+  white-space: normal;
+  word-break: break-word;
+  max-width: 200px;
+  text-align: left; /* Cho phép canh trái nếu là đoạn văn dài */
+}

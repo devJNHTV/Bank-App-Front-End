@@ -111,7 +111,7 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/customer-dashboard']);
   }
 }
 

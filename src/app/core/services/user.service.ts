@@ -27,14 +27,28 @@ export class UserService {
     }
   }
 
-  getCustomerList(): Observable<any> {
-    return this.http.get(this.apiEndpointsService.getCustomerListEndpoint()).pipe(
-      tap((res) => console.log('Customer List:', res)),
-      catchError((error) =>
-        throwError(() => new Error('Lấy danh sách khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
-      )
-    );
+  getUsername(): string | null {
+    const token = this.authService.getToken();
+    console.log("token: " + token)
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log("payload: " + payload)
+      return payload?.preferred_username || null;
+    } catch {
+      return null;
+    }
   }
+
+  // getCustomerList(): Observable<any> {
+  //   return this.http.get(this.apiEndpointsService.getCustomerListEndpoint()).pipe(
+  //     tap((res) => console.log('Customer List:', res)),
+  //     catchError((error) =>
+  //       throwError(() => new Error('Lấy danh sách khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
+  //     )
+  //   );
+  // }
 
   getCustomerDetail(userId: string): Observable<any> {
     return this.http.get(this.apiEndpointsService.getCustomerDetailEndpoint()).pipe(

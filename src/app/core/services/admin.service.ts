@@ -35,13 +35,13 @@ export class AdminService {
     return userInfo && userInfo.realm_access && userInfo.realm_access.roles && userInfo.realm_access.roles.includes('ADMIN');
   }
 
-  getCustomerList(): Observable<any> {
+  getCustomerList(page: number, size: number, keyword: string): Observable<any> {
     if (!this.checkAdminAccess()) {
       console.log(this.userService.getUserInfo())
       return throwError(() => new Error('Bạn không có quyền xem danh sách khách hàng'));
     }
 
-    return this.http.get(this.apiEndpointsService.getCustomerListEndpoint()).pipe(
+    return this.http.get(this.apiEndpointsService.getCustomerListEndpoint(page, size, keyword)).pipe(
       tap((res) => console.log('Customer List:', res)),
       catchError((error) =>
         throwError(() => new Error('Lấy danh sách khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))

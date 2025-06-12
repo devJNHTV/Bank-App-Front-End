@@ -10,7 +10,6 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
 import { ChangePasswordComponent } from './auth/change-password/change-password.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { KycComponent } from './auth/kyc/kyc.component';
 import { CustomerListComponent } from './admin/customer-list/customer-list.component';
 import { AdminGuard } from './core/guards/admin.guard';
@@ -18,6 +17,7 @@ import { CustomerDetailComponent } from './customer/customer-detail/customer-det
 import { CustomerAccountsComponent } from './customer/customer-accounts/customer-accounts.component';
 import { KycGuard } from './core/guards/kyc.guard';
 import { CustomerDetailAdminComponent } from './admin/customer-detail/customer-detail-admin.component';
+import { CustomerDashboardComponent } from './customer/customer-dashboard/customer-dashboard.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -30,7 +30,7 @@ export const routes: Routes = [
     { path: 'reset-password', component: ResetPasswordComponent },
     { path: 'verify-otp', component: VerifyOtpComponent },
     { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard] },
-    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard, KycGuard] },
+    { path: 'customer-dashboard', component: CustomerDashboardComponent, canActivate: [AuthGuard, KycGuard] },
     { path: 'home', component: HomeComponent },
     { path: 'about', component: AboutComponent },
     { path: 'savings', component: SavingsComponent },

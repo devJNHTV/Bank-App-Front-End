@@ -1,0 +1,449 @@
+.dashboard-container {
+      height: 100vh;
+      background-color: #f5f7fa;
+    }
+
+    .sidenav-container {
+      height: 100%;
+    }
+
+    .sidenav {
+      width: 280px;
+      background-color: white;
+      border-right: 1px solid #e0e0e0;
+    }
+
+    .logo-container {
+      padding: 20px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon {
+      font-size: 24px;
+      color: #22c55e;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .nav-menu {
+      padding: 0;
+    }
+
+    .nav-item {
+      height: 48px !important;
+      margin: 4px 16px;
+      border-radius: 8px;
+      color: #6b7280;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background-color: #f3f4f6;
+      color: #374151;
+    }
+
+    .nav-item.active {
+      background-color: #22c55e;
+      color: white;
+    }
+
+    .header {
+      background-color: white;
+      color: #1f2937;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 0 24px;
+      height: 64px;
+    }
+
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-right {
+      margin-left: auto;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: #22c55e;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .dashboard-content {
+      padding: 24px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0;
+    }
+
+    .account-card {
+      margin-bottom: 20px;
+      overflow: hidden;
+      position: relative;
+      height: 200px;
+    }
+
+    .card-visual {
+      position: relative;
+      height: 100%;
+      padding: 20px;
+    }
+
+    .card-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #0f766e 0%, #22c55e 100%);
+    }
+
+    .card-logo {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+    }
+
+    .card-logo .logo-icon {
+      font-size: 24px;
+    }
+
+    .card-logo .logo-text {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .card-navigation {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 1;
+    }
+
+    .nav-btn {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .account-details {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .account-type {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
+
+    .account-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .account-item:last-child {
+      border-bottom: none;
+    }
+
+    .account-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .account-number {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .account-balance {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .balance-amount {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .balance-currency {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .view-all-btn {
+      width: 100%;
+      margin-top: 16px;
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    .transaction-card {
+      padding: 40px 20px;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #9ca3af;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .chart-card {
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .chart-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .donut-chart {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: conic-gradient(#22c55e 0deg 360deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .donut-chart::before {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: white;
+    }
+
+    .chart-center {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .chart-percentage {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .chart-label {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    .legend-color.blue { background-color: #3b82f6; }
+    .legend-color.orange { background-color: #f97316; }
+    .legend-color.green { background-color: #22c55e; }
+    .legend-color.pink { background-color: #ec4899; }
+
+    .beneficiaries-card {
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .search-field {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .beneficiary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .beneficiary-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+
+    .beneficiary-item:hover {
+      background-color: #f9fafb;
+    }
+
+    .beneficiary-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #22c55e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .beneficiary-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .beneficiary-info {
+      flex: 1;
+    }
+
+    .beneficiary-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1f2937;
+    }
+
+    .beneficiary-details {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .chat-support {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+    }
+
+    .chat-btn {
+      background-color: #22c55e;
+      color: white;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+
+    .chat-btn::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ef4444;
+    }
+
+    @media (max-width: 1024px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .sidenav {
+        width: 260px;
+      }
+    }
+
+    .logo-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-image {
+  height: 32px;
+  margin-right: 8px;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #006341; /* Màu xanh đặc trưng KienlongBank */
+}

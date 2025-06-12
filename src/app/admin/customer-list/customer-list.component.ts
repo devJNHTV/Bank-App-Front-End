@@ -38,6 +38,12 @@ import { CustomerResponse } from '../../core/models/customer-response.dto';
   ]
 })
 export class CustomerListComponent implements OnInit {
+
+  totalElements = 0;
+  pageSize = 10;
+  pageIndex = 0;
+  keyword: string = '';
+
   // Cập nhật displayedColumns để hiển thị tất cả các trường
   displayedColumns: string[] = [
     'cifCode',
@@ -71,32 +77,24 @@ export class CustomerListComponent implements OnInit {
     this.loadCustomers();
   }
 
-  ngAfterViewInit(): void {
-    // Kiểm tra paginator có tồn tại không trước khi sử dụng
-    if (this.paginator && this.sort) {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-
-      this.paginator.page.subscribe(() => {
-        console.log('Page index:', this.paginator.pageIndex);
-        console.log('Page size:', this.paginator.pageSize);
-      });
-    }
-  }
+  // ngAfterViewInit(): void {
+  //   this.paginator.page.subscribe(() => {
+  //     this.pageIndex = this.paginator.pageIndex;
+  //     this.pageSize = this.paginator.pageSize;
+  //     this.loadCustomers();
+  //   });
+  // }
 
   loadCustomers(): void {
     this.isLoading = true;
-    this.adminService.getCustomerList().subscribe({
-      next: (response: any) => {
+
+    this.adminService.getCustomerList(this.pageIndex, this.pageSize, this.keyword).subscribe({
+      next: (response) => {
         this.dataSource = new MatTableDataSource<CustomerResponse>(response.data.customers);
-
-        // Gán lại paginator & sort sau khi có dữ liệu
-        this.dataSource.paginator = this.paginator;
+        this.totalElements = response.data.totalElements;
+        this.pageSize = response.data.pageSize || this.pageSize;
+        this.pageIndex = response.data.currentPage;
         this.dataSource.sort = this.sort;
-
-        if (this.table) {
-          this.table.renderRows();
-        }
       },
       error: (error) => {
         Swal.fire({
@@ -111,15 +109,27 @@ export class CustomerListComponent implements OnInit {
     });
   }
 
-
-  applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  onPageChange(event: any) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadCustomers();
   }
+
+  onSearch(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.keyword = value.trim();
+    this.pageIndex = 0;
+    this.loadCustomers();
+  }
+
+  // applyFilter(event: Event): void {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
 
   viewCustomerDetail(cifCode: string): void {
     this.router.navigate(['customers/detail', cifCode]);
@@ -164,5 +174,9 @@ export class CustomerListComponent implements OnInit {
         }
       });
     }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/dashboard']);
   }
 }

@@ -89,7 +89,7 @@ export class KycComponent implements OnInit {
       .pipe(take(1))
       .subscribe((isVerified) => {
         if (isVerified) {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/customer-dashboard']);
         }
       });
 

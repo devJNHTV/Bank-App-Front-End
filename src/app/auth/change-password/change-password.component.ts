@@ -84,7 +84,7 @@ export class ChangePasswordComponent implements OnInit {
 
     this.passwordService.changePassword(currentPassword, newPassword, confirmNewPassword).subscribe({
       next: () => {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/customer-dashboard']);
         this.isLoading = false;
       },
       error: (error: { message?: string }) => {
