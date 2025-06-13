@@ -21,7 +21,7 @@ export class AdminService {
 
   private restoreAdminState(): void {
     const userInfo = this.userService.getUserInfo();
-    if (userInfo && userInfo.roles && userInfo.roles.includes('ADMIN')) {
+    if (userInfo && userInfo.realm_access && userInfo.realm_access.roles && userInfo.realm_access.roles.includes('ADMIN')) {
       this.isAdminSubject.next(true);
     }
   }

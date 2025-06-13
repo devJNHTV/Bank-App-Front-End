@@ -26,14 +26,12 @@ import { UserService } from '../../core/services/user.service';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    // Material Modules
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    // PrimeNG Modules
     ButtonModule,
     CardModule,
     InputTextModule,
@@ -61,7 +59,7 @@ export class LoginComponent implements OnInit {
 
   initForm(): void {
     this.loginForm = this.fb.group({
-      username: ['test21', [Validators.required]],
+      username: ['testfrontend3', [Validators.required]],
       password: ['290801Bin@', [Validators.required, Validators.minLength(6)]]
     });
   }

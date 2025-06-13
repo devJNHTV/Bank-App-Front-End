@@ -13,7 +13,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import Swal from 'sweetalert2';
-import { UserService } from '../../core/services/user.service';
 import { AdminService } from '../../core/services/admin.service';
 import { CustomerResponse } from '../../core/models/customer-response.dto'; 
 
@@ -44,7 +43,6 @@ export class CustomerListComponent implements OnInit {
   pageIndex = 0;
   keyword: string = '';
 
-  // Cập nhật displayedColumns để hiển thị tất cả các trường
   displayedColumns: string[] = [
     'cifCode',
     'fullName',
@@ -66,7 +64,6 @@ export class CustomerListComponent implements OnInit {
   @ViewChild(MatTable) table!: MatTable<CustomerResponse>;
 
   constructor(
-    private userService: UserService,
     private adminService: AdminService,
     private router: Router
   ) {
@@ -76,14 +73,6 @@ export class CustomerListComponent implements OnInit {
   ngOnInit(): void {
     this.loadCustomers();
   }
-
-  // ngAfterViewInit(): void {
-  //   this.paginator.page.subscribe(() => {
-  //     this.pageIndex = this.paginator.pageIndex;
-  //     this.pageSize = this.paginator.pageSize;
-  //     this.loadCustomers();
-  //   });
-  // }
 
   loadCustomers(): void {
     this.isLoading = true;
@@ -101,6 +90,8 @@ export class CustomerListComponent implements OnInit {
           icon: 'error',
           title: 'Lỗi',
           text: error.message || 'Không thể tải danh sách khách hàng'
+        }).then(() => {
+          this.router.navigate(['/customer-dashboard']);
         });
       },
       complete: () => {
@@ -121,15 +112,6 @@ export class CustomerListComponent implements OnInit {
     this.pageIndex = 0;
     this.loadCustomers();
   }
-
-  // applyFilter(event: Event): void {
-  //   const filterValue = (event.target as HTMLInputElement).value;
-  //   this.dataSource.filter = filterValue.trim().toLowerCase();
-
-  //   if (this.dataSource.paginator) {
-  //     this.dataSource.paginator.firstPage();
-  //   }
-  // }
 
   viewCustomerDetail(cifCode: string): void {
     this.router.navigate(['customers/detail', cifCode]);

@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { Observable, combineLatest } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { AdminService } from '../services/admin.service';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root',
@@ -27,10 +28,18 @@ export class AdminGuard implements CanActivate {
           this.router.navigate(['/login']);
           return false;
         }
+
         if (!isAdmin) {
-          this.router.navigate(['/dashboard']);
+          Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: 'Bạn không có quyền truy cập',
+          }).then(() => {
+            this.router.navigate(['/customer-dashboard']);
+          });
           return false;
         }
+
         return true;
       })
     );

@@ -1,37 +1,30 @@
-<!-- Navigation Bar -->
-<nav class="navbar">
-  <div class="nav-logo">💼 Bank System</div>
-  <ul class="nav-links">
-    <li><a routerLink="/dashboard">🏠 Home</a></li>
-    <li><a routerLink="/about">📄 About</a></li>
-    <li><a routerLink="/customers">👥 Customers</a></li>
-    <li><a routerLink="/contact">📞 Contact</a></li>
-  </ul>
-</nav>
-
-<!-- Main Container -->
-<div class="container animate__animated animate__fadeIn">
-  <mat-card class="customer-card">
+<div class="dashboard-content animate__animated animate__fadeIn">
+  <mat-card class="customer-card mat-elevation-z4">
     <mat-card-header>
-      <mat-card-title class="card-title">📋 Quản lý khách hàng</mat-card-title>
-      <button mat-icon-button color="primary" (click)="goBack()" class="back-button animate__animated animate__bounceIn">
+      <mat-card-title class="card-title">
+        <mat-icon class="title-icon">supervisor_account</mat-icon>
+        Quản lý khách hàng
+      </mat-card-title>
+      <button mat-icon-button color="primary" (click)="goBack()" class="back-button">
         <mat-icon>arrow_back</mat-icon>
       </button>
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Filter Input -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Lọc</mat-label>
-        <input matInput (keyup)="onSearch($event)" placeholder="Tìm kiếm khách hàng..." #input>
-        <button mat-icon-button matSuffix>
-          <mat-icon>search</mat-icon>
-        </button>
-      </mat-form-field>
+      <!-- Filter -->
+      <div class="filter-section">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Tìm kiếm khách hàng...</mat-label>
+          <input matInput (keyup)="onSearch($event)" #input />
+          <button mat-icon-button matSuffix>
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
 
       <!-- Table -->
-      <div class="mat-elevation-z8 table-container">
-        <mat-spinner *ngIf="isLoading" diameter="50" class="spinner-center"></mat-spinner>
+      <div class="table-wrapper mat-elevation-z1">
+        <mat-spinner *ngIf="isLoading" diameter="40" class="spinner-center"></mat-spinner>
 
         <table mat-table [dataSource]="dataSource" matSort *ngIf="!isLoading">
 
@@ -74,7 +67,7 @@
 
           <ng-container matColumnDef="gender">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Giới tính</th>
-            <td mat-cell *matCellDef="let row">{{ row.gender }}</td>
+            <td mat-cell *matCellDef="let row">{{ row.gender == 'male' ? 'Nam' : 'Nữ' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="status">
@@ -107,7 +100,7 @@
               <button mat-icon-button color="primary" (click)="viewCustomerDetail(row.cifCode)" matTooltip="Xem chi tiết">
                 <mat-icon>visibility</mat-icon>
               </button>
-              <button mat-icon-button [color]="row.status === 'ACTIVE' ? 'warn' : 'primary'"
+              <button mat-icon-button [color]="row.status === 'ACTIVE' ? 'warn' : 'accent'"
                       (click)="updateCustomerStatus(row.cifCode, row.status)"
                       [matTooltip]="row.status === 'ACTIVE' ? 'Khóa' : 'Kích hoạt'">
                 <mat-icon>{{ row.status === 'ACTIVE' ? 'block' : 'check_circle' }}</mat-icon>
@@ -115,7 +108,6 @@
             </td>
           </ng-container>
 
-          <!-- Header and row render -->
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           <tr class="mat-row no-data-row" *matNoDataRow>
@@ -125,6 +117,7 @@
           </tr>
         </table>
 
+        <!-- Paginator -->
         <mat-paginator
           [length]="totalElements"
           [pageSize]="pageSize"
@@ -132,7 +125,6 @@
           [pageSizeOptions]="[5, 10, 25, 100]"
           (page)="onPageChange($event)"
           showFirstLastButtons
-          aria-label="Chọn trang khách hàng"
           *ngIf="!isLoading">
         </mat-paginator>
       </div>

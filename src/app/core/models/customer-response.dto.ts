@@ -8,7 +8,7 @@ export interface CustomerResponse {
   address: string;
   email: string;
   identityNumber: string;
-  dateOfBirth: string; // ISO 8601 format (yyyy-MM-dd)
+  dateOfBirth: Date | null;
   phoneNumber: string;
   status: CustomerStatus;
   kycStatus: KycStatus;

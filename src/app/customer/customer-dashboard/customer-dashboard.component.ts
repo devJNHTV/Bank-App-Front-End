@@ -79,7 +79,7 @@ export class CustomerDashboardComponent {
   beneficiaries: Beneficiary[] = [
     {
       name: 'Nguyễn Văn A',
-      bank: 'VPBank',
+      bank: 'KienlongBank',
       accountNumber: '123456789',
       avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMyMmM1NWUiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5Ljc5IDEyIDggMTAuMjEgOCA4UzkuNzkgNCA0IDhTMTIgOS43OSAxMiAxMlpNMTIgMTRDMTQuNjcgMTQgMjAgMTUuMzQgMjAgMThWMjBIMTRWMThDMTQgMTUuMzQgOS4zMyAxNCAxMiAxNFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo8L3N2Zz4K'
     }

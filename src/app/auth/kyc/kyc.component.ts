@@ -67,22 +67,19 @@ export class KycComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.route.queryParams.subscribe((params) => {
-      const message = params['message'] != '' || undefined || null;
-
+      const hasMessage = !!params['message'];
       Swal.fire({
         title: 'Thông báo',
-        text: message
-          ? 'Bạn đã xác minh người dùng, không cần xác minh lại!'
-          : 'Vui lòng xác minh danh tính người dùng!',
+        text: hasMessage
+          ? 'Vui lòng xác minh danh tính người dùng!'
+          : 'Bạn đã xác minh danh tính, không cần xác minh lại!',
         icon: 'info',
         confirmButtonText: 'OK',
         timer: 3000,
         timerProgressBar: true,
       });
     });
-
 
     this.kycService
       .isKycVerified()
@@ -93,16 +90,12 @@ export class KycComponent implements OnInit {
         }
       });
 
-    this.route.queryParams.subscribe((params) => {
-      this.message = params['message'] || null;
-    });
-
-    const userInfo = this.userService.getUserInfo();
-    if (userInfo) {
-      this.kycForm.patchValue({
-        customerId: userInfo.sub || '',
-      });
-    }
+    // const userInfo = this.userService.getUserInfo();
+    // if (userInfo) {
+    //   this.kycForm.patchValue({
+    //     customerId: userInfo.sub || '',
+    //   });
+    // }
   }
 
   initForm(): void {

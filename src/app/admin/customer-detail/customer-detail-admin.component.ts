@@ -32,12 +32,6 @@ interface Customer {
   status: string;
 }
 
-interface Account {
-  accountNumber: string;
-  balance: number;
-  accountType: string;
-}
-
 @Component({
   selector: 'app-customer-detail',
   standalone: true,
@@ -66,7 +60,6 @@ export class CustomerDetailAdminComponent implements OnInit {
   cifCode: string | null = null;
   customer: Customer | null = null;
   isLoading = false;
-  customerAccounts: Account[] = [];
 
   constructor(
     private userService: UserService,
@@ -80,7 +73,6 @@ export class CustomerDetailAdminComponent implements OnInit {
     this.cifCode = this.route.snapshot.paramMap.get('cifCode');
     if (this.cifCode) {
       this.loadCustomerDetail(this.cifCode);
-      this.loadCustomerAccounts();
     } else {
       Swal.fire({
         icon: 'error',
@@ -109,22 +101,6 @@ export class CustomerDetailAdminComponent implements OnInit {
       },
       complete: () => {
         this.isLoading = false;
-      },
-    });
-  }
-
-  loadCustomerAccounts(): void {
-    this.userService.getCustomerAccounts().subscribe({
-      next: (accounts) => {
-        this.customerAccounts = accounts.data || [];
-      },
-      error: (error) => {
-        console.error('Lỗi khi tải danh sách tài khoản:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Lỗi',
-          text: 'Không thể tải danh sách tài khoản khách hàng',
-        });
       },
     });
   }

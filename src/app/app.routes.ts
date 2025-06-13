@@ -18,29 +18,44 @@ import { CustomerAccountsComponent } from './customer/customer-accounts/customer
 import { KycGuard } from './core/guards/kyc.guard';
 import { CustomerDetailAdminComponent } from './admin/customer-detail/customer-detail-admin.component';
 import { CustomerDashboardComponent } from './customer/customer-dashboard/customer-dashboard.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
-    { path: 'login', component: LoginComponent },
-    { path: 'kyc', component: KycComponent, canActivate: [AuthGuard] },
-    { path: 'register', component: RegisterComponent },
-    { path: 'customers/accounts', component: CustomerAccountsComponent, canActivate: [AuthGuard, AuthGuard] },
-    { path: 'detail', component: CustomerDetailComponent, canActivate: [AuthGuard, AuthGuard] },
-    { path: 'forgot-password', component: ForgotPasswordComponent },
-    { path: 'reset-password', component: ResetPasswordComponent },
-    { path: 'verify-otp', component: VerifyOtpComponent },
-    { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard] },
-    { path: 'customer-dashboard', component: CustomerDashboardComponent, canActivate: [AuthGuard, KycGuard] },
-    { path: 'home', component: HomeComponent },
-    { path: 'about', component: AboutComponent },
-    { path: 'savings', component: SavingsComponent },
-    // { 
-    //   path: 'admin',
-    //   canActivate: [AuthGuard, AdminGuard],
-    //   children: [
-        { path: 'customers', component: CustomerListComponent, canActivate: [AuthGuard] },
-        { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent, canActivate: [AuthGuard] },
-    //   ]
-    // },
-    { path: '**', component: NotFoundComponent },
+  // Layout cho các route cần đăng nhập
+  
+  {
+    path: '',
+    component: MainLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'customer-dashboard', component: CustomerDashboardComponent, canActivate: [KycGuard] },
+      { path: 'detail', component: CustomerDetailComponent, canActivate: [KycGuard]  },
+      { path: 'customers/accounts', component: CustomerAccountsComponent, canActivate: [KycGuard] },
+      { path: 'home', component: HomeComponent, canActivate: [KycGuard] },
+      { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
+      { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
+
+      { path: 'customers', component: CustomerListComponent, canActivate: [KycGuard] },
+      { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent, canActivate: [KycGuard] },
+    ]
+  },
+  { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard, KycGuard] },
+  { path: 'kyc', component: KycComponent, canActivate: [AuthGuard] },
+  
+  {
+    path: '',
+    component: AuthLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordComponent },
+      { path: 'verify-otp', component: VerifyOtpComponent },
+    ]
+  },
+
+  // Not Found
+  { path: '**', component: NotFoundComponent }
 ];

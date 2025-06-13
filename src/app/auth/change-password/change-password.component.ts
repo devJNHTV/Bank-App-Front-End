@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -8,10 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AuthService } from '../../core/services/auth.service';
 import { MustMatch } from '../must-match.validator';
 import { PasswordService } from '../../core/services/password.service';
 import Swal from 'sweetalert2';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-change-password',
@@ -40,8 +40,9 @@ export class ChangePasswordComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private passwordService: PasswordService
+    private passwordService: PasswordService,
+    public dialogRef: MatDialogRef<ChangePasswordComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +63,15 @@ export class ChangePasswordComponent implements OnInit {
     });
   }
 
+  get newPasswordError(): string | null {
+    const control = this.changePasswordForm.get('newPassword');
+    if (control?.hasError('required')) return 'Vui lòng nhập mật khẩu mới';
+    if (control?.hasError('minlength')) return 'Mật khẩu phải có ít nhất 8 ký tự';
+    if (control?.hasError('pattern')) return 'Mật khẩu phải có: chữ hoa, chữ thường, số và ký tự đặc biệt';
+    return null;
+  }
+
+
   togglePasswordVisibility(field: 'currentPassword' | 'newPassword' | 'confirmNewPassword') {
     if (field === 'currentPassword') {
       this.showCurrentPassword = !this.showCurrentPassword;
@@ -70,6 +80,10 @@ export class ChangePasswordComponent implements OnInit {
     } else {
       this.showConfirmNewPassword = !this.showConfirmNewPassword;
     }
+  }
+
+  close() {
+    this.dialogRef.close(true);
   }
 
   onSubmit(): void {
@@ -84,18 +98,27 @@ export class ChangePasswordComponent implements OnInit {
 
     this.passwordService.changePassword(currentPassword, newPassword, confirmNewPassword).subscribe({
       next: () => {
-        this.router.navigate(['/customer-dashboard']);
-        this.isLoading = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Đổi mật khẩu thành công',
+          timer: 1500,
+          showConfirmButton: false
+        }).then(() => {
+          this.dialogRef.close(true);
+          window.location.reload(); // hoặc navigate nếu cần
+        });
       },
-      error: (error: { message?: string }) => {
+      error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.message || 'Không thể đổi mật khẩu. Vui lòng thử lại.';
         Swal.fire({
           icon: 'error',
           title: 'Lỗi',
-          text: this.errorMessage,
+          text: error?.message || 'Không thể đổi mật khẩu. Vui lòng thử lại.',
           confirmButtonText: 'OK'
         });
+      },
+      complete: () => {
+        this.isLoading = false;
       }
     });
   }
