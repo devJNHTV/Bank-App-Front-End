@@ -158,6 +158,7 @@ resendInterval: any;
       case 'TRANSFER': return 'chuyển khoản';
       case 'DEPOSIT': return 'nạp tiền';
       case 'WITHDRAW': return 'rút tiền';
+      case 'PAY_BILL': return 'thanh toán hóa đơn';
       default: return 'không xác định';
     }
   }

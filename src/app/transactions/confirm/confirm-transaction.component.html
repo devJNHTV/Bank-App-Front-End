@@ -1,4 +1,6 @@
-<p-card header="Xác nhận giao dịch" styleClass="p-mt-4">
+<p-card header="Xác nhận giao dịch {{transactionData.type == 'TRANSFER' ?
+ 'Chuyển khoản' : transactionData.type == 'WITHDRAW' ? 'Rút tiền' : transactionData.type == 'DEPOSIT' ? 'Nạp tiền' : 
+ 'Thanh toán hóa đơn'}}" styleClass="p-mt-4">
   <div class="p-fluid">
     <div class="p-field">
       <label *ngIf="transactionData.fromAccountNumber" ><i class="pi pi-building-columns mr-2"></i>Từ tài khoản:
@@ -12,7 +14,7 @@
     </div>
 
     <div class="p-field">
-      <label><i class="pi pi-building-columns mr-2"></i>Đến tài khoản:
+      <label *ngIf="transactionData.toAccountNumber"><i class="pi pi-building-columns mr-2"></i>Đến tài khoản:
         <small *ngIf="transactionData.toCustomerName" style="font-size: 14px;">
           <br>
           <strong><i class="pi pi-user mr-2 ml-2"></i>{{ transactionData.toCustomerName}} -

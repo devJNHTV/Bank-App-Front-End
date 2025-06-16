@@ -224,7 +224,7 @@ export class TransferComponent implements OnInit{
         type: 'TRANSFER',
       };
     }
-
+    console.log(this.someTransferData);
     this.transactionService.transfer(this.someTransferData).subscribe({
       next: (res) => {
         console.log('Phản hồi từ server:', res);

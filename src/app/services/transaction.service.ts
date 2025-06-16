@@ -78,6 +78,27 @@ withdraw(payload: any): Observable<any> {
     headers: this.getAuthHeaders()
   });
 }
+
+// Get Provider
+  getProvider(): Observable<any> {
+    return this.http.get(`${this.baseUrlTransaction}/paybill/providers`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  // Check bill
+  checkBill(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrlTransaction}/payments/bills/check`, payload, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+// Pay bill
+  payBill(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrlTransaction}/payments/bills/pay`, payload, {
+      headers: this.getAuthHeaders()
+    });
+  }
 // Get Transaction History
   getTransactionHistory(params: any): Observable<any> {
     return this.http.get(`${this.baseUrlTransaction}/getTransactionsAndFilter`, {

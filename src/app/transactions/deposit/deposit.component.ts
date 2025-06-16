@@ -58,7 +58,6 @@ export class DepositComponent implements OnInit {
     private location: Location
   ) {
     this.depositForm = this.fb.group({
-      fromAccountNumber: ['', Validators.required],
       toAccountNumber: ['', Validators.required],
       amount: [null, [Validators.required, Validators.min(1000)]],
       currency: [this.currencyOptions[0].currencyCode, Validators.required],

@@ -144,7 +144,6 @@ export class WithdrawComponent implements OnInit {
         fromCustomerName: this.fromCustomerName,
         type: 'WITHDRAW',
       };
-      console.log("Dâu"+this.someWithdrawData);
     }
 
     this.transactionService.withdraw(this.someWithdrawData).subscribe({

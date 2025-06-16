@@ -206,9 +206,9 @@ export class TransactionHistoryComponent implements OnInit {
     });
   } 
 
-  goBack(): void {
-    this.location.back();
-  }
+  goBack(): void {  
+    this.router.navigate(['/transactions']); 
+  } 
 
   showSuccess(message: string) {
     this.messageService.add({

@@ -1,0 +1,92 @@
+<div class="payment-selection-container">
+    <h2 class="page-title">Thanh toán hóa đơn</h2>
+
+    <div class="payment-grid">
+        <p-card
+            class="payment-card electricity"
+            (click)="navigateTo('electricity')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Thanh toán hóa đơn điện"
+        >
+            <ng-template pTemplate="header">
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2092/2092663.png" width="50" height="50" alt="electricity icon" />
+                </button>
+            </ng-template>
+            <div class="card-title">Thanh toán hóa đơn điện</div>
+        </p-card>
+
+        <p-card
+            class="payment-card phone"
+            (click)="navigateTo('phone')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Thanh toán hóa đơn điện thoại"      
+        >
+            <ng-template pTemplate="header">
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="data:image/jpeg;base64,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" width="50" height="50" alt="phone icon" />
+                </button>
+            </ng-template>
+            <div class="card-title">Thanh toán hóa đơn điện thoại</div>
+        </p-card>
+
+        <p-card
+            class="payment-card water"
+            (click)="navigateTo('water')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Thanh toán hóa đơn nước"
+        >
+            <ng-template pTemplate="header">
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2382/2382533.png" width="50" height="50" alt="water icon" />
+                </button>
+            </ng-template>
+            <div class="card-title">Thanh toán hóa đơn nước</div>
+        </p-card>
+
+        <p-card
+            class="payment-card internet"
+            (click)="navigateTo('internet')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Thanh toán hóa đơn internet"
+        >
+            <ng-template pTemplate="header">
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="https://cdn.pixabay.com/photo/2016/03/30/13/24/wifi-1290667_1280.png" width="60" height="50" alt="internet icon" />
+                </button>
+            </ng-template>
+            <div class="card-title">Thanh toán hóa đơn internet</div>
+        </p-card>
+
+        
+
+        <p-card
+            class="payment-card tuition"
+            (click)="navigateTo('tuition')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Thanh toán học phí"
+        >
+            <ng-template pTemplate="header">
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4V_KS50yYcTzJLVTnLbBs2BSYxAFZ91Sm2A&s" width="50" height="50" alt="tuition icon" />
+                </button>
+            </ng-template>
+            <div class="card-title">Thanh toán học phí</div>
+        </p-card>
+    </div>
+</div>

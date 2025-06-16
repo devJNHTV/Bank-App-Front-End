@@ -1,0 +1,111 @@
+<div class="page-container">
+    <div class="page-title">
+        <h1>Thanh toán hóa đơn {{ billType=='electricity' ? 'điện' : billType=='phone' ? 'điện thoại'
+        : billType=='water' ? 'nước' : 'internet' }}</h1>
+    </div>      
+
+    <div class="search-section">
+        <p-card>
+            <div class="search-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="provider">Nhà cung cấp</label>
+                        <p-dropdown 
+                            id="provider" 
+                            [options]="availableProviders"  
+                            [(ngModel)]="selectedProvider"      
+                            optionLabel="name"
+                            placeholder="Chọn nhà cung cấp"
+                            [style]="{'width':'100%'}"
+                            [showClear]="true">
+                        </p-dropdown>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerCode">Mã khách hàng</label>
+                        <input 
+                            pInputText 
+                            id="customerCode" 
+                            [(ngModel)]="customerCode"
+                            placeholder="Nhập mã khách hàng"
+                            [style]="{'width':'100%'}" />
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <p-button 
+                        label="Tìm kiếm" 
+                        icon="pi pi-search"
+                        (onClick)="searchBill()"
+                        [loading]="loading">
+                    </p-button>
+                    <p-button 
+                        label="Xóa" 
+                        icon="pi pi-trash"
+                        severity="secondary"
+                        (onClick)="clearForm()">
+                    </p-button>
+                </div>
+            </div>
+        </p-card>
+    </div>
+
+    <div class="result-section" *ngIf="billResult">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="result-header ">
+                    <h2>Kết quả tra cứu</h2>
+                </div>
+            </ng-template>
+
+            <div class="result-content">
+                <div class="result-row">
+                    <div class="result-item mb-2">
+                        <label class="mr-3">Mã khách hàng:</label>
+                        <span>{{billResult.customerCode}}</span>
+                    </div>
+                    <div class="result-item mb-2">
+                        <label class="mr-3">Tên khách hàng:</label>
+                        <span>{{billResult.customerName}}</span>
+                    </div>
+                </div>
+
+                <div class="result-row">
+                    <div class="result-item mb-2">
+                        <label class="mr-3">Mã hóa đơn:</label>
+                        <span>{{billResult.billId}}</span>
+                    </div>
+                    <div class="result-item mb-2">
+                        <label class="mr-3">Số tiền:</label>
+                        <span>{{billResult.amount | currency:'VND':'symbol-narrow':'1.0-0'}}</span>
+                    </div>
+                </div>
+
+                <div class="result-row">
+                    <div class="result-item mb-2">
+                        <label class="mr-3">Nhà cung cấp:</label>
+                        <span>{{billResult.provider}}</span>
+                    </div>
+                    <div class="result-item mb-2">
+                        <label class="mr-3">Trạng thái:</label>
+                        <p-tag 
+                            [severity]="billResult.status === 'PAID' ? 'success' : 'warn'"
+                            [value]="billResult.status === 'PAID' ? 'Đã thanh toán' : 'Chưa thanh toán'">
+                        </p-tag>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <p-button 
+                        label="Thanh toán" 
+                        icon="pi pi-credit-card"
+                        (onClick)="proceedToPayment()"
+                        [disabled]="billResult.status === 'PAID'">
+                    </p-button>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+
+<p-toast></p-toast>

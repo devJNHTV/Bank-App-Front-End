@@ -89,7 +89,7 @@
                 <label>Loại hình:</label>
                 <p class="value">{{ transaction.bankType == 'INTERNAL'? 'Chuyển tiền nội bộ' : 'Chuyển tiền liên ngân hàng' }}</p>
               </div>
-              <div class="p-col-12">
+              <div class="p-col-12" *ngIf="transaction.failedReason">
                 <label>Lý do thất bại:</label>
                 <p class="value">{{ transaction.failedReason || 'Không có nội dung' }}</p>
               </div>
@@ -121,10 +121,12 @@
       type="button"
       label="Quay về"
       icon="pi pi-arrow-left"
-      class="p-button-secondary"
+      class="p-button-secondary mr-2"
+      style="background-color: #fff"
       (click)="goBack()"
     ></button>
   </div>
+  
 </div>
 
 <p-toast></p-toast>
