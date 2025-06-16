@@ -1,3 +1,4 @@
+<!-- login.component.html -->
 <div class="container">
   <div class="form-container">
     <div class="logo-container">
@@ -55,6 +56,42 @@
                 Mật khẩu phải có ít nhất 6 ký tự
               </mat-error>
             </mat-form-field>
+          </div>
+
+          <!-- Captcha Section -->
+          <div class="form-row captcha-section">
+            <div class="captcha-container">
+              <div class="captcha-display">
+                <canvas 
+                  id="captchaCanvas" 
+                  width="150" 
+                  height="50"
+                  class="captcha-canvas">
+                </canvas>
+                <button 
+                  mat-icon-button 
+                  type="button" 
+                  (click)="refreshCaptcha()"
+                  class="refresh-btn"
+                  title="Làm mới captcha">
+                  <mat-icon>refresh</mat-icon>
+                </button>
+              </div>
+              
+              <mat-form-field appearance="outline" class="captcha-input">
+                <mat-label>Nhập mã captcha</mat-label>
+                <input
+                  matInput
+                  formControlName="captcha"
+                  placeholder="Nhập mã hiển thị bên trên"
+                  maxlength="5"
+                />
+                <mat-icon matSuffix>security</mat-icon>
+                <mat-error *ngIf="loginForm.get('captcha')?.hasError('required')">
+                  Vui lòng nhập mã captcha
+                </mat-error>
+              </mat-form-field>
+            </div>
           </div>
 
           <div class="error-message" *ngIf="loginError">

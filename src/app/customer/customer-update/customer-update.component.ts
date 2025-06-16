@@ -88,6 +88,7 @@ export class CustomerUpdateDialogComponent {
       };
 
       console.log('kycData:', updateData);
+      console.log('Customer data: ', this.customerForm);
 
       this.userService.updateCustomer(updateData).subscribe({
         next: () => {

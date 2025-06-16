@@ -21,16 +21,16 @@ import { UserService } from '../../core/services/user.service';
 import { AdminService } from '../../core/services/admin.service';
 import { CustomerUpdateDialogComponent } from '../../customer/customer-update/customer-update.component';
 
-interface Customer {
-  fullName: string;
-  email: string;
-  phoneNumber: string;
-  identityNumber: string;
-  dateOfBirth: Date | null;
-  gender: 'male' | 'female';
-  address: string;
-  status: string;
-}
+// interface Customer {
+//   fullName: string;
+//   email: string;
+//   phoneNumber: string;
+//   identityNumber: string;
+//   dateOfBirth: Date | null;
+//   gender: 'male' | 'female';
+//   address: string;
+//   status: string;
+// }
 
 @Component({
   selector: 'app-customer-detail',
@@ -58,7 +58,8 @@ interface Customer {
 })
 export class CustomerDetailAdminComponent implements OnInit {
   cifCode: string | null = null;
-  customer: Customer | null = null;
+  // customer: Customer | null = null;
+  customer: any;
   isLoading = false;
 
   constructor(
@@ -85,12 +86,12 @@ export class CustomerDetailAdminComponent implements OnInit {
   loadCustomerDetail(cifCode: string): void {
     this.isLoading = true;
     this.adminService.getCustomerDetailByCifcode(cifCode).subscribe({
-      next: (response) => {
-        this.customer = response.data;
-        if (this.customer?.dateOfBirth) {
-          this.customer.dateOfBirth = new Date(this.customer.dateOfBirth);
+      next: (customer) => {
+        this.customer = customer.data;
+        console.log("customer detail by cifcode: ", this.customer)
+        if (customer.dateOfBirth) {
+          this.customer.dateOfBirth = new Date(customer.dateOfBirth);
         }
-        console.log('Customer:', this.customer);
       },
       error: (error) => {
         Swal.fire({

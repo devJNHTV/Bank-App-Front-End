@@ -170,3 +170,64 @@
     text-align: center;
   }
 }
+
+/* Thêm vào login.component.scss */
+
+.captcha-section {
+  margin: 10px 0;
+}
+
+.captcha-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.captcha-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.captcha-canvas {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: default;
+}
+
+.refresh-btn {
+  color: #1976d2;
+  
+  &:hover {
+    background-color: rgba(25, 118, 210, 0.04);
+  }
+}
+
+.captcha-input {
+  width: 100%;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 14px;
+  margin: 8px 0;
+  text-align: center;
+}
+
+/* Responsive design cho captcha */
+@media (max-width: 600px) {
+  .captcha-display {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .captcha-canvas {
+    align-self: center;
+  }
+}

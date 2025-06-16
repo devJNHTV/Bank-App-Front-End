@@ -45,7 +45,7 @@ export class ApiEndpointsService {
   }
 
   getCustomerAccountsEndpoint(): string {
-    return `http://localhost:8888/account/getAllPaymentAccount`;
+    return `${this.apiUrl}/accounts`;
   }
 
   getForgotPasswordEndpoint(): string {

@@ -68,7 +68,7 @@ export class CustomerDetailComponent implements OnInit {
     this.userService.getCustomerDetail(this.userId).subscribe({
       next: (customer) => {
         this.customer = customer.data;
-        console.log(this.customer)
+        console.log("customer detail: ", this.customer)
         if (customer.dateOfBirth) {
           this.customer.dateOfBirth = new Date(customer.dateOfBirth);
         }
@@ -89,7 +89,7 @@ export class CustomerDetailComponent implements OnInit {
   loadCustomerAccounts(): void {
     this.userService.getCustomerAccounts().subscribe({
       next: (accounts) => {
-        this.customerAccounts = accounts.data;
+        this.customerAccounts = accounts;
       },
       error: (error) => {
         console.error('Lỗi khi tải danh sách tài khoản khách hàng:', error);
