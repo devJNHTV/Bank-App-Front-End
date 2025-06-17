@@ -1,0 +1,154 @@
+<!-- Main Content -->
+<!-- Dashboard Content -->
+<div class="dashboard-content">
+  <div class="content-grid">
+    <!-- Left Column -->
+    <div class="left-column">
+      <!-- Account Section -->
+      <div class="section-header">
+        <h2>Tài khoản</h2>
+      </div>
+
+      <!-- Account Card -->
+      <mat-card class="account-card">
+        <div class="card-visual">
+          <div class="card-gradient"></div>
+          <div class="card-logo">
+            <img
+              src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon-logo-klb.jpg"
+              alt="KienlongBank Logo"
+              class="logo-image"
+            />
+            <span class="logo-text">KienlongBank</span>
+          </div>
+          <div class="card-navigation">
+            <button mat-icon-button class="nav-btn">
+              <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+            <button mat-icon-button class="nav-btn">
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card>
+
+      <!-- Account Details -->
+      <div class="account-details">
+        <div class="account-type">TÀI KHOẢN CHÍNH</div>
+        <div class="account-list">
+          <div class="account-item" *ngFor="let account of accounts">
+            <div class="account-info">
+              <div class="account-title">{{ account.type }}</div>
+              <div class="account-number">{{ account.number }}</div>
+            </div>
+            <div class="account-balance">
+              <span class="balance-amount">{{ account.balance }}</span>
+              <span class="balance-currency">{{ account.currency }}</span>
+              <button mat-icon-button class="visibility-toggle">
+                <mat-icon>visibility_off</mat-icon>
+              </button>
+              <button mat-icon-button class="account-menu">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button mat-button class="view-all-btn">XEM TẤT CẢ TÀI KHOẢN</button>
+      </div>
+
+      <!-- Transaction History -->
+      <div class="section-header">
+        <h2>Lịch sử thanh toán</h2>
+        <button mat-icon-button>
+          <mat-icon>launch</mat-icon>
+        </button>
+      </div>
+
+      <mat-card class="transaction-card">
+        <div class="empty-state">
+          <mat-icon class="empty-icon">description</mat-icon>
+          <p>Chưa có giao dịch nào</p>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Right Column -->
+    <div class="right-column">
+      <!-- Account Overview -->
+      <div class="section-header">
+        <h2>Tổng quan tài khoản</h2>
+      </div>
+
+      <!-- Donut Chart -->
+      <mat-card class="chart-card">
+        <div class="chart-container">
+          <div class="donut-chart">
+            <div class="chart-center">
+              <div class="chart-percentage">100%</div>
+              <div class="chart-label">0.0%</div>
+            </div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-color blue"></div>
+              <span>Tài khoản Thẻ</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color orange"></div>
+              <span>Tài khoản Tiết kiệm</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color green"></div>
+              <span>Tài khoản Thanh toán</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color pink"></div>
+              <span>Tài khoản vay</span>
+            </div>
+          </div>
+        </div>
+        <button mat-button class="view-all-btn">XEM TẤT CẢ TÀI KHOẢN</button>
+      </mat-card>
+
+      <!-- Beneficiaries -->
+      <div class="section-header">
+        <h2>Danh sách người thụ hưởng</h2>
+      </div>
+
+      <mat-card class="beneficiaries-card">
+        <mat-form-field class="search-field" appearance="outline">
+          <mat-label>Tìm kiếm</mat-label>
+          <input matInput placeholder="Nhập tên người thụ hưởng" />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="beneficiary-list">
+          <div
+            class="beneficiary-item"
+            *ngFor="let beneficiary of beneficiaries"
+          >
+            <div class="beneficiary-avatar">
+              <img [src]="beneficiary.avatar" [alt]="beneficiary.name" />
+            </div>
+            <div class="beneficiary-info">
+              <div class="beneficiary-name">{{ beneficiary.name }}</div>
+              <div class="beneficiary-details">
+                {{ beneficiary.bank }} - {{ beneficiary.accountNumber }}
+              </div>
+            </div>
+            <button mat-icon-button class="beneficiary-menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card>
+
+      <!-- Chat Support -->
+      <div class="chat-support">
+        <button mat-fab class="chat-btn">
+          <mat-icon>chat</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

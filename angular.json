@@ -29,7 +29,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
+              "src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -83,7 +86,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
+              "src/styles.scss"
+            ],
             "scripts": []
           }
         }
@@ -91,6 +97,6 @@
     }
   },
   "cli": {
-    "analytics": "d05cf054-5638-4e54-aa78-ec3cc5b403f8"
+    "analytics": false
   }
 }
