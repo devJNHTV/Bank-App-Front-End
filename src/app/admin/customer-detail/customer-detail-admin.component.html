@@ -1,0 +1,36 @@
+<div class="container animated-card">
+  <mat-card class="glow-card animate__animated animate__fadeInUp">
+    <mat-card-header>
+      <mat-card-title class="title-with-icon">
+        <mat-icon class="title-icon">person</mat-icon>
+        Thông tin cá nhân
+      </mat-card-title>
+      <button mat-icon-button color="primary" (click)="goBack()" class="back-button animate__animated animate__bounceIn">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content *ngIf="customer && !isLoading">
+      <div class="customer-info animate__animated animate__fadeInLeft">
+        <!-- <mat-divider></mat-divider> -->
+        <div class="info-item"><strong>👤 Full Name:</strong> {{ customer.fullName }}</div>
+        <div class="info-item"><strong>📧 Email:</strong> {{ customer.email }}</div>
+        <div class="info-item"><strong>📱 Phone:</strong> {{ customer.phoneNumber }}</div>
+        <div class="info-item"><strong>🆔 Identity Number:</strong> {{ customer.identityNumber }}</div>
+        <div class="info-item"><strong>🎂 Date of Birth:</strong> {{ customer.dateOfBirth | date:'dd/MM/yyyy' }}</div>
+        <div class="info-item"><strong>⚥ Gender:</strong> {{ customer.gender === 'male' ? 'Nam' : 'Nữ' }}</div>
+        <div class="info-item"><strong>🏡 Address:</strong> {{ customer.address }}</div>
+        <div class="info-item"><strong>📶 Status:</strong> {{ customer.status }}</div>
+      </div>
+      <div class="add-account-button animate__animated animate__pulse animate__delay-2s">
+        <button mat-raised-button color="accent" class="glow-button" (click)="openUpdateDialog()">
+          ✏️ Update
+        </button>
+      </div>
+    </mat-card-content>
+
+    <mat-card-content *ngIf="isLoading">
+      <mat-spinner></mat-spinner>
+    </mat-card-content>
+  </mat-card>
+</div>

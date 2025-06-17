@@ -1,0 +1,127 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav" fixedInViewport>
+    <!-- Logo Header -->
+    <div class="logo-container">
+      <div class="logo">
+        <!-- <span class="logo-icon" >🌿</span> -->
+        <img
+          src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon-logo-klb.jpg"
+          alt="KienlongBank Logo"
+          class="logo-image"
+        />
+        <span class="logo-text">KienlongBank</span>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <mat-nav-list class="nav-menu">
+      <a
+        mat-list-item
+        routerLink="/customer-dashboard"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/transactions"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>payments</mat-icon>
+        <span matListItemTitle>Giao dịch</span>
+      </a>
+
+      <!-- <a
+        mat-list-item
+        routerLink="/customers/accounts"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>account_balance_wallet</mat-icon>
+        <span matListItemTitle>Thông tin tài khoản</span>
+      </a> -->
+
+      <a
+        *ngIf="isAdmin()"
+        mat-list-item
+        routerLink="/customers"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>people</mat-icon>
+        <span matListItemTitle>Danh sách người dùng</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- Header Toolbar -->
+    <mat-toolbar class="header-toolbar">
+      <button
+        mat-icon-button
+        (click)="sidenav.toggle()"
+        class="menu-button hide-desktop"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <span class="spacer"></span>
+
+      <div class="header-right">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="userMenu"
+          class="user-menu-trigger"
+        >
+          <div class="user-avatar">
+            <mat-icon>account_circle</mat-icon>
+          </div>
+        </button>
+
+        <mat-menu #userMenu="matMenu" class="user-menu">
+          <div class="user-info">
+            <div class="user-name">Xin chào, {{ username || "User" }}!</div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <a mat-menu-item routerLink="/detail" routerLinkActive="active-link">
+            <mat-icon>account_circle</mat-icon>
+            <span>Thông tin cá nhân</span>
+          </a>
+
+          <a
+            mat-menu-item
+            (click)="openUpdateDialog()"
+            routerLinkActive="active-link"
+          >
+            <mat-icon>settings</mat-icon>
+            <span>Đổi mật khẩu</span>
+          </a>
+
+          <a mat-menu-item routerLink="/kyc" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>verified_user</mat-icon>
+            <span matListItemTitle>Xác minh danh tính</span>
+          </a>
+
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Đăng xuất</span>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-toolbar>
+
+    
+    <router-outlet></router-outlet>
+    
+  </mat-sidenav-content>
+</mat-sidenav-container>

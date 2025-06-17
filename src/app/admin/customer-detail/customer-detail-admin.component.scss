@@ -1,0 +1,249 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 64px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.glow-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  }
+}
+
+mat-card-header {
+  padding: 1.8rem;
+  background: linear-gradient(135deg, #006341, #006341);
+  color: white;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    z-index: 1;
+  }
+}
+
+.title-with-icon {
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  
+  .title-icon {
+    margin-right: 0.8rem;
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.back-button {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 2;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.1);
+  }
+
+  mat-icon {
+    color: white;
+  }
+}
+
+.customer-info {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  margin: 1.5rem;
+}
+
+.info-item {
+  padding: 1.2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  
+  &:hover {
+    background: #fff;
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  strong {
+    color: #006341;
+    margin-right: 0.8rem;
+    font-weight: 500;
+  }
+}
+
+.accounts-section {
+  margin-top: 2rem;
+  h3 {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  background: #f0f8ff;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+  &:hover {
+    transform: scale(1.01);
+    background: #e6f2ff;
+  }
+}
+
+.account-icon {
+  font-size: 36px;
+  margin-right: 1rem;
+  color: #1976d2;
+}
+
+.account-content {
+  .account-number {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  .account-detail {
+    font-size: 14px;
+    color: #555;
+  }
+}
+
+.no-account-text {
+  color: #888;
+  text-align: center;
+  font-size: 16px;
+  margin: 1rem 0;
+}
+
+.add-account-button {
+  text-align: center;
+  margin: 2rem 0;
+  
+  button {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #006341, #006341);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(183, 28, 28, 0.2);
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(183, 28, 28, 0.3);
+    }
+
+    mat-icon {
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+  }
+}
+
+mat-spinner {
+  margin: 3rem auto;
+  ::ng-deep circle {
+    stroke: #006341;
+  }
+}
+
+// Animation classes
+.animate__animated {
+  animation-duration: 0.8s;
+}
+
+.animate__fadeInUp {
+  animation-name: fadeInUp;
+}
+
+.animate__fadeInLeft {
+  animation-name: fadeInLeft;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .customer-info {
+    grid-template-columns: 1fr;
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .info-item {
+    padding: 1rem;
+  }
+
+  .add-account-button button {
+    padding: 0.8rem 2rem;
+    width: 100%;
+  }
+}

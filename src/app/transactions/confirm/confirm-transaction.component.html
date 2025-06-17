@@ -1,0 +1,98 @@
+<p-card class="confirm-container" header="Xác nhận giao dịch {{transactionData.type == 'TRANSFER' ?
+ 'Chuyển khoản' : transactionData.type == 'WITHDRAW' ? 'Rút tiền' : transactionData.type == 'DEPOSIT' ? 'Nạp tiền' : 
+ 'Thanh toán hóa đơn'}}" styleClass="p-mt-4">
+  <div class="p-fluid">
+    <div class="p-field">
+      <label *ngIf="transactionData.fromAccountNumber" ><i class="pi pi-building-columns mr-2"></i>Từ tài khoản:
+        <small *ngIf="transactionData.fromCustomerName" style="font-size: 14px;">
+          <br>
+          <strong><i class="pi pi-user mr-2 ml-2"></i>{{ transactionData.fromCustomerName }}  - 
+           {{ transactionData.fromAccountNumber }}
+          </strong>
+        </small>
+      </label>
+    </div>
+
+    <div class="p-field">
+      <label *ngIf="transactionData.toAccountNumber"><i class="pi pi-building-columns mr-2"></i>Đến tài khoản:
+        <small *ngIf="transactionData.toCustomerName" style="font-size: 14px;">
+          <br>
+          <strong><i class="pi pi-user mr-2 ml-2"></i>{{ transactionData.toCustomerName}} -
+             {{ transactionData.toAccountNumber }}
+          </strong>
+          
+        </small>
+      </label>
+    </div>
+
+    <div class="p-field">
+      <label>Số tiền giao dịch:</label>
+      <p><i class="pi pi-money-bill mr-2"></i> {{ transactionData.amount | number : "1.0-0" }} VNĐ</p>
+    </div>
+
+    <div class="p-field" *ngIf="transactionData.description">
+      <label>Nội dung giao dịch:</label>
+      <p>{{ transactionData.description }}</p>
+    </div>
+
+    <div class="p-field">
+      <label for="otp">Nhập mã OTP:</label>
+      <p-inputotp
+        id="otp"
+        [(ngModel)]="otpCode"
+        placeholder="Nhập mã OTP "
+        [length]="6"
+      />
+    </div>
+    <div class="p-field">
+      <p>
+        <i class="pi pi-info-circle mr-2" style="color: #299f3bbe; font-size: 1.2rem; vertical-align: middle;"></i>
+        Mã OTP sẽ hết hạn sau 1 phút. Nếu bạn nhập sai mã OTP quá 3 lần liên tiếp, giao dịch sẽ bị hủy.
+      
+      </p>
+    </div>
+    <div class="p-field">
+      <p>
+        <i class="pi pi-info-circle mr-2" style="color: #299f3bbe; font-size: 1.2rem; vertical-align: middle;"></i>
+         Bạn chưa nhận được mã OTP? 
+        <button
+        pButton
+        type="button"
+        class="p-button-info p-mr-2 ml-3"
+        (click)="onResendOtp()"
+        [disabled]="isResendDisabled"
+      >
+      {{ isResendDisabled ? 'Gửi lại mã (' + resendCountdown + 's)' : 'Gửi lại mã' }}
+      </button>
+      </p>
+    </div>
+    <div class="p-field">
+      <p>
+        <i class="pi pi-exclamation-triangle mr-2" style="color: #f59e42; font-size: 1.2rem; vertical-align: middle;"></i>
+        Vui lòng kiểm tra kỹ các thông tin của giao dịch trước khi xác nhận
+      </p>
+    </div>
+
+    <div class="p-d-flex p-jc-end p-mt-3">
+      <button
+        pButton
+        type="button"
+        class="p-button-secondary p-mr-2"
+        (click)="onCancel()"
+      >
+        Hủy
+      </button>
+      <button
+        pButton
+        type="button"
+        class="p-button-success"
+        (click)="onConfirm()"
+        [disabled]="!otpCode"
+      >
+        Xác nhận
+      </button>
+    </div>
+  </div>
+</p-card>
+
+<p-toast></p-toast>

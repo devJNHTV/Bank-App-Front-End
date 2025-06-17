@@ -1,27 +1,2 @@
-/* You can add global styles to this file, and also import other style files */
-
-/* PrimeIcons CSS */
-@import 'primeicons/primeicons.css';
-
-/* Global styles for banking app */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--p-font-family);
-  background-color: var(--p-surface-0);
-  color: var(--p-text-color);
-}
-
-/* Custom CSS Variables for Banking Theme */
-:root {
-  --banking-primary: var(--p-primary-500);
-  --banking-primary-dark: var(--p-primary-600);
-  --banking-surface: var(--p-surface-0);
-  --banking-success: var(--p-green-500);
-  --banking-warning: var(--p-orange-500);
-  --banking-danger: var(--p-red-500);
-}
+@import "primeflex/primeflex.css";
+@import "primeicons/primeicons.css";
