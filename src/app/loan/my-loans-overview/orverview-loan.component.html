@@ -1,13 +1,20 @@
-<p-panel header="✅ Khoản vay đã phê duyệt" styleClass="approved-panel">
+<!-- Approved Loans -->
+<p-panel  styleClass="approved-panel">
+  <ng-template pTemplate="header">
+    <i class="pi pi-check-circle" style="color: green;">
+      <span style="margin-left: 10px;"><Strong>Khoản vay đã phê duyệt</Strong></span>
+    </i>
+  </ng-template>
+
   <p-table [value]="approvedLoans" [paginator]="false" [rows]="5" responsiveLayout="scroll">
     <ng-template pTemplate="header">
       <tr>
-        <th>Mã khoản vay</th>
+        <th>Id</th>
         <th>Số tài khoản</th>
         <th>Số tiền vay</th>
         <th>Lãi suất</th>
         <th>Kỳ hạn (tháng)</th>
-        <th>Thu nhập khai báo</th>
+        <th> Thu nhập</th>
         <th>Trạng thái</th>
         <th>Ngày tạo</th>
         <th>Ngày duyệt</th>
@@ -25,22 +32,28 @@
         <td><span class="status-badge approved">APPROVED</span></td>
         <td>{{ loan.createdAt | date:'dd/MM/yyyy' }}</td>
         <td>{{ loan.approvedAt || '—' }}</td>
-        <td><p-button (click)="getDetailLoan(loan.loanId)">Chi tiết</p-button></td>
+        <td><p-button (click)="getDetailLoan(loan.loanId)" icon="pi pi-file-import"></p-button></td>
       </tr>
     </ng-template>
   </p-table>
 </p-panel>
 
-<p-panel header="⏳ Đang chờ xử lý" styleClass="pending-panel">
+<p-panel  styleClass="pending-panel" [style]="{'margin': '1rem 0'}">
+  <ng-template pTemplate="header">
+    <i class="pi pi-clock" style="color: orange;">
+      <span style="margin-left: 10px;"><Strong>Đang chờ xử lý</Strong></span>
+    </i>
+  </ng-template>
+
   <p-table [value]="pendingLoans" [paginator]="false" [rows]="5" responsiveLayout="scroll">
-     <ng-template pTemplate="header">
+    <ng-template pTemplate="header">
       <tr>
-        <th>Mã khoản vay</th>
+        <th>Id</th>
         <th>Số tài khoản</th>
         <th>Số tiền vay</th>
         <th>Lãi suất</th>
         <th>Kỳ hạn (tháng)</th>
-        <th>Thu nhập khai báo</th>
+        <th> Thu nhập</th>
         <th>Trạng thái</th>
         <th>Ngày tạo</th>
         <th>Ngày duyệt</th>
@@ -62,25 +75,39 @@
   </p-table>
 </p-panel>
 
-<p-panel header="❌ Bị từ chối" styleClass="rejected-panel">
-  <p-table [value]="rejectedLoans" [paginator]="false" [rows]="5" responsiveLayout="scroll">
-     <ng-template pTemplate="header">
+<p-panel  styleClass="rejected-panel">
+  <ng-template pTemplate="header">
+    <i class="pi pi-times-circle" style="color: red;">
+      <span style="margin-left: 10px;"><Strong>Bị từ chối</Strong></span>
+    </i>
+  </ng-template>
+
+  <p-table [value]="rejectedLoans" [paginator]="false" [rows]="5" responsiveLayout="scroll" dataKey="loanId">
+    <ng-template pTemplate="header">
       <tr>
-        <th>Mã khoản vay</th>
+        <th>Id</th>
         <th>Số tài khoản</th>
         <th>Số tiền vay</th>
         <th>Lãi suất</th>
         <th>Kỳ hạn (tháng)</th>
-        <th>Thu nhập khai báo</th>
+        <th> Thu nhập</th>
         <th>Trạng thái</th>
         <th>Ngày tạo</th>
-        <th>Ngày duyệt</th>
         <th>Thao tác</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-loan>
       <tr>
-        <td>{{ loan.loanId }}</td>
+        <!-- <td>{{ loan.loanId }}</td> -->
+         <td>
+          <button
+                  type="button"
+                  pButton
+                  pRipple
+                  [pRowToggler]="loan"
+                  class="p-button-text p-button-rounded p-button-plain"
+                >{{ loan.loanId }}</button>
+         </td>
         <td>{{ loan.accountNumber }}</td>
         <td>{{ loan.amount | number:'1.0-0' }} VND</td>
         <td>{{ loan.interestRate }}%</td>
@@ -88,8 +115,16 @@
         <td>{{ loan.declaredIncome | number:'1.0-0' }} VND</td>
         <td><span class="status-badge rejected">REJECTED</span></td>
         <td>{{ loan.createdAt | date:'dd/MM/yyyy' }}</td>
-        <td>{{ loan.approvedAt || '—' }}</td>
-        <td><p-button (click)="getDetailReject(loan.loanId)">Chi tiết</p-button></td>
+        <td><p-button (click)="getDetailReject(loan.loanId)"  icon="pi pi-file-edit"></p-button></td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-loan>
+      <tr>
+        <td colspan="10">
+          <div class="p-3" style="color: red; font-weight: 500;">
+            Lý do từ chối: {{ loan.rejectionReasons[0].reason }}
+          </div>
+        </td>
       </tr>
     </ng-template>
   </p-table>

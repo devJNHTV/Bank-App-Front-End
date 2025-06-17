@@ -214,7 +214,7 @@ export class ApplyNewLoanComponent implements OnInit {
       next: (response: ApiResponseWrapper<Loan>) => {
         this.loading = false;
         this.toastr.success(response.message || 'Đăng ký khoản vay thành công!', 'Thành công');
-        setTimeout(() => this.router.navigate(['']), 2000);
+        setTimeout(() => this.router.navigate(['loan/overview']), 2000);
       },
       error: (httpError: HttpErrorResponse) => {
         console.log(httpError);

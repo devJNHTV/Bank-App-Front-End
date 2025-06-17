@@ -4,19 +4,32 @@ import { CommonModule } from '@angular/common';
 import { LoanService } from '../../services/loan.service';
 import { Loan } from '../../models/loan.model';
 import { Repayment } from '../../models/repayment.model';
-
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TableModule } from 'primeng/table';
 @Component({
   selector: 'app-detail-loan',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProgressSpinnerModule, TableModule],
   templateUrl: './detail-loan.component.html',
   styleUrls: ['./detail-loan.component.scss']
 })
 export class DetailLoanComponent implements OnInit {
-  loanDetail: Loan | null = null;
+  loanDetail: Loan = {
+    loanId:null,
+    accountNumber: '',
+    amount: 0,
+    interestRate: 0,
+    termMonths: 0,
+    createdAt: '',
+    approvedAt: '',
+    customerId: null,
+    declaredIncome: 0,
+    status: null,
+    repayments: [],
+    rejectionReasons: []
+  };
   loading: boolean = true;
   error: string | null = null;
-
   constructor(
     private route: ActivatedRoute,
     private loanService: LoanService

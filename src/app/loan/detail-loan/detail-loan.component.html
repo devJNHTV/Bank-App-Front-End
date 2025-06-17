@@ -1,95 +1,141 @@
 <div class="loan-detail-container">
-  <div class="loading-spinner" *ngIf="loading">
-    <div class="spinner"></div>
+  <div class="loading-overlay" *ngIf="loading">
+    <p-progressSpinner strokeWidth="6"></p-progressSpinner>
   </div>
 
-  <div class="error-message" *ngIf="error">
-    {{ error }}
+  <div class="error-banner" *ngIf="error">
+    <i class="pi pi-exclamation-triangle"></i>
+    <span>{{ error }}</span>
   </div>
 
   <div class="loan-detail-content" *ngIf="loanDetail && !loading">
     <div class="loan-header">
-      <h1>Loan Details</h1>
+      <div class="header-content">
+        <h1>Loan Details</h1>
+        <p class="subtitle">View your loan information and status</p>
+      </div>
       <div class="loan-status" [ngClass]="loanDetail.status?.toLowerCase()">
-        {{ loanDetail.status }}
+        <i class="pi" [ngClass]="{
+          'pi-check-circle': loanDetail.status === 'APPROVED',
+          'pi-clock': loanDetail.status === 'PENDING',
+          'pi-times-circle': loanDetail.status === 'REJECTED'
+        }"></i>
+        <span>{{ loanDetail.status }}</span>
       </div>
     </div>
 
-    <div class="loan-info-section">
-      <h2>Basic Information</h2>
-      <div class="info-grid">
-        <div class="info-item">
-          <label>Loan ID</label>
-          <span>{{ loanDetail.loanId }}</span>
+    <div class="content-grid">
+      <div class="info-card">
+        <div class="card-header">
+          <i class="pi pi-info-circle"></i>
+          <h2>Basic Information</h2>
         </div>
-        <div class="info-item">
-          <label>Account Number</label>
-          <span>{{ loanDetail.accountNumber }}</span>
-        </div>
-        <div class="info-item">
-          <label>Loan Amount</label>
-          <span>{{ formatCurrency(loanDetail.amount) }}</span>
-        </div>
-        <div class="info-item">
-          <label>Interest Rate</label>
-          <span>{{ loanDetail.interestRate }}%</span>
-        </div>
-        <div class="info-item">
-          <label>Term (Months)</label>
-          <span>{{ loanDetail.termMonths }}</span>
-        </div>
-        <div class="info-item">
-          <label>Declared Income</label>
-          <span>{{ formatCurrency(loanDetail.declaredIncome) }}</span>
-        </div>
-        <div class="info-item">
-          <label>Created Date</label>
-          <span>{{ formatDate(loanDetail.createdAt) }}</span>
-        </div>
-        <div class="info-item" *ngIf="loanDetail.approvedAt">
-          <label>Approved Date</label>
-          <span>{{ formatDate(loanDetail.approvedAt) }}</span>
+        <div class="info-grid">
+          <div class="info-item">
+            <i class="pi pi-id-card"></i>
+            <div class="info-content">
+              <label>Loan ID</label>
+              <span>{{ loanDetail.loanId }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-credit-card"></i>
+            <div class="info-content">
+              <label>Account Number</label>
+              <span>{{ loanDetail.accountNumber }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-dollar"></i>
+            <div class="info-content">
+              <label>Loan Amount</label>
+              <span>{{ formatCurrency(loanDetail.amount) }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-percentage"></i>
+            <div class="info-content">
+              <label>Interest Rate</label>
+              <span>{{ loanDetail.interestRate }}%</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-clock"></i>
+            <div class="info-content">
+              <label>Term (Months)</label>
+              <span>{{ loanDetail.termMonths }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-wallet"></i>
+            <div class="info-content">
+              <label>Declared Income</label>
+              <span>{{ formatCurrency(loanDetail.declaredIncome) }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <i class="pi pi-calendar"></i>
+            <div class="info-content">
+              <label>Created Date</label>
+              <span>{{ formatDate(loanDetail.createdAt) }}</span>
+            </div>
+          </div>
+          <div class="info-item" *ngIf="loanDetail.approvedAt">
+            <i class="pi pi-calendar-check"></i>
+            <div class="info-content">
+              <label>Approved Date</label>
+              <span>{{ formatDate(loanDetail.approvedAt) }}</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="repayment-schedule-section" *ngIf="loanDetail.repayments">
-      <h2>Repayment Schedule</h2>
-      <div class="repayment-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Due Date</th>
-              <th>Principal</th>
-              <th>Interest</th>
-              <th>Total Due</th>
-              <th>Paid Amount</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let repayment of loanDetail.repayments">
-              <td>{{ formatDate(repayment.dueDate) }}</td>
-              <td>{{ formatCurrency(repayment.principal) }}</td>
-              <td>{{ formatCurrency(repayment.interest) }}</td>
-              <td>{{ formatCurrency(repayment.principal + repayment.interest) }}</td>
-              <td>{{ formatCurrency(repayment.paidAmount) }}</td>
-              <td>
-                <span class="status-badge" [ngClass]="getStatusClass(repayment.status)">
-                  {{ repayment.status }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="repayment-card" *ngIf="loanDetail.repayments?.length">
+        <div class="card-header">
+          <i class="pi pi-list"></i>
+          <h2>Repayment Schedule</h2>
+        </div>
+        <div class="repayment-table-wrapper">
+          <p-table 
+            [value]="loanDetail.repayments  ?? []"
+            styleClass="p-datatable-gridlines"
+            [tableStyle]="{'min-width': '50rem'}">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Due Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Paid Date</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-repayment>
+              <tr>
+                <td>{{ formatDate(repayment.dueDate) }}</td>
+                <td>{{ formatCurrency(repayment.amount) }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="repayment.status?.toLowerCase()">
+                    {{ repayment.status }}
+                  </span>
+                </td>
+                <td>{{ repayment.paidDate ? formatDate(repayment.paidDate) : '-' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
       </div>
-    </div>
 
-    <div class="rejection-reasons" *ngIf="loanDetail.rejectionReasons && loanDetail.rejectionReasons.length > 0">
-      <h2>Rejection Reasons</h2>
-      <ul>
-        <li *ngFor="let reason of loanDetail.rejectionReasons">{{ reason.reason }}</li>
-      </ul>
+      <div class="rejection-card" *ngIf="loanDetail.rejectionReasons?.length">
+        <div class="card-header">
+          <i class="pi pi-times-circle"></i>
+          <h2>Rejection Reasons</h2>
+        </div>
+        <div class="rejection-list">
+          <div class="rejection-item" *ngFor="let reason of loanDetail.rejectionReasons">
+            <i class="pi pi-exclamation-circle"></i>
+            <span>{{ reason.reason }}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

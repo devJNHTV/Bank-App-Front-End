@@ -1,90 +1,254 @@
 .loan-detail-view-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+  .header-content {
     h1 {
       margin: 0;
-      color: #2c3e50;
+      color: #1e293b;
+      font-size: 1.875rem;
+      font-weight: 600;
     }
-  
-    .refresh-button {
+
+    .subtitle {
+      margin: 0.5rem 0 0;
+      color: #64748b;
+      font-size: 1rem;
+    }
+  }
+
+  .refresh-button {
+    .p-button-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.content-wrapper {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  min-height: 400px;
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin: 1rem;
+
+  i {
+    font-size: 1.25rem;
+  }
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: #64748b;
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #94a3b8;
+  }
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+:host ::ng-deep {
+  .p-datatable {
+    .p-datatable-header {
+      background: transparent;
+      border: none;
+      padding: 1.5rem;
+    }
+
+    .table-header {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background-color: #f8f9fa;
-      border: 1px solid #dee2e6;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-  
-      &:hover {
-        background-color: #e9ecef;
-      }
-  
-      i {
-        color: #6c757d;
-      }
-    }
-  }
-  
-  .loading-spinner,
-  .error-message,
-  .no-loans-message {
-    margin: 1rem 0;
-    text-align: center;
-  }
-  
-  .loans-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-  
-    th, td {
-      padding: 0.75rem 1rem;
-      border: 1px solid #dee2e6;
-      text-align: left;
-      font-size: 0.95rem;
-    }
-  
-    thead {
-      background-color: #f1f3f5;
-  
-      th {
+
+      h2 {
+        margin: 0;
+        color: #1e293b;
+        font-size: 1.25rem;
         font-weight: 600;
-        color: #495057;
+      }
+
+      .p-input-icon-left {
+        position: relative;
+
+        i {
+          position: absolute;
+          left: 0.75rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #64748b;
+        }
+
+        input {
+          padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          font-size: 0.875rem;
+          width: 300px;
+          transition: all 0.2s ease;
+
+          &:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+          }
+        }
       }
     }
-  
-    tbody tr {
+
+    .p-datatable-thead > tr > th {
+      background: #f8fafc;
+      color: #1e293b;
+      font-weight: 600;
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
       transition: background-color 0.2s ease;
-  
+
       &:hover {
-        background-color: #f8f9fa;
+        background: #f1f5f9;
+      }
+
+      .p-sortable-column-icon {
+        color: #64748b;
+      }
+    }
+
+    .p-datatable-tbody > tr {
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background: #f8fafc;
+      }
+
+      > td {
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        color: #1e293b;
+      }
+    }
+
+    .p-datatable-footer {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+      padding: 1rem;
+      color: #64748b;
+    }
+
+    .p-paginator {
+      background: transparent;
+      border: none;
+      padding: 0;
+
+      .p-paginator-first,
+      .p-paginator-prev,
+      .p-paginator-next,
+      .p-paginator-last {
+        min-width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 8px;
+        margin: 0 0.25rem;
+        color: #64748b;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #f1f5f9;
+          color: #1e293b;
+        }
+
+        &.p-disabled {
+          color: #cbd5e1;
+        }
+      }
+
+      .p-paginator-pages {
+        .p-paginator-page {
+          min-width: 2.5rem;
+          height: 2.5rem;
+          border-radius: 8px;
+          margin: 0 0.25rem;
+          color: #64748b;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+          }
+
+          &.p-highlight {
+            background: #4f46e5;
+            color: white;
+          }
+        }
       }
     }
   }
-  
-  .details-button {
-    padding: 0.4rem 0.8rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: white;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  
-    &:hover {
-      background-color: #0069d9;
+
+  .p-button {
+    &.p-button-outlined {
+      border-color: #4f46e5;
+      color: #4f46e5;
+
+      &:hover {
+        background: rgba(79, 70, 229, 0.1);
+      }
+
+      .p-button-icon {
+        color: #4f46e5;
+      }
     }
   }
+}
   

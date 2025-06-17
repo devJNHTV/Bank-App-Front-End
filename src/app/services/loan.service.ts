@@ -15,8 +15,10 @@ export class LoanService {
     private http: HttpClient
   ) {}
   private getAuthHeaders(): HttpHeaders {
-    
     const token = localStorage.getItem('access_token') || '';
+    console.log("token");
+    
+    console.log(token);
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -33,12 +35,12 @@ export class LoanService {
 
   // 3. POST: Phê duyệt khoản vay
   approveLoan(loanId: number): Observable<ApiResponseWrapper<Loan>> {
-    return this.http.post<ApiResponseWrapper<Loan>>(`${this.baseUrl}/${loanId}/approve`, { headers: this.getAuthHeaders() });
+    return this.http.post<ApiResponseWrapper<Loan>>(`${this.baseUrl}/${loanId}/approve`, {}, { headers: this.getAuthHeaders() });
   }
 
   // 4. POST: Đóng khoản vay
   closeLoan(loanId: number): Observable<ApiResponseWrapper<Loan>> {
-    return this.http.post<ApiResponseWrapper<Loan>>(`${this.baseUrl}/${loanId}/close`, { headers: this.getAuthHeaders() });
+    return this.http.post<ApiResponseWrapper<Loan>>(`${this.baseUrl}/${loanId}/close`, {},{ headers: this.getAuthHeaders() });
   }
 
   // 5. POST: Từ chối khoản vay
@@ -51,7 +53,7 @@ export class LoanService {
     return this.http.get<ApiResponseWrapper<Loan>>(`${this.baseUrl}/${loanId}`, { headers: this.getAuthHeaders() });
   }
 
-  // 7. GET: Lấy danh sách khoản vay theo customerId (tích hợp Keycloak)
+  // 7. GET: Lấy danh sách khoản vay theo customerId
   async getLoansByCustomerId(customerId: number): Promise<Observable<ApiResponseWrapper<Loan[]>>> {
     return this.http.get<ApiResponseWrapper<Loan[]>>(`${this.baseUrl}/customer/${customerId}`,{ headers: this.getAuthHeaders() });
   }

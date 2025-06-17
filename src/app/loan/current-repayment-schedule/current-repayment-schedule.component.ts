@@ -9,6 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-current-repayment-schedule',
@@ -32,7 +33,8 @@ export class CurrentRepaymentScheduleComponent implements OnInit {
 
   constructor(
     private repaymentService: RepaymentService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -49,15 +51,6 @@ export class CurrentRepaymentScheduleComponent implements OnInit {
       {
       
       next: (response: ApiResponseWrapper<Repayment>) => {
-        // console.log('1111111111111111111');
-        
-        // console.log(response);
-        // if (response.status === 200) {
-        //   this.currentRepayment = response.data;
-        // } else {
-        //   this.error = response.message || 'Failed to load current repayment';
-        //   this.showNotification('error', 'Error', this.error);
-        // }
         this.currentRepayment = response.data;
       },
       error: (error) => {
@@ -74,9 +67,7 @@ export class CurrentRepaymentScheduleComponent implements OnInit {
 
   handlePayment(): void {
     if (!this.currentRepayment) return;
-    
-    // Here you can implement the payment logic or navigate to a payment page
-    this.showNotification('info', 'Payment', 'Payment functionality will be implemented here');
+    this.router.navigate(['loan/pay-repayment/'+this.currentRepayment.repaymentId]);
   }
 
   getStatusSeverity(status: string): string {

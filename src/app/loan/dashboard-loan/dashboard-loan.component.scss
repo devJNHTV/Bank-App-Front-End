@@ -1,110 +1,547 @@
-/* src/app/loan/DashboardLoan/dashboard-loan.component.css */
+
+$primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-border: rgba(255, 255, 255, 0.2);
+$text-primary: #ffffff;
+$text-secondary: rgba(255, 255, 255, 0.8);
+$shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+$shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+
+@mixin glassmorphism {
+  background: $glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  box-shadow: $shadow-light;
+}
+
+@mixin smooth-transition {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+// Base styles
 .dashboard-wrapper {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3), transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+// Header
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0 10rem;
+  animation: fadeInDown 0.8s ease-out;
+  
+  .dashboard-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    letter-spacing: -2px;
+  }
+  
+  .dashboard-subtitle {
+    color: $text-secondary;
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+}
+
+.main-panel {
+  @include glassmorphism;
+  border-radius: 24px !important;
+  overflow: hidden;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+  
+  ::ng-deep .p-panel-content {
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+  
+  ::ng-deep .p-panel-header {
+    display: none;
+  }
 }
 
 .dashboard-container {
-  padding: 1.5rem;
-  background-color: #f9fafb;
-  border-radius: 8px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  background:transparent; 
+}
+
+// Floating elements
+.floating-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+// Section titles
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 2;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(135deg, #ff9a9e, #fecfef);
+    border-radius: 2px;
+  }
+}
+
+// Stats section
+.stats-section {
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 2;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
 }
 
 .stat-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 12px;
+  @include smooth-transition;
+  position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  
+  ::ng-deep .p-card {
+    @include glassmorphism;
+    border-radius: 20px;
+    overflow: hidden;
+    
+    .p-card-body {
+      padding: 2rem;
+    }
+    
+    .p-card-content {
+      padding: 0;
+    }
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+  
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    
+    ::ng-deep .p-card {
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    &::before {
+      opacity: 1;
+    }
+  }
+  
+  &.total-borrowed {
+    ::ng-deep .p-card {
+      background: linear-gradient(135deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 142, 83, 0.15) 100%);
+    }
+  }
+  
+  &.total-outstanding {
+    ::ng-deep .p-card {
+      background: linear-gradient(135deg, rgba(72, 187, 120, 0.15) 0%, rgba(56, 178, 172, 0.15) 100%);
+    }
+  }
 }
 
 .stat-content {
   display: flex;
   align-items: center;
-  padding: 1rem;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 1rem;
 }
 
 .stat-icon {
-  font-size: 2.5rem;
-  color: #1e88e5;
-  margin-right: 1rem;
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  
+  i {
+    font-size: 2.5rem;
+    color: white;
+    z-index: 2;
+    position: relative;
+  }
+}
+
+.total-borrowed .stat-icon {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+  box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+}
+
+.total-outstanding .stat-icon {
+  background: linear-gradient(135deg, #48bb78 0%, #38b2ac 100%);
+  box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
 }
 
 .stat-info {
   flex: 1;
-}
-
-.stat-info h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 0.5rem;
+  
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text-secondary;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 }
 
 .stat-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1a3c34;
-  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: $text-primary;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 0.5rem;
 }
 
-.button-group {
+.stat-trend {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  
+  i {
+    margin-right: 0.25rem;
+    font-size: 0.8rem;
+  }
+  
+  .total-borrowed & {
+    color: #ff8e53;
+  }
+  
+  .total-outstanding & {
+    color: #48bb78;
+  }
 }
 
-.modern-button {
+.stat-chart {
+  display: flex;
+  align-items: end;
+  gap: 4px;
+  height: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+
+// Actions section
+.actions-section {
+  position: relative;
+  z-index: 2;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.action-card {
+  @include glassmorphism;
+  @include smooth-transition;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+  }
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-heavy;
+    border-color: rgba(255, 255, 255, 0.3);
+    
+    &::before {
+      left: 100%;
+    }
+    
+    .action-glow {
+      opacity: 1;
+      transform: scale(1.5);
+    }
+  }
+}
+
+.action-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  opacity: 0;
   transition: all 0.3s ease;
-  font-weight: 500;
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
+  pointer-events: none;
 }
 
-.modern-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.create-loan {
+  background: linear-gradient(135deg, rgba(129, 140, 248, 0.2) 0%, rgba(124, 58, 237, 0.2) 100%);
+  
+  .action-glow {
+    background: radial-gradient(circle, rgba(129, 140, 248, 0.3), transparent 70%);
+  }
 }
 
-@media (max-width: 768px) {
+.overview-loan {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(234, 88, 12, 0.2) 100%);
+  
+  .action-glow {
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.3), transparent 70%);
+  }
+}
+
+.history-loan {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+  
+  .action-glow {
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.3), transparent 70%);
+  }
+}
+
+.current-loan {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(21, 128, 61, 0.2) 100%);
+  
+  .action-glow {
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.3), transparent 70%);
+  }
+}
+
+.action-description {
+  font-size: 0.9rem;
+  color: $text-secondary;
+  line-height: 1.5;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+// Button styles
+::ng-deep .modern-button {
+  @include smooth-transition;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border: none;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover::before {
+    opacity: 1;
+  }
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  &.primary-btn {
+    background: linear-gradient(135deg, #818cf8 0%, #7c3aed 100%);
+    box-shadow: 0 4px 15px rgba(129, 140, 248, 0.4);
+  }
+  
+  &.secondary-btn {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+  }
+  
+  &.tertiary-btn {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+  }
+  
+  &.quaternary-btn {
+    background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+  }
+}
+
+// Animations
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes chartGrow {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--final-height);
+  }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .dashboard-wrapper {
+    padding: 1.5rem;
+  }
+  
   .stats-grid {
     grid-template-columns: 1fr;
   }
+}
 
-  .button-group {
-    flex-direction: column;
-    align-items: stretch;
+@media (max-width: 768px) {
+  .dashboard-wrapper {
+    padding: 1rem;
   }
-
-  .modern-button {
-    width: 100%;
-    text-align: center;
+  
+  .dashboard-header .dashboard-title {
+    font-size: 2.5rem;
+  }
+  
+  .dashboard-container {
+    padding: 1.5rem;
+  }
+  
+  .button-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .stat-card {
+    ::ng-deep .p-card .p-card-body {
+      padding: 1.5rem;
+    }
+  }
+  
+  .stat-value {
+    font-size: 1.8rem;
   }
 }
 
 @media (max-width: 480px) {
-  .dashboard-container {
-    padding: 1rem;
-  }
-
-  .stat-icon {
+  .dashboard-header .dashboard-title {
     font-size: 2rem;
   }
-
-  .stat-value {
-    font-size: 1.3rem;
+  
+  .stat-content {
+    flex-direction: column;
+    text-align: center;
+    
+    .stat-icon {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
 }

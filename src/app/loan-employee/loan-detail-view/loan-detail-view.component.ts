@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { AccountService } from '../../services/account/account.service';
+import { Account } from '../../interfaces/account.interface';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -15,10 +16,11 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-
+import { ToastrService } from 'ngx-toastr';
 import { LoanService } from '../../services/loan.service';
 import { Loan } from '../../models/loan.model';
 import { LoanStatus } from '../../models/loanStatus .model';
+import { DividerModule } from 'primeng/divider';
 
 type Severity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast';
 
@@ -37,7 +39,8 @@ type Severity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast
     TagModule,
     ToastModule,
     InputTextModule,
-    InputNumberModule
+    InputNumberModule,
+    DividerModule
   ],
   providers: [
     MessageService
@@ -48,7 +51,7 @@ type Severity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast
 export class LoanDetailViewComponent implements OnInit {
   loanDetail: Loan | null = null;
   customerInfo: any = null;
-  accounts: any[] = [];
+  accounts: Account[] = [];
   loading = true;
   error: string | null = null;
 
@@ -69,7 +72,9 @@ export class LoanDetailViewComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private loanService: LoanService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private accountService: AccountService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -86,7 +91,7 @@ export class LoanDetailViewComponent implements OnInit {
         this.loanDetail = data;
         if (data.customerId) {
           this.loadCustomerInfo(data.customerId);
-          this.loadAccounts(data.customerId);
+          this.loadAccounts();
         }
         // Initialize form with current loan values
         if (data.status === 'REJECTED') {
@@ -121,27 +126,6 @@ export class LoanDetailViewComponent implements OnInit {
     };
   }
 
-  loadAccounts(customerId: number) {
-    this.accounts = [
-      {
-        accountNumber: "27654321",
-        cifCode: "CIF00000005",
-        accountType: "PAYMENT",
-        balance: 20000000,
-        status: "ACTIVE",
-        openedDate: "2024-01-05"
-      },
-      {
-        accountNumber: "37154329",
-        cifCode: "CIF00000005",
-        accountType: "PAYMENT",
-        balance: 100000,
-        status: "ACTIVE",
-        openedDate: "2024-01-01"
-      }
-    ];
-  }
-
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
   }
@@ -159,20 +143,32 @@ export class LoanDetailViewComponent implements OnInit {
       default:         return 'info';
     }
   }
+  loadAccounts(): void {
+    this.accountService.getAccounts().subscribe({
+      next: (res: any) => {
+        this.accounts = res.data;
+        console.log(this.accounts);
+        
+      },
+      error: (err) => {
+        console.error('Không tải được danh sách tài khoản:', err);
+        this.toastr.error('Lỗi khi tải danh sách tài khoản.', 'Lỗi');
+      }
+    });
+  }
 
   approveLoan() {
-    if (!this.loanDetail?.loanId) return;
     this.processingAction = true;
-    this.loanService.approveLoan(this.loanDetail.loanId).subscribe({
+    this.loanService.approveLoan(this.loanDetail?.loanId ?? 0).subscribe({
       next: () => {
         this.processingAction = false;
-        this.messageService.add({ severity: 'success', summary: 'Approved', detail: 'Loan approved successfully' });
+        this.toastr.success( 'Kích hoạt khoản vay thành công!', 'Thành công');
         this.router.navigate(['/employee/loans/pending']);
       },
-      error: () => {
+      error: (err) => {
         this.processingAction = false;
-        this.error = 'Failed to approve loan';
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: this.error });
+        console.log(err);
+        this.toastr.error( err.error.message, 'Thất bại');
       }
     });
   }
@@ -188,6 +184,8 @@ export class LoanDetailViewComponent implements OnInit {
   }
 
   rejectLoan() {
+    console.log(this.loanDetail);
+    
     if (!this.loanDetail?.loanId) return;
     const reason = this.rejectionReasonControl.value?.trim();
     if (!reason) return;
@@ -200,14 +198,13 @@ export class LoanDetailViewComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.processingAction = false;
-        this.messageService.add({ severity: 'success', summary: 'Rejected', detail: 'Loan rejected' });
+        this.toastr.success( 'TỪ chối khoản vay thành công!', 'Thành công');
         this.closeRejectDialog();
-        this.router.navigate(['/employee/loans/pending']);
+        this.router.navigate(['/detail/loan/'+this.loanDetail?.loanId]);
       },
-      error: () => {
+      error: (err) => {
         this.processingAction = false;
-        this.error = 'Failed to reject loan';
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: this.error });
+        this.toastr.error( err.error.message, 'Thất bại');
       }
     });
   }
@@ -228,33 +225,4 @@ export class LoanDetailViewComponent implements OnInit {
       });
     }
   }
-
-  // updateAndResubmitLoan() {
-  //   if (!this.loanDetail?.loanId || !this.loanForm.valid) return;
-
-  //   const updatedLoan: Loan = {
-  //     ...this.loanDetail,
-  //     ...this.loanForm.value,
-  //     status: 'PENDING' // Change status to PENDING for resubmission
-  //   };
-
-  //   this.processingAction = true;
-  //   this.loanService.updateLoan(updatedLoan).subscribe({
-  //     next: () => {
-  //       this.processingAction = false;
-  //       this.messageService.add({ 
-  //         severity: 'success', 
-  //         summary: 'Success', 
-  //         detail: 'Loan updated and resubmitted successfully' 
-  //       });
-  //       this.closeEditDialog();
-  //       this.router.navigate(['/customer/loans']);
-  //     },
-  //     error: () => {
-  //       this.processingAction = false;
-  //       this.error = 'Failed to update and resubmit loan';
-  //       this.messageService.add({ severity: 'error', summary: 'Error', detail: this.error });
-  //     }
-  //   });
-  // }
 }

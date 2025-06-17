@@ -38,7 +38,15 @@ import { InputTextModule } from 'primeng/inputtext';
   styleUrls: ['./pay-repayment.component.scss']
 })
 export class PayRepaymentComponent implements OnInit {
-  repayment: Repayment | null = null;
+  repayment: Repayment = {
+    repaymentId: 0,
+    dueDate: '',
+    principal: 0,
+    interest: 0,
+    paidAmount: 0,
+    status: ''
+  };
+  
   accounts: Account[] = [];
   loading = false;
   error: string | null = null;
@@ -82,6 +90,8 @@ export class PayRepaymentComponent implements OnInit {
       next: (response: ApiResponseWrapper<Repayment>) => {
         if (response.status === 200) {
           this.repayment = response.data;
+          console.log(this.repayment);
+          
           // Set max amount for payment
           const maxAmount = this.repayment.principal + this.repayment.interest - this.repayment.paidAmount;
           this.paymentForm.get('amount')?.setValidators([
@@ -132,6 +142,8 @@ export class PayRepaymentComponent implements OnInit {
       next: (response: any) => {
         if (response.status === 200) {
           this.referenceCode = response.data;
+          console.log(this.referenceCode);
+          
           this.showOtpDialog = true;
           this.showNotification('success', 'Success', 'OTP has been sent to your email');
         } else {
@@ -172,6 +184,8 @@ export class PayRepaymentComponent implements OnInit {
         }
       },
       error: (err) => {
+        console.log(err);
+        
         this.showNotification('error', 'Error', 'Error confirming payment');
       },
       complete: () => {

@@ -4,10 +4,17 @@ import { LoanService } from '../../services/loan.service';
 import { Loan } from '../../models/loan.model';
 import { LoanStatus } from '../../models/loanStatus .model';
 import { Router } from '@angular/router';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 @Component({
   selector: 'app-pending-loans-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TableModule, ButtonModule, InputTextModule, ToastModule, ConfirmDialogModule, DialogModule, ProgressSpinnerModule],
   templateUrl: './pending-loans-list.component.html',
   styleUrls: ['./pending-loans-list.component.scss']
 })

@@ -1,134 +1,114 @@
+<!-- Component Template -->
 <p-toast></p-toast>
 
-<div class="container">
-  <p-card header="Make Repayment" styleClass="shadow-2">
+<div class="master-container">
+  <!-- Repayment Card -->
+  <div class="card repayment">
+    <label class="title">Make Repayment</label>
+
+    <!-- Loading / Error -->
     <ng-container *ngIf="loading">
-      <div class="flex justify-content-center">
+      <div class="loading-overlay">
         <p-progressSpinner></p-progressSpinner>
       </div>
     </ng-container>
-
     <ng-container *ngIf="!loading && error">
-      <div class="flex justify-content-center">
-        <span class="text-red-500">{{ error }}</span>
+      <div class="error-overlay">
+        <span>{{ error }}</span>
       </div>
     </ng-container>
 
-    <ng-container *ngIf="!loading && !error && repayment">
-      <div class="grid">
-        <div class="col-12">
-          <div class="flex flex-column gap-2">
-            <!-- <div class="flex justify-content-between">
-              <span class="font-semibold">Repayment Period:</span>
-              <span>{{ repayment.period }}</span>
-            </div> -->
-            <div class="flex justify-content-between">
-              <span class="font-semibold">Principal Amount:</span>
-              <span>{{ repayment.principal | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
-            </div>
-            <div class="flex justify-content-between">
-              <span class="font-semibold">Interest Amount:</span>
-              <span>{{ repayment.interest | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
-            </div>
-            <div class="flex justify-content-between">
-              <span class="font-semibold">Total Amount:</span>
-              <span>{{ calculateTotalAmount() | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
-            </div>
-            <div class="flex justify-content-between">
-              <span class="font-semibold">Paid Amount:</span>
-              <span>{{ repayment.paidAmount | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
-            </div>
-            <div class="flex justify-content-between">
-              <span class="font-semibold">Remaining Amount:</span>
-              <span>{{ calculateRemainingAmount() | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
-            </div>
-          </div>
+    <!-- Content -->
+    <div class="content">
+      <div class="summary">
+        <div class="row">
+          <span>Principal Amount:</span>
+          <span>{{ repayment.principal | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
         </div>
-
-        <div class="col-12">
-          <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-3">
-            <div class="field">
-              <label for="accountNumber" class="block mb-2">Select Account</label>
-              <p-dropdown
-                id="accountNumber"
-                formControlName="accountNumber"
-                [options]="accounts"
-                optionLabel="accountNumber"
-                placeholder="Select an account"
-                [showClear]="true"
-                styleClass="w-full"
-              ></p-dropdown>
-              <small class="p-error block" *ngIf="paymentForm.get('accountNumber')?.invalid && paymentForm.get('accountNumber')?.touched">
-                Please select an account
-              </small>
-            </div>
-
-            <div class="field">
-              <label for="amount" class="block mb-2">Payment Amount</label>
-              <p-inputNumber
-                id="amount"
-                formControlName="amount"
-                mode="currency"
-                currency="VND"
-                locale="vi-VN"
-                [min]="0"
-                [max]="calculateRemainingAmount()"
-                styleClass="w-full"
-              ></p-inputNumber>
-              <small class="p-error block" *ngIf="paymentForm.get('amount')?.invalid && paymentForm.get('amount')?.touched">
-                Please enter a valid amount
-              </small>
-            </div>
-
-            <div class="flex justify-content-end">
-              <p-button
-                type="submit"
-                label="Make Payment"
-                icon="pi pi-money-bill"
-                [loading]="loading"
-                [disabled]="paymentForm.invalid"
-              ></p-button>
-            </div>
-          </form>
+        <div class="row">
+          <span>Interest Amount:</span>
+          <span>{{ repayment.interest | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+        <div class="row">
+          <span>Total Amount:</span>
+          <span>{{ calculateTotalAmount() | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+        <div class="row">
+          <span>Paid Amount:</span>
+          <span>{{ repayment.paidAmount | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+        <div class="row">
+          <span>Remaining Amount:</span>
+          <span>{{ calculateRemainingAmount() | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
         </div>
       </div>
-    </ng-container>
-  </p-card>
+
+      <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="form">
+        <div class="field">
+          <label for="accountNumber">Select Account</label>
+          <p-dropdown
+            id="accountNumber"
+            formControlName="accountNumber"
+            [options]="accounts"
+            optionLabel="accountNumber"
+            placeholder="Select an account"
+            [showClear]="true"
+          ></p-dropdown>
+          <small *ngIf="paymentForm.get('accountNumber')?.invalid && paymentForm.get('accountNumber')?.touched">
+            Please select an account
+          </small>
+        </div>
+
+        <div class="field">
+          <label for="amount">Payment Amount</label>
+          <p-inputNumber
+            id="amount"
+            formControlName="amount"
+            mode="currency"
+            currency="VND"
+            locale="vi-VN"
+            [min]="0"
+            [max]="calculateRemainingAmount()"
+          ></p-inputNumber>
+          <small *ngIf="paymentForm.get('amount')?.invalid && paymentForm.get('amount')?.touched">
+            Please enter a valid amount
+          </small>
+        </div>
+
+        <button pButton type="submit" label="Make Payment" icon="pi pi-money-bill"
+          [loading]="loading" [disabled]="paymentForm.invalid" class="action-btn">
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- OTP Dialog as Card -->
+  <p-dialog
+    [(visible)]="showOtpDialog"
+    [modal]="true"
+    [style]="{width: '450px'}"
+    header="Enter OTP"
+    [draggable]="false"
+    [resizable]="false"
+    contentStyleClass="otp-dialog-content"
+  >
+    <form [formGroup]="otpForm" (ngSubmit)="confirmPayment()" class="form">
+      <div class="field">
+        <label for="otpCode">OTP Code</label>
+        <input
+          id="otpCode"
+          type="text"
+          pInputText
+          formControlName="otpCode"
+          maxlength="6"
+        >
+        <small *ngIf="otpForm.get('otpCode')?.invalid && otpForm.get('otpCode')?.touched">
+          Please enter a valid 6-digit OTP
+        </small>
+      </div>
+      <button pButton type="submit" label="Confirm Payment" icon="pi pi-check"
+        [loading]="loading" [disabled]="otpForm.invalid" class="action-btn">
+      </button>
+    </form>
+  </p-dialog>
 </div>
-
-<p-dialog
-  [(visible)]="showOtpDialog"
-  [modal]="true"
-  [style]="{width: '450px'}"
-  header="Enter OTP"
-  [draggable]="false"
-  [resizable]="false"
->
-  <form [formGroup]="otpForm" (ngSubmit)="confirmPayment()" class="flex flex-column gap-3">
-    <div class="field">
-      <label for="otpCode" class="block mb-2">OTP Code</label>
-      <input
-        id="otpCode"
-        type="text"
-        pInputText
-        formControlName="otpCode"
-        class="w-full"
-        placeholder="Enter 6-digit OTP"
-        maxlength="6"
-      >
-      <small class="p-error block" *ngIf="otpForm.get('otpCode')?.invalid && otpForm.get('otpCode')?.touched">
-        Please enter a valid 6-digit OTP
-      </small>
-    </div>
-
-    <div class="flex justify-content-end">
-      <p-button
-        type="submit"
-        label="Confirm Payment"
-        icon="pi pi-check"
-        [loading]="loading"
-        [disabled]="otpForm.invalid"
-      ></p-button>
-    </div>
-  </form>
-</p-dialog> 

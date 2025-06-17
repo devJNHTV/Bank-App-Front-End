@@ -1,28 +1,96 @@
-.container {
+/* Base grid container */
+.master-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
   max-width: 800px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-:host ::ng-deep {
-  .p-card {
-    .p-card-body {
-      padding: 2rem;
-    }
-  }
+/* Generic card style */
+.card {
+  background: #ffffff;
+  box-shadow:
+    0px 187px 75px rgba(0, 0, 0, 0.01),
+    0px 105px 63px rgba(0, 0, 0, 0.05),
+    0px 47px 47px rgba(0, 0, 0, 0.09),
+    0px 12px 26px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
 
-  .p-dropdown,
-  .p-inputnumber {
-    width: 100%;
-  }
+/* Card header */
+.card .title {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #efeff3;
+  font-weight: 700;
+  font-size: 14px;
+  color: #63656b;
+}
 
-  .p-inputtext {
-    width: 100%;
-  }
+/* Loading & error overlays */
+.loading-overlay,
+.error-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.error-overlay span {
+  color: #d9534f;
+  font-weight: 600;
+}
 
-  .p-dialog {
-    .p-dialog-content {
-      padding: 2rem;
-    }
-  }
-} 
+/* Card content */
+.card .content {
+  padding: 1rem;
+}
+
+/* Summary rows */
+.summary .row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 14px;
+  font-weight: 600;
+  color: #47484b;
+}
+
+/* Form inside card */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.field label {
+  font-size: 13px;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+.field small {
+  color: #d9534f;
+}
+
+/* Action button */
+.action-btn {
+  align-self: end;
+  background: linear-gradient(180deg, #4480FF 0%, #115DFC 50%, #0550ED 100%);
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 5px;
+}
+
+/* OTP dialog content override */
+.otp-dialog-content {
+  padding: 2rem 1rem !important;
+}

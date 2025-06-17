@@ -1,56 +1,91 @@
 <!-- src/app/loan/DashboardLoan/dashboard-loan.component.html -->
 <div class="dashboard-wrapper">
-  <p-panel header="Bảng Điều Khiển Khoản Vay" [style]="{'border-radius': '12px', 'overflow': 'hidden'}">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Quản lý khoản vay thông minh và hiện đại</h1>
+  </div>
+
+  <div class="main-panel">
     <div class="dashboard-container">
+
       <!-- Thống kê -->
-      <div class="stats-grid">
-        <p-card class="stat-card" [style]="{'background': 'linear-gradient(135deg, #e3f2fd, #bbdefb)'}">
-          <div class="stat-content">
-            <i class="pi pi-wallet stat-icon"></i>
-            <div class="stat-info">
-              <h3>Tổng Số Tiền Đã Vay</h3>
-              <p class="stat-value">{{ totalBorrowed | currency:'VND':'symbol':'1.0-0' }}</p>
+      <div class="stats-section">
+        <h2 class="section-title">Tổng Quan Tài Chính</h2>
+        <div class="stats-grid">
+          <p-card class="stat-card total-borrowed">
+            <div class="stat-content">
+              <div class="stat-icon">
+                <i class="pi pi-wallet"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Tổng Số Tiền Đã Vay</h3>
+                <p class="stat-value">{{ totalBorrowed | currency:'VND':'symbol':'1.0-0' }}</p>
+              </div>
             </div>
-          </div>
-        </p-card>
-        <p-card class="stat-card" [style]="{'background': 'linear-gradient(135deg, #fff3e0, #ffe0b2)'}">
-          <div class="stat-content">
-            <i class="pi pi-money-bill stat-icon"></i>
-            <div class="stat-info">
-              <h3>Tổng Số Tiền Còn Nợ</h3>
-              <p class="stat-value">{{ totalOutstanding | currency:'VND':'symbol':'1.0-0' }}</p>
+          </p-card>
+
+          <p-card class="stat-card total-outstanding">
+            <div class="stat-content">
+              <div class="stat-icon">
+                <i class="pi pi-money-bill"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Tổng Số Tiền Còn Nợ</h3>
+                <p class="stat-value">{{ totalOutstanding | currency:'VND':'symbol':'1.0-0' }}</p>
+              </div>
             </div>
-          </div>
-        </p-card>
+          </p-card>
+        </div>
       </div>
 
       <!-- Nút điều hướng -->
-      <div class="button-group">
-        <p-button
-          label="Đăng Ký Khoản Vay"
-          icon="pi pi-plus"
-          styleClass="p-button-raised p-button-success modern-button"
-          (click)="navigateToCreateLoan()"
-        ></p-button>
-        <p-button
-          label="Tổng Quan Khoản Vay"
-          icon="pi pi-list"
-          styleClass="p-button-raised p-button-info modern-button"
-          (click)="navigateToLoanOverview()"
-        ></p-button>
-        <p-button
-          label="Lịch Sử Vay"
-          icon="pi pi-history"
-          styleClass="p-button-raised p-button-warning modern-button"
-          (click)="navigateToLoanHistory()"
-        ></p-button>
-        <p-button
-          label="Khoản Vay Hiện Tại"
-          icon="pi pi-file"
-          styleClass="p-button-raised p-button-primary modern-button"
-          (click)="navigateToCurrentRepayments()"
-        ></p-button>
+      <div class="actions-section">
+        <h2 class="section-title">Dịch Vụ Vay Vốn</h2>
+        <div class="button-grid">
+          <div class="action-card create-loan">
+            <div class="action-glow"></div>
+            <p-button
+              label="Đăng Ký Khoản Vay"
+              icon="pi pi-plus"
+              styleClass="p-button-raised modern-button primary-btn"
+              (click)="navigateToCreateLoan()">
+            </p-button>
+            <p class="action-description">Tạo yêu cầu vay vốn mới với quy trình nhanh chóng</p>
+          </div>
+
+          <div class="action-card overview-loan">
+            <div class="action-glow"></div>
+            <p-button
+              label="Tổng Quan Khoản Vay"
+              icon="pi pi-chart-line"
+              styleClass="p-button-raised modern-button secondary-btn"
+              (click)="navigateToLoanOverview()">
+            </p-button>
+            <p class="action-description">Xem tổng quan chi tiết về tất cả khoản vay</p>
+          </div>
+
+          <div class="action-card history-loan">
+            <div class="action-glow"></div>
+            <p-button
+              label="Lịch Sử Vay"
+              icon="pi pi-history"
+              styleClass="p-button-raised modern-button tertiary-btn"
+              (click)="navigateToLoanHistory()">
+            </p-button>
+            <p class="action-description">Theo dõi lịch sử giao dịch và thanh toán</p>
+          </div>
+
+          <div class="action-card current-loan">
+            <div class="action-glow"></div>
+            <p-button
+              label="Khoản Vay Hiện Tại"
+              icon="pi pi-file"
+              styleClass="p-button-raised modern-button quaternary-btn"
+              (click)="navigateToCurrentRepayments()">
+            </p-button>
+            <p class="action-description">Quản lý các khoản vay đang còn hiệu lực</p>
+          </div>
+        </div>
       </div>
     </div>
-  </p-panel>
+  </div>
 </div>

@@ -1,13 +1,10 @@
-/* src/app/loan/apply-new-loan/apply-new-loan.component.scss */
 
-/* Container chính */
 .apply-loan-wrapper {
   max-width: 900px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
 
-/* Card chính */
 .apply-loan-card {
   background: white;
   border-radius: 12px;
@@ -21,7 +18,6 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
 }
 
-/* Header – gradient màu nổi bật */
 .card-header {
   background: linear-gradient(135deg, #1e88e5, #42a5f5);
   color: white;
@@ -42,7 +38,6 @@
   color: white;
 }
 
-/* Chú thích Thu nhập tối thiểu */
 .income-note {
   padding: 1rem 2rem;
   background: #e3f2fd;
@@ -51,7 +46,6 @@
   border-bottom: 1px solid #bbdefb;
 }
 
-/* Phần bảng điều kiện vay */
 .loan-conditions {
   padding: 1.5rem 2rem;
   border-bottom: 1px solid #e0e0e0;
@@ -108,7 +102,6 @@
   }
 }
 
-/* Form đăng ký vay */
 .apply-loan-form {
   padding: 2rem;
   display: flex;
@@ -117,14 +110,12 @@
   background: #fafafa;
 }
 
-/* Lưới form */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
-/* Mỗi trường input */
 .form-field {
   display: flex;
   flex-direction: column;
@@ -167,33 +158,28 @@
   font-style: italic;
 }
 
-/* Nút hành động */
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
 }
 
-/* Nút hiện đại */
 .modern-button {
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
   transition: all 0.3s ease;
 }
 
-/* Khi hover nút không disabled */
 .p-button:not([disabled]):hover {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Khi button disabled → mờ và chuột không thể click */
 .p-button[disabled] {
   opacity: 0.5 !important;
   cursor: not-allowed !important;
 }
 
-/* Media Queries */
 @media (max-width: 768px) {
   .form-grid {
     grid-template-columns: 1fr;
