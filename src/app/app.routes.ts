@@ -10,7 +10,6 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
 import { ChangePasswordComponent } from './auth/change-password/change-password.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
-import { KycComponent } from './auth/kyc/kyc.component';
 import { CustomerListComponent } from './admin/customer-list/customer-list.component';
 import { AdminGuard } from './core/guards/admin.guard';
 import { CustomerDetailComponent } from './customer/customer-detail/customer-detail.component';
@@ -20,6 +19,8 @@ import { CustomerDetailAdminComponent } from './admin/customer-detail/customer-d
 import { CustomerDashboardComponent } from './customer/customer-dashboard/customer-dashboard.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { KycOtpComponent } from './auth/kyc-otp/kyc-otp.component';
+import { KycComponent } from './customer/kyc/kyc.component';
 
 export const routes: Routes = [
   // Layout cho các route cần đăng nhập
@@ -50,9 +51,10 @@ export const routes: Routes = [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
+      { path: 'kyc-otp', component: KycOtpComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'reset-password', component: ResetPasswordComponent },
-      { path: 'verify-otp', component: VerifyOtpComponent },
+      { path: 'confirm-otp', component: VerifyOtpComponent },
     ]
   },
 

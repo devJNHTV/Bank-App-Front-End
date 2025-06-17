@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import { CustomDateAdapter } from '../../shared/custom-date-adapter';
 import { MY_DATE_FORMATS } from '../../shared/date-formats';
 import { UserService } from '../../core/services/user.service';
+import { AdminService } from '../../core/services/admin.service';
 
 @Component({
   selector: 'app-customer-update-dialog',
@@ -45,24 +46,39 @@ import { UserService } from '../../core/services/user.service';
 export class CustomerUpdateDialogComponent {
   customerForm!: FormGroup;
   isLoading = false;
+  isAdmin = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private adminService: AdminService,
     public dialogRef: MatDialogRef<CustomerUpdateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.initForm();
   }
 
+  ngOnInit(): void {
+    // Kiểm tra vai trò admin
+    this.isAdmin = this.adminService.checkAdminAccess();
+    if (this.isAdmin) {
+      // Bắt buộc userId cho admin
+      this.customerForm.get('userId')?.setValidators(Validators.required);
+      this.customerForm.get('userId')?.updateValueAndValidity();
+    } else {
+      this.customerForm.get('userId')?.disable();
+    }
+  }
+
   private initForm(): void {
     this.customerForm = this.formBuilder.group({
+      userId: [this.data.userId || ''],
       fullName: [this.data.fullName || '', Validators.required],
       email: [this.data.email || '', [Validators.required, Validators.email]],
       phoneNumber: [this.data.phoneNumber || '', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       address: [this.data.address || '', Validators.required],
       dateOfBirth: [this.data.dateOfBirth ? new Date(this.data.dateOfBirth) : '', Validators.required],
-      gender: [this.data.gender || '', Validators.required],
+      gender: [this.data.gender || '', Validators.required]
     });
   }
 
@@ -79,43 +95,47 @@ export class CustomerUpdateDialogComponent {
         const day = ('0' + rawDate.getDate()).slice(-2);
         formattedDate = `${year}-${month}-${day}`;
       } else if (typeof rawDate === 'string') {
-        formattedDate = rawDate
+        formattedDate = rawDate;
       }
 
       const updateData = {
-        ...this.customerForm.value,
+        ...this.customerForm.getRawValue(), // Lấy cả giá trị từ trường disabled
         dateOfBirth: formattedDate,
       };
+
+      // Xóa userId nếu không phải admin
+      if (!this.isAdmin) {
+        delete updateData.userId;
+      }
 
       console.log('kycData:', updateData);
       console.log('Customer data: ', this.customerForm);
 
       this.userService.updateCustomer(updateData).subscribe({
-        next: () => {
+        next: (response) => {
           Swal.fire({
             icon: 'success',
             title: 'Thành công',
-            text: 'Thông tin khách hàng đã được cập nhật thành công',
+            text: response.message || 'Thông tin khách hàng đã được cập nhật thành công',
             timer: 1500,
           }).then(() => {
             this.dialogRef.close(updateData);
-            window.location.reload();
           });
         },
         error: (error) => {
           Swal.fire({
             icon: 'error',
             title: 'Lỗi',
-            text: error.message || 'Không thể cập nhật thông tin khách hàng'
+            text: error.message || 'Không thể cập nhật thông tin khách hàng',
           });
           this.isLoading = false;
         },
         complete: () => {
           this.isLoading = false;
-        }
+        },
       });
     } else {
-      Object.keys(this.customerForm.controls).forEach(key => {
+      Object.keys(this.customerForm.controls).forEach((key) => {
         const control = this.customerForm.get(key);
         if (control?.invalid) {
           control.markAsTouched();
