@@ -223,22 +223,24 @@ export class TransferComponent implements OnInit{
         fromCustomerName: this.fromCustomerName,
         type: 'TRANSFER',
       };
-    }
-    console.log(this.someTransferData);
-    this.transactionService.transfer(this.someTransferData).subscribe({
-      next: (res) => {
-        console.log('Phản hồi từ server:', res);
-        this.showSuccess('Giao dịch chuyển khoản đã khởi tạo thành công. Vui lòng xác nhận OTP.');
-        if (this.someTransferData) {
-          this.someTransferData.referenceCode = res.result.referenceCode;
+      this.transactionService.transfer(this.someTransferData).subscribe({
+        next: (res) => {
+          console.log('Phản hồi từ server:', res);
+          this.showSuccess('Giao dịch chuyển khoản đã khởi tạo thành công. Vui lòng xác nhận OTP.');
+          if (this.someTransferData) {
+            this.someTransferData.referenceCode = res.result.referenceCode;
+          }
+          this.showConfirmForm = true;
+        },
+        error: (err) => {
+          console.error('Lỗi khi gửi dữ liệu:', err.message);
+          this.showError('Chuyển khoản thất bại: ' + (err.error?.message || err.message));
         }
-        this.showConfirmForm = true;
-      },
-      error: (err) => {
-        console.error('Lỗi khi gửi dữ liệu:', err);
-        this.showError('Chuyển khoản thất bại: ' + (err.error?.message || err.message));
-      }
-    });
+      });
+    }
+    
+    
+
   }
   
 

@@ -26,6 +26,17 @@
         <span matListItemTitle>Dashboard</span>
       </a>
 
+      <a
+        mat-list-item
+        routerLink="/transactions"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>payments</mat-icon>
+        <span matListItemTitle>Giao dịch</span>
+      </a>
+
       <!-- <a
         mat-list-item
         routerLink="/customers/accounts"
@@ -109,6 +120,7 @@
       </div>
     </mat-toolbar>
 
+    
     <router-outlet></router-outlet>
     
   </mat-sidenav-content>

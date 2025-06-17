@@ -2,24 +2,31 @@
   display: block;
   max-width: 1000px;
   margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 4rem;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+} 
 
 .page-title {
-  font-size: 18px;
+  font-size: 2.2rem;
   font-weight: 700;
-  color: #000;
+  color: #fff;
   margin-bottom: 2rem;
   text-align: center;
-  background-color: #fff;
+  background: linear-gradient(135deg, #006341, #006341);
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .search-section {
   margin-bottom: 2rem;
-    
+  background: rgba(221, 218, 218, 0.95);
   ::ng-deep .p-card {
     .p-card-body {
       padding: 2rem;
@@ -73,7 +80,7 @@
     h3 {
       margin: 0;
       color: #333;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
     }
   }
 

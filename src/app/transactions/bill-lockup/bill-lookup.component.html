@@ -1,8 +1,10 @@
 <div class="page-container">
-    <div class="page-title">
-        <h1>Thanh toán hóa đơn {{ billType=='electricity' ? 'điện' : billType=='phone' ? 'điện thoại'
-        : billType=='water' ? 'nước' : 'internet' }}</h1>
-    </div>      
+    <h2 class="page-title p-mb-3 text-center">
+        <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+          <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
+        </button>Thanh toán hóa đơn {{ billType=='electricity' ? 'điện' : billType=='telephone' ? 'điện thoại'
+        : billType=='water' ? 'nước' : 'internet' }}
+    </h2>
 
     <div class="search-section">
         <p-card>
@@ -32,7 +34,17 @@
                     </div>
                 </div>
 
-                <div class="button-group">
+                <div class="button-group d-flex justify-content-between">
+                    <button
+                    pButton
+                    pRipple
+                    type="button"
+                    label="Quay về"
+                    icon="pi pi-arrow-left"
+                    class="p-button-secondary mr-2"
+                    (click)="goBack()"
+                  ></button>
+                  <div >
                     <p-button 
                         label="Tìm kiếm" 
                         icon="pi pi-search"
@@ -43,8 +55,10 @@
                         label="Xóa" 
                         icon="pi pi-trash"
                         severity="secondary"
+                        class="ml-3"
                         (onClick)="clearForm()">
                     </p-button>
+                  </div>
                 </div>
             </div>
         </p-card>

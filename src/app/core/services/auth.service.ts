@@ -41,6 +41,7 @@ export class AuthService {
 
   login(username: string, password: string): Observable<any> {
     console.log('Attempting login for user:', username);
+    console.log('Attempting login for password:', password);
     const body = new HttpParams()
       .set('grant_type', 'password')
       .set('client_id', environment.keycloak.clientId)

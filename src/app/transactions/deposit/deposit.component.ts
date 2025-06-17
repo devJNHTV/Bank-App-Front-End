@@ -142,22 +142,23 @@ export class DepositComponent implements OnInit {
         fromCustomerName: this.fromCustomerName,
         type: 'DEPOSIT',
       };
-    }
-
-    this.transactionService.deposit(this.someDepositData).subscribe({
-      next: (res) => {
-        console.log('Phản hồi từ server:', res);
-        this.showSuccess('Giao dịch nộp tiền đã khởi tạo thành công. Vui lòng xác nhận OTP.');
-        if (this.someDepositData) {
-          this.someDepositData.referenceCode = res.result.referenceCode;
+      this.transactionService.deposit(this.someDepositData).subscribe({
+        next: (res) => {
+          console.log('Phản hồi từ server:', res);
+          this.showSuccess('Giao dịch nộp tiền đã khởi tạo thành công. Vui lòng xác nhận OTP.');
+          if (this.someDepositData) {
+            this.someDepositData.referenceCode = res.result.referenceCode;
+          }
+          this.showConfirmForm = true;  
+        },
+        error: (err) => { 
+          console.error('Lỗi khi gửi dữ liệu:', err.message);
+          this.showError('Nộp tiền thất bại: ' + (err.error?.message || err.message));
         }
-        this.showConfirmForm = true;
-      },
-      error: (err) => {
-        console.error('Lỗi khi gửi dữ liệu:', err);
-        this.showError('Chuyển khoản thất bại: ' + (err.error?.message || err.message));
-      }
-    });
+      });
+        }
+
+    
   }
   
 

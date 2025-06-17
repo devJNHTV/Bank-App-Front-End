@@ -82,17 +82,40 @@ export class BillLookupComponent implements OnInit {
     this.searchBillRequest.customerCode = this.customerCode;
     this.searchBillRequest.provider = this.selectedProvider.value;
     this.searchBillRequest.billType = this.billType.toUpperCase();
-    this.transactionService.checkBill(this.searchBillRequest).subscribe((res: any) => {
-      this.billResult = {
-        billId: res.result.billId,
-        customerCode: this.customerCode,
-        customerName: res.result.customerName,
-        amount: res.result.amount,
-        status: res.result.status,
-        provider: this.selectedProvider.name
-      };
-      console.log(this.billResult)
-    });
+    this.transactionService.checkBill(this.searchBillRequest).subscribe({ 
+      next: (res: any) => {
+        
+        if (res && res.result) {
+          this.loading = false;
+          this.billResult = {
+            billId: res.result.billId,
+            customerCode: this.customerCode,
+            customerName: res.result.customerName,
+            amount: res.result.amount,
+            status: res.result.status,
+            provider: this.selectedProvider.name
+          };
+    
+        } else {
+          this.billResult = null; 
+          this.messageService.add({
+            severity: 'error', 
+            summary: 'Lỗi',
+            detail: res.message || 'Không tìm thấy thông tin hóa đơn.'
+          });
+          this.loading = false;
+        }
+    },
+    error: (error: any) => {
+      this.loading = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Lỗi',
+        detail: error.error.message
+      });
+    }
+  });
+
   }
 
   clearForm() {
@@ -119,6 +142,10 @@ export class BillLookupComponent implements OnInit {
       }
     });
   }
+  
+  goBack() {
+    this.router.navigate(['/transactions/payment']);
+  }
 
   private validateForm(): boolean {
     if (!this.selectedProvider) {
@@ -143,4 +170,4 @@ export class BillLookupComponent implements OnInit {
 
     return true;
   }
-}
+  }

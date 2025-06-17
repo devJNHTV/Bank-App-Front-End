@@ -20,8 +20,8 @@
         </p-card>
 
         <p-card
-            class="payment-card phone"
-            (click)="navigateTo('phone')"
+            class="payment-card telephone"  
+            (click)="navigateTo('telephone')"
             styleClass="clickable-card"
             headerStyleClass="card-header"
             tabindex="0"
@@ -89,4 +89,15 @@
             <div class="card-title">Thanh toán học phí</div>
         </p-card>
     </div>
+    <div class="button-group mt-5" >
+    <button
+    pButton
+    pRipple
+    type="button"
+    label="Quay về"
+    icon="pi pi-arrow-left"
+    class="p-button-secondary mr-2"
+    (click)="goBack()"
+  ></button>
+</div>
 </div>

@@ -16,4 +16,7 @@ export class PaymentSelectionComponent {
   navigateTo(path: string) {
     this.router.navigate([`/transactions/payment/${path}`]);
   }
+  goBack() {
+    this.router.navigate(['/transactions']);
+  }
 }

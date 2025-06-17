@@ -144,22 +144,23 @@ export class WithdrawComponent implements OnInit {
         fromCustomerName: this.fromCustomerName,
         type: 'WITHDRAW',
       };
+      this.transactionService.withdraw(this.someWithdrawData).subscribe({
+        next: (res) => {
+          console.log('Phản hồi từ server:', res);
+          this.showSuccess('Giao dịch rút tiền đã khởi tạo thành công. Vui lòng xác nhận OTP.');
+          if (this.someWithdrawData) {
+            this.someWithdrawData.referenceCode = res.result.referenceCode;
+          }
+          this.showConfirmForm = true;
+        },
+        error: (err) => {
+          console.error('Lỗi khi gửi dữ liệu:', err);
+          this.showError('Rút tiền thất bại: ' + (err.error?.message || err.message));
+        }
+      });
     }
 
-    this.transactionService.withdraw(this.someWithdrawData).subscribe({
-      next: (res) => {
-        console.log('Phản hồi từ server:', res);
-        this.showSuccess('Giao dịch rút tiền đã khởi tạo thành công. Vui lòng xác nhận OTP.');
-        if (this.someWithdrawData) {
-          this.someWithdrawData.referenceCode = res.result.referenceCode;
-        }
-        this.showConfirmForm = true;
-      },
-      error: (err) => {
-        console.error('Lỗi khi gửi dữ liệu:', err);
-        this.showError('Chuyển khoản thất bại: ' + (err.error?.message || err.message));
-      }
-    });
+    
   }
   
 

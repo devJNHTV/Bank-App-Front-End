@@ -8,21 +8,36 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
-import { providePrimeNG } from 'primeng/config';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import Aura from '@primeng/themes/aura';
+import { provideClientHydration } from '@angular/platform-browser';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
+    provideClientHydration(), 
+    provideHttpClient(
+      withFetch(),
+      withInterceptorsFromDi(),
+      withInterceptors([authInterceptor])
+    ),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
         preset: Aura,
+        options: {
+          prefix: 'p',
+          darkModeSelector: '.app-dark',
+          cssLayer: false
+        }
       },
+    }),
+    provideStore(),
+    provideEffects(),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode(),
     }),
   ],
 };
