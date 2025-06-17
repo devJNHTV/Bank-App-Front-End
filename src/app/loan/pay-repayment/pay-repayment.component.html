@@ -4,7 +4,10 @@
 <div class="master-container">
   <!-- Repayment Card -->
   <div class="card repayment">
-    <label class="title">Make Repayment</label>
+    <div class="card-header">
+      <h2 class="title">Thanh toán khoản vay</h2>
+      <p class="subtitle">Vui lòng chọn tài khoản và nhập số tiền thanh toán</p>
+    </div>
 
     <!-- Loading / Error -->
     <ng-container *ngIf="loading">
@@ -21,94 +24,104 @@
     <!-- Content -->
     <div class="content">
       <div class="summary">
-        <div class="row">
-          <span>Principal Amount:</span>
-          <span>{{ repayment.principal | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+        <div class="summary-item">
+          <span class="label">Số tiền gốc:</span>
+          <span class="value">{{ repayment.principal | currency:'VND':'symbol-narrow' :'1.0-20' }}</span>
         </div>
-        <div class="row">
-          <span>Interest Amount:</span>
-          <span>{{ repayment.interest | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+        <div class="summary-item">
+          <span class="label">Số tiền lãi:</span>
+          <span class="value">{{ repayment.interest | currency:'VND':'symbol-narrow' :'1.0-20' }}</span>
         </div>
-        <div class="row">
-          <span>Total Amount:</span>
-          <span>{{ calculateTotalAmount() | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+        <div class="summary-item total">
+          <span class="label">Tổng số tiền:</span>
+          <span class="value">{{ calculateTotalAmount() | currency:'VND':'symbol-narrow' :'1.0-20' }}</span>
         </div>
-        <div class="row">
-          <span>Paid Amount:</span>
-          <span>{{ repayment.paidAmount | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+        <div class="summary-item">
+          <span class="label">Đã thanh toán:</span>
+          <span class="value">{{ repayment.paidAmount | currency:'VND':'symbol-narrow' :'1.0-20' }}</span>
         </div>
-        <div class="row">
-          <span>Remaining Amount:</span>
-          <span>{{ calculateRemainingAmount() | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+        <div class="summary-item remaining">
+          <span class="label">Số tiền còn lại:</span>
+          <span class="value">{{ calculateRemainingAmount() | currency:'VND':'symbol-narrow' :'1.0-20' }}</span>
         </div>
       </div>
 
       <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="form">
         <div class="field">
-          <label for="accountNumber">Select Account</label>
+          <label for="accountNumber">Chọn tài khoản thanh toán</label>
           <p-dropdown
             id="accountNumber"
             formControlName="accountNumber"
             [options]="accounts"
             optionLabel="accountNumber"
-            placeholder="Select an account"
+            placeholder="Chọn tài khoản"
             [showClear]="true"
+            class="w-full"
           ></p-dropdown>
           <small *ngIf="paymentForm.get('accountNumber')?.invalid && paymentForm.get('accountNumber')?.touched">
-            Please select an account
+            Vui lòng chọn tài khoản thanh toán
           </small>
         </div>
 
         <div class="field">
-          <label for="amount">Payment Amount</label>
+          <label for="amount">Số tiền thanh toán</label>
           <p-inputNumber
             id="amount"
-            formControlName="amount"
-            mode="currency"
-            currency="VND"
-            locale="vi-VN"
+            [minFractionDigits]="0"
+            [maxFractionDigits]="10"
+            [useGrouping]="false"
+            [showButtons]="false"
             [min]="0"
-            [max]="calculateRemainingAmount()"
+            [mode]="'decimal'"
+            locale="vi-VN"
+            formControlName="amount"
+            class="w-full"
+            placeholder="Nhập số tiền"
           ></p-inputNumber>
           <small *ngIf="paymentForm.get('amount')?.invalid && paymentForm.get('amount')?.touched">
-            Please enter a valid amount
+            Vui lòng nhập số tiền hợp lệ
           </small>
         </div>
 
-        <button pButton type="submit" label="Make Payment" icon="pi pi-money-bill"
+        <button pButton type="submit" label="Thanh toán" icon="pi pi-money-bill"
           [loading]="loading" [disabled]="paymentForm.invalid" class="action-btn">
         </button>
       </form>
     </div>
   </div>
 
-  <!-- OTP Dialog as Card -->
+  <!-- OTP Dialog -->
   <p-dialog
     [(visible)]="showOtpDialog"
     [modal]="true"
     [style]="{width: '450px'}"
-    header="Enter OTP"
+    header="Xác nhận OTP"
     [draggable]="false"
     [resizable]="false"
     contentStyleClass="otp-dialog-content"
   >
-    <form [formGroup]="otpForm" (ngSubmit)="confirmPayment()" class="form">
-      <div class="field">
-        <label for="otpCode">OTP Code</label>
-        <input
-          id="otpCode"
-          type="text"
-          pInputText
-          formControlName="otpCode"
-          maxlength="6"
-        >
-        <small *ngIf="otpForm.get('otpCode')?.invalid && otpForm.get('otpCode')?.touched">
-          Please enter a valid 6-digit OTP
-        </small>
-      </div>
-      <button pButton type="submit" label="Confirm Payment" icon="pi pi-check"
-        [loading]="loading" [disabled]="otpForm.invalid" class="action-btn">
-      </button>
-    </form>
+    <div class="otp-content">
+      <p class="otp-message">Vui lòng nhập mã OTP đã được gửi đến email của bạn</p>
+      <form [formGroup]="otpForm" (ngSubmit)="confirmPayment()" class="form">
+        <div class="field">
+          <label for="otpCode">Mã OTP</label>
+          <input
+            id="otpCode"
+            type="text"
+            pInputText
+            formControlName="otpCode"
+            maxlength="6"
+            class="w-full"
+            placeholder="Nhập mã OTP 6 số"
+          >
+          <small *ngIf="otpForm.get('otpCode')?.invalid && otpForm.get('otpCode')?.touched">
+            Vui lòng nhập mã OTP 6 số
+          </small>
+        </div>
+        <button pButton type="submit" label="Xác nhận thanh toán" icon="pi pi-check"
+          [loading]="loading" [disabled]="otpForm.invalid" class="action-btn">
+        </button>
+      </form>
+    </div>
   </p-dialog>
 </div>

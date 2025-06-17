@@ -20,56 +20,56 @@
           <ng-template pTemplate="header">
             <div class="card-header">
               <i class="pi pi-money-bill card-icon"></i>
-              <h3>Loan Details</h3>
+              <h3>Chi tiết khoản vay</h3>
             </div>
           </ng-template>
           <div class="info-grid">
             <div class="info-item">
               <i class="pi pi-id-card"></i>
               <div class="info-content">
-                <label>Loan ID</label>
+                <label>Mã khoản vay</label>
                 <span>{{ loanDetail.loanId }}</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-credit-card"></i>
               <div class="info-content">
-                <label>Account</label>
+                <label>Số tài khoản</label>
                 <span>{{ loanDetail.accountNumber }}</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-calendar"></i>
               <div class="info-content">
-                <label>Created</label>
+                <label>Ngày tạo</label>
                 <span>{{ formatDate(loanDetail.createdAt) }}</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-dollar"></i>
               <div class="info-content">
-                <label>Amount</label>
+                <label>Số tiền</label>
                 <span>{{ formatCurrency(loanDetail.amount) }}</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-percentage"></i>
               <div class="info-content">
-                <label>Rate</label>
+                <label>Lãi suất</label>
                 <span>{{ loanDetail.interestRate }}%</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-clock"></i>
               <div class="info-content">
-                <label>Term</label>
-                <span>{{ loanDetail.termMonths }} months</span>
+                <label>Kỳ hạn</label>
+                <span>{{ loanDetail.termMonths }} tháng</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-wallet"></i>
               <div class="info-content">
-                <label>Income</label>
+                <label>Thu nhập</label>
                 <span>{{ formatCurrency(loanDetail.declaredIncome) }}</span>
               </div>
             </div>
@@ -80,14 +80,14 @@
           <ng-template pTemplate="header">
             <div class="card-header">
               <i class="pi pi-user card-icon"></i>
-              <h3>Customer Information</h3>
+              <h3>Thông tin khách hàng</h3>
             </div>
           </ng-template>
           <div class="info-grid">
             <div class="info-item">
               <i class="pi pi-user"></i>
               <div class="info-content">
-                <label>Name</label>
+                <label>Họ tên</label>
                 <span>{{ customerInfo?.fullName }}</span>
               </div>
             </div>
@@ -101,7 +101,7 @@
             <div class="info-item">
               <i class="pi pi-phone"></i>
               <div class="info-content">
-                <label>Phone</label>
+                <label>Số điện thoại</label>
                 <span>{{ customerInfo?.phoneNumber }}</span>
               </div>
             </div>
@@ -112,14 +112,14 @@
       <!-- ACTION BUTTONS -->
       <div class="action-buttons" *ngIf="loanDetail.status === 'PENDING'">
         <p-button 
-          label="Approve Loan" 
+          label="Duyệt khoản vay" 
           icon="pi pi-check" 
           severity="success" 
           (onClick)="approveLoan()" 
           [loading]="processingAction">
         </p-button>
         <p-button 
-          label="Reject Loan" 
+          label="Từ chối khoản vay" 
           icon="pi pi-times" 
           severity="danger" 
           (onClick)="openRejectDialog()" 

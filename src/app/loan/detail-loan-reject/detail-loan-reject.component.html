@@ -11,30 +11,30 @@
 
   <div *ngIf="!loading && !error && loanDetail" class="loan-detail">
     <!-- Loan Status Card -->
-    <p-card header="Loan Status" [style]="{'margin-bottom': '1rem'}">
+    <p-card header="Trạng thái khoản vay" [style]="{'margin-bottom': '1rem'}">
       <div class="status-info">
         <p-tag severity="danger" [value]="loanDetail.status ?? undefined"></p-tag>
-        <span class="date-info">Created: {{ formatDate(loanDetail.createdAt) }}</span>
+        <span class="date-info">Ngày tạo: {{ formatDate(loanDetail.createdAt) }}</span>
       </div>
     </p-card>
 
     <!-- Rejection Reasons Section -->
     <p-card *ngIf="loanDetail.rejectionReasons?.length" 
-            header="Rejection Reasons" 
+            header="Lý do từ chối" 
             [style]="{'margin-bottom': '1rem'}">
       <div class="rejection-reasons">
         <div *ngFor="let reason of loanDetail.rejectionReasons" class="rejection-reason">
           <p>{{ reason.reason }}</p>
-          s<small>Rejected on: {{ formatDate(reason.createdAt) }}</small>
+          <small>Từ chối vào: {{ formatDate(reason.createdAt) }}</small>
         </div>
       </div>
     </p-card>
 
     <!-- Loan Details Card -->
-    <p-card header="Loan Details" [style]="{'margin-bottom': '1rem'}">
+    <p-card header="Chi tiết khoản vay" [style]="{'margin-bottom': '1rem'}">
       <form [formGroup]="loanForm" class="loan-form">
         <div class="form-field">
-          <label for="amount">Loan Amount (VND)</label>
+          <label for="amount">Số tiền vay (VND)</label>
           <p-inputNumber 
             id="amount" 
             formControlName="amount" 
@@ -45,15 +45,15 @@
             locale="vi-VN">
           </p-inputNumber>
           <small *ngIf="loanForm.get('amount')?.errors?.['required'] && loanForm.get('amount')?.touched" class="error-text">
-            Loan amount is required
+            Vui lòng nhập số tiền vay
           </small>
           <small *ngIf="loanForm.get('amount')?.errors?.['min'] && loanForm.get('amount')?.touched" class="error-text">
-            Minimum loan amount is 1,000,000 VND
+            Số tiền vay tối thiểu là 1.000.000 VND
           </small>
         </div>
 
         <div class="form-field">
-          <label for="interestRate">Interest Rate (%)</label>
+          <label for="interestRate">Lãi suất (%)</label>
           <p-inputNumber 
             id="interestRate" 
             formControlName="interestRate" 
@@ -63,18 +63,18 @@
             suffix="%">
           </p-inputNumber>
           <small *ngIf="loanForm.get('interestRate')?.errors?.['required'] && loanForm.get('interestRate')?.touched" class="error-text">
-            Interest rate is required
+            Vui lòng nhập lãi suất
           </small>
           <small *ngIf="loanForm.get('interestRate')?.errors?.['min'] && loanForm.get('interestRate')?.touched" class="error-text">
-            Interest rate must be at least 0%
+            Lãi suất phải lớn hơn hoặc bằng 0%
           </small>
           <small *ngIf="loanForm.get('interestRate')?.errors?.['max'] && loanForm.get('interestRate')?.touched" class="error-text">
-            Interest rate cannot exceed 100%
+            Lãi suất không được vượt quá 100%
           </small>
         </div>
 
         <div class="form-field">
-          <label for="termMonths">Term (months)</label>
+          <label for="termMonths">Kỳ hạn (tháng)</label>
           <p-inputNumber 
             id="termMonths" 
             formControlName="termMonths" 
@@ -82,15 +82,15 @@
             [showButtons]="true">
           </p-inputNumber>
           <small *ngIf="loanForm.get('termMonths')?.errors?.['required'] && loanForm.get('termMonths')?.touched" class="error-text">
-            Term is required
+            Vui lòng nhập kỳ hạn
           </small>
           <small *ngIf="loanForm.get('termMonths')?.errors?.['min'] && loanForm.get('termMonths')?.touched" class="error-text">
-            Term must be at least 1 month
+            Kỳ hạn tối thiểu là 1 tháng
           </small>
         </div>
 
         <div class="form-field">
-          <label for="declaredIncome">Declared Income (VND)</label>
+          <label for="declaredIncome">Thu nhập (VND)</label>
           <p-inputNumber 
             id="declaredIncome" 
             formControlName="declaredIncome" 
@@ -101,10 +101,10 @@
             locale="vi-VN">
           </p-inputNumber>
           <small *ngIf="loanForm.get('declaredIncome')?.errors?.['required'] && loanForm.get('declaredIncome')?.touched" class="error-text">
-            Declared income is required
+            Vui lòng nhập thu nhập
           </small>
           <small *ngIf="loanForm.get('declaredIncome')?.errors?.['min'] && loanForm.get('declaredIncome')?.touched" class="error-text">
-            Declared income must be at least 0 VND
+            Thu nhập phải lớn hơn hoặc bằng 0 VND
           </small>
         </div>
       </form>
@@ -113,7 +113,7 @@
     <!-- Action Buttons -->
     <div class="action-buttons">
       <p-button 
-        label="Update and Resubmit" 
+        label="Cập nhật và gửi lại" 
         icon="pi pi-check" 
         severity="success" 
         (onClick)="updateAndResubmitLoan()"

@@ -107,6 +107,9 @@ export class LoanHistoryComponent implements OnInit {
         return 'info';
     }
   }
+  calculateTotalPaid(): number {
+    return this.repayments.reduce((total, repayment) => total + repayment.paidAmount, 0);
+  }
 
   calculateTotalAmount(repayment: Repayment): number {
     return repayment.principal + repayment.interest;

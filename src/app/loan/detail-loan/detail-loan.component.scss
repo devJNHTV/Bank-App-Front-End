@@ -20,7 +20,6 @@ $shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
 .loan-detail-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
   min-height: 100vh;
   position: relative;
   
@@ -134,15 +133,14 @@ $shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .content-grid {
-  display: grid;
+  display: flex;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   padding: 2rem;
 }
 
 .info-card,
-.repayment-card,
-.rejection-card {
+.repayment-card{
   @include glassmorphism;
   border-radius: 16px;
   overflow: hidden;
@@ -323,7 +321,7 @@ $shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
 
 @media (max-width: 768px) {
   .loan-detail-container {
-    padding: 1rem;
+    padding: 0.2rem;
   }
 
   .loan-header {

@@ -47,6 +47,7 @@ export class DetailLoanComponent implements OnInit {
     this.loanService.getLoanById(loanId).subscribe({
       next: (response) => {
         this.loanDetail = response.data;
+        console.log(this.loanDetail);
         this.loading = false;
       },
       error: (error) => {

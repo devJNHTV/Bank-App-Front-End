@@ -11,8 +11,8 @@
   <div class="loan-detail-content" *ngIf="loanDetail && !loading">
     <div class="loan-header">
       <div class="header-content">
-        <h1>Loan Details</h1>
-        <p class="subtitle">View your loan information and status</p>
+        <h1>Chi tiết khoản vay</h1>
+        <p class="subtitle">Xem thông tin và trạng thái khoản vay của bạn</p>
       </div>
       <div class="loan-status" [ngClass]="loanDetail.status?.toLowerCase()">
         <i class="pi" [ngClass]="{
@@ -28,62 +28,62 @@
       <div class="info-card">
         <div class="card-header">
           <i class="pi pi-info-circle"></i>
-          <h2>Basic Information</h2>
+          <h2>Thông tin cơ bản</h2>
         </div>
         <div class="info-grid">
           <div class="info-item">
             <i class="pi pi-id-card"></i>
             <div class="info-content">
-              <label>Loan ID</label>
+              <label>Mã khoản vay</label>
               <span>{{ loanDetail.loanId }}</span>
             </div>
           </div>
           <div class="info-item">
             <i class="pi pi-credit-card"></i>
             <div class="info-content">
-              <label>Account Number</label>
+              <label>Số tài khoản</label>
               <span>{{ loanDetail.accountNumber }}</span>
             </div>
           </div>
           <div class="info-item">
             <i class="pi pi-dollar"></i>
             <div class="info-content">
-              <label>Loan Amount</label>
+              <label>Số tiền vay</label>
               <span>{{ formatCurrency(loanDetail.amount) }}</span>
             </div>
           </div>
           <div class="info-item">
             <i class="pi pi-percentage"></i>
             <div class="info-content">
-              <label>Interest Rate</label>
+              <label>Lãi suất</label>
               <span>{{ loanDetail.interestRate }}%</span>
             </div>
           </div>
           <div class="info-item">
             <i class="pi pi-clock"></i>
             <div class="info-content">
-              <label>Term (Months)</label>
+              <label>Kỳ hạn (tháng)</label>
               <span>{{ loanDetail.termMonths }}</span>
             </div>
           </div>
           <div class="info-item">
             <i class="pi pi-wallet"></i>
             <div class="info-content">
-              <label>Declared Income</label>
+              <label>Thu nhập</label>
               <span>{{ formatCurrency(loanDetail.declaredIncome) }}</span>
             </div>
           </div>
           <div class="info-item">
             <i class="pi pi-calendar"></i>
             <div class="info-content">
-              <label>Created Date</label>
+              <label>Ngày tạo</label>
               <span>{{ formatDate(loanDetail.createdAt) }}</span>
             </div>
           </div>
           <div class="info-item" *ngIf="loanDetail.approvedAt">
             <i class="pi pi-calendar-check"></i>
             <div class="info-content">
-              <label>Approved Date</label>
+              <label>Ngày duyệt</label>
               <span>{{ formatDate(loanDetail.approvedAt) }}</span>
             </div>
           </div>
@@ -93,7 +93,7 @@
       <div class="repayment-card" *ngIf="loanDetail.repayments?.length">
         <div class="card-header">
           <i class="pi pi-list"></i>
-          <h2>Repayment Schedule</h2>
+          <h2>Lịch trả nợ</h2>
         </div>
         <div class="repayment-table-wrapper">
           <p-table 
@@ -102,22 +102,25 @@
             [tableStyle]="{'min-width': '50rem'}">
             <ng-template pTemplate="header">
               <tr>
-                <th>Due Date</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Paid Date</th>
+                <th>Ngày đến hạn</th>
+                <th>Trạng thái</th>
+                <th>Gốc</th>
+                <th>Lãi</th>
+                <th>Số tiền đã trả</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-repayment>
               <tr>
                 <td>{{ formatDate(repayment.dueDate) }}</td>
-                <td>{{ formatCurrency(repayment.amount) }}</td>
                 <td>
                   <span class="status-badge" [ngClass]="repayment.status?.toLowerCase()">
                     {{ repayment.status }}
                   </span>
                 </td>
-                <td>{{ repayment.paidDate ? formatDate(repayment.paidDate) : '-' }}</td>
+                <td>{{ formatCurrency(repayment.principal) }}</td>
+                <td>{{ formatCurrency(repayment.interest) }}</td>
+                <td>{{ formatCurrency(repayment.paidAmount) }}</td>
+               
               </tr>
             </ng-template>
           </p-table>
@@ -127,7 +130,7 @@
       <div class="rejection-card" *ngIf="loanDetail.rejectionReasons?.length">
         <div class="card-header">
           <i class="pi pi-times-circle"></i>
-          <h2>Rejection Reasons</h2>
+          <h2>Lý do từ chối</h2>
         </div>
         <div class="rejection-list">
           <div class="rejection-item" *ngFor="let reason of loanDetail.rejectionReasons">

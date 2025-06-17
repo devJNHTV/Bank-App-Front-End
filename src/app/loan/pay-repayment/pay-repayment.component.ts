@@ -91,8 +91,6 @@ export class PayRepaymentComponent implements OnInit {
         if (response.status === 200) {
           this.repayment = response.data;
           console.log(this.repayment);
-          
-          // Set max amount for payment
           const maxAmount = this.repayment.principal + this.repayment.interest - this.repayment.paidAmount;
           this.paymentForm.get('amount')?.setValidators([
             Validators.required,
@@ -136,9 +134,10 @@ export class PayRepaymentComponent implements OnInit {
 
     const repaymentId = this.route.snapshot.paramMap.get('id');
     if (!repaymentId || !this.repayment) return;
-
+    console.log(typeof  this.paymentForm.value.accountNumber.accountNumber);
+    
     this.loading = true;
-    this.repaymentService.makeRepayment(+repaymentId, this.paymentForm.value.amount).subscribe({
+    this.repaymentService.makeRepayment(+repaymentId, this.paymentForm.value.amount, this.paymentForm.value.accountNumber.accountNumber).subscribe({
       next: (response: any) => {
         if (response.status === 200) {
           this.referenceCode = response.data;

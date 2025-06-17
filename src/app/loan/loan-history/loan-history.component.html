@@ -1,75 +1,94 @@
 <p-toast></p-toast>
 
-<div class="container">
-  <p-card header="Loan Repayment History" styleClass="shadow-2">
-    <div class="flex flex-column gap-4">
-      <!-- Date Filter Section -->
-      <div class="flex flex-column md:flex-row gap-3 align-items-center">
-        <span class="p-input-icon-right">
-          <i class="pi pi-calendar"></i>
-          <p-calendar
-            [(ngModel)]="dateRange"
-            selectionMode="range"
-            [showButtonBar]="true"
-            [readonlyInput]="true"
-            placeholder="Select date range"
-            styleClass="w-full md:w-25rem"
-          ></p-calendar>
-        </span>
-        <div class="flex gap-2">
-          <p-button
-            label="Apply Filter"
-            icon="pi pi-filter"
-            (onClick)="applyDateFilter()"
-            [disabled]="!dateRange || dateRange.length !== 2"
-          ></p-button>
-          <p-button
-            label="Clear"
-            icon="pi pi-times"
-            severity="secondary"
-            (onClick)="clearDateFilter()"
-            [disabled]="!dateRange || dateRange.length === 0"
-          ></p-button>
+<div class="history-wrapper">
+  <div class="history-header">
+    <div class="header-content">
+      <h1>Lịch sử thanh toán khoản vay</h1>
+      <p class="subtitle">Theo dõi chi tiết các khoản thanh toán của bạn</p>
+    </div>
+  </div>
+
+  <div class="main-panel">
+    <div class="history-container">
+      <!-- Stats Section -->
+      <div class="stats-section">
+        <div class="stats-grid">
+          <p-card class="stat-card total-paid">
+            <div class="stat-content">
+              <div class="stat-icon">
+                <i class="pi pi-check-circle"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Tổng số tiền đã trả</h3>
+                <p class="stat-value">{{ calculateTotalPaid() | currency:'VND':'symbol':'1.0-0' }}</p>
+              </div>
+            </div>
+          </p-card>
+        </div>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <div class="filter-content">
+          <span class="p-input-icon-right">
+            <i class="pi pi-calendar"></i>
+            <p-calendar
+              [(ngModel)]="dateRange"
+              selectionMode="range"
+              [showButtonBar]="true"
+              [readonlyInput]="true"
+              placeholder="Chọn khoảng thời gian"
+              styleClass="w-full md:w-25rem"
+            ></p-calendar>
+          </span>
+          <div class="filter-buttons">
+            <p-button
+              label="Áp dụng bộ lọc"
+              icon="pi pi-filter"
+              (onClick)="applyDateFilter()"
+              [disabled]="!dateRange || dateRange.length !== 2"
+              styleClass="p-button-raised modern-button primary-btn">
+            </p-button>
+            <p-button
+              label="Xóa bộ lọc"
+              icon="pi pi-times"
+              severity="secondary"
+              (onClick)="clearDateFilter()"
+              [disabled]="!dateRange || dateRange.length === 0"
+              styleClass="p-button-raised modern-button secondary-btn">
+            </p-button>
+          </div>
         </div>
       </div>
 
       <!-- Loading State -->
-      <ng-container *ngIf="loading">
-        <div class="flex justify-content-center">
-          <p-progressSpinner></p-progressSpinner>
-        </div>
-      </ng-container>
+      <div class="loading-overlay" *ngIf="loading">
+        <p-progressSpinner strokeWidth="6"></p-progressSpinner>
+      </div>
 
       <!-- Error State -->
-      <ng-container *ngIf="!loading && error">
-        <div class="flex justify-content-center">
-          <span class="text-red-500">{{ error }}</span>
-        </div>
-      </ng-container>
+      <div class="error-banner" *ngIf="!loading && error">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>{{ error }}</span>
+      </div>
 
       <!-- Repayment History Table -->
-      <ng-container *ngIf="!loading && !error">
+      <div class="table-section" *ngIf="!loading && !error">
         <p-table
           [value]="filteredRepayments"
-          [paginator]="true"
-          [rows]="10"
-          [showCurrentPageReport]="true"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-          [rowsPerPageOptions]="[10, 25, 50]"
-          styleClass="p-datatable-sm"
+          styleClass="p-datatable-gridlines modern-table"
           [expandedRowKeys]="expandedRows"
           [rowHover]="true"
           dataKey="repaymentId"
         >
-          <!-- Basic Info Columns -->
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 3rem"></th>
-              <th>ID</th>
-              <th>Due Date</th>
-              <th>Status</th>
-              <th>Total Amount</th>
-              <th>Paid Amount</th>
+              <th>Mã thanh toán</th>
+              <th>Ngày đến hạn</th>
+              <th>Trạng thái</th>
+              <th>Tổng số tiền</th>
+              <th>Số tiền đã trả</th>
             </tr>
           </ng-template>
 
@@ -88,41 +107,35 @@
               <td>{{ repayment.repaymentId }}</td>
               <td>{{ repayment.dueDate | date:'mediumDate' }}</td>
               <td>
-                <!-- <span
-                  [pBadge]="repayment.status"
-                  [severity]="getStatusSeverity(repayment.status)"
-                  styleClass="p-badge-sm"
-                ></span> -->
                 <span
-                pBadge="New" 
-                severity="success"
-                styleClass="p-badge-sm"
-              ></span>
+                  pBadge="New" 
+                  severity="success"
+                  styleClass="p-badge-sm"
+                ></span>
               </td>
               <td>{{ calculateTotalAmount(repayment) | currency:'VND':'symbol-narrow':'1.0-0' }}</td>
               <td>{{ repayment.paidAmount | currency:'VND':'symbol-narrow':'1.0-0' }}</td>
             </tr>
           </ng-template>
 
-          <!-- Expanded Row Template -->
           <ng-template pTemplate="rowexpansion" let-repayment>
             <tr>
               <td colspan="6">
-                <div class="p-3">
+                <div class="expansion-content">
                   <div class="grid">
                     <div class="col-12 md:col-6">
-                      <div class="flex flex-column gap-2">
-                        <div class="flex justify-content-between">
-                          <span class="font-semibold">Principal Amount:</span>
-                          <span>{{ repayment.principal | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+                      <div class="detail-grid">
+                        <div class="detail-item">
+                          <span class="detail-label">Số tiền gốc:</span>
+                          <span class="detail-value">{{ repayment.principal | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
                         </div>
-                        <div class="flex justify-content-between">
-                          <span class="font-semibold">Interest Amount:</span>
-                          <span>{{ repayment.interest | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+                        <div class="detail-item">
+                          <span class="detail-label">Số tiền lãi:</span>
+                          <span class="detail-value">{{ repayment.interest | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
                         </div>
-                        <div class="flex justify-content-between">
-                          <span class="font-semibold">Remaining Amount:</span>
-                          <span>{{ calculateRemainingAmount(repayment) | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
+                        <div class="detail-item">
+                          <span class="detail-label">Số tiền còn lại:</span>
+                          <span class="detail-value">{{ calculateRemainingAmount(repayment) | currency:'VND':'symbol-narrow':'1.0-0' }}</span>
                         </div>
                       </div>
                     </div>
@@ -132,16 +145,15 @@
             </tr>
           </ng-template>
 
-          <!-- Empty Message Template -->
           <ng-template pTemplate="emptymessage">
             <tr>
               <td colspan="6" class="text-center p-4">
-                No repayment records found
+                Không tìm thấy lịch sử thanh toán
               </td>
             </tr>
           </ng-template>
         </p-table>
-      </ng-container>
+      </div>
     </div>
-  </p-card>
+  </div>
 </div> 

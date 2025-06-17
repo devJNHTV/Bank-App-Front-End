@@ -39,8 +39,8 @@ export class RepaymentService {
   }
 
   // 5. POST: Thực hiện thanh toán repayment
-  makeRepayment(repaymentId: number, amount: number): Observable<ApiResponseWrapper<void>> {
-    const params = new HttpParams().set('amount', amount.toString());
+  makeRepayment(repaymentId: number, amount: number, accountNumber : string): Observable<ApiResponseWrapper<void>> {
+    const params = new HttpParams().set('amount', amount.toString()) .set('accountNumber', accountNumber);
     return this.http.post<ApiResponseWrapper<void>>(`${this.apiUrl}/${repaymentId}/pay`, null, { headers: this.getAuthHeaders(), params });
     
   }
