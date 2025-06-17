@@ -17,9 +17,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 
-  
-import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterModule } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-root',
