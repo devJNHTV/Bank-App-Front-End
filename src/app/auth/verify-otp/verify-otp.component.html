@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="form-container">
+    <div class="logo-container">
+      <img
+        src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon-logo-klb.jpg"
+        alt="KienlongBank Logo"
+        class="logo"
+      />
+    </div>
+
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>Xác minh mã OTP</mat-card-title>
+        <mat-card-subtitle>Vui lòng nhập mã OTP đã được gửi đến email của bạn</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="otpForm" (ngSubmit)="onOtpSubmit()" class="form">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Mã OTP</mat-label>
+              <input
+                matInput
+                formControlName="otp"
+                placeholder="Nhập mã OTP 6 chữ số"
+                type="text"
+                maxlength="6"
+              />
+              <mat-icon matSuffix>lock</mat-icon>
+              <mat-error *ngIf="otpForm.get('otp')?.hasError('required')">
+                Vui lòng nhập mã OTP
+              </mat-error>
+              <mat-error *ngIf="otpForm.get('otp')?.hasError('pattern')">
+                Mã OTP phải là 6 chữ số
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+          <div class="form-actions">
+            <button mat-stroked-button color="primary" type="button" routerLink="/kyc-otp">
+              Quay lại
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="otpForm.invalid || isLoading || !email"
+            >
+              <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+              <span *ngIf="!isLoading">Xác minh</span>
+            </button>
+          </div>
+
+          <div class="resend-otp">
+            <button
+              mat-button
+              color="primary"
+              type="button"
+              (click)="resendOtp()"
+              [disabled]="isResending || !email"
+            >
+              {{ isResending ? 'Đang gửi lại...' : 'Gửi lại mã OTP' }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="additional-info">
+      <a href="#" class="info-link">Điều khoản sử dụng</a>
+      <a href="#" class="info-link">Hướng dẫn giao dịch an toàn</a>
+      <a href="#" class="info-link">Biểu phí dịch vụ</a>
+    </div>
+  </div>
+</div>

@@ -18,6 +18,7 @@ import { AccountService } from '../../../../services/account/account.service';
 import { Customer } from '../../../../interfaces/customer.inteface';
 import { CustomerService } from '../../../../services/customer/customer.service';
 
+
 @Component({
   selector: 'app-apply-credit',
   standalone: true,
@@ -33,9 +34,7 @@ import { CustomerService } from '../../../../services/customer/customer.service'
     DialogModule,
     ToastModule,
     CalendarModule,
-    StepperComponent
   ],
-  providers: [MessageService],
   templateUrl: './apply-credit.component.html',
   styleUrl: './apply-credit.component.scss'
 })
@@ -87,7 +86,7 @@ export class ApplyCreditComponent implements OnInit {
   formCredit: FormGroup;
   constructor(
     private fb: FormBuilder, 
-    public messageService: MessageService,
+    private messageService: MessageService,
     private route: ActivatedRoute,
     private accountService: AccountService,
     private customerService: CustomerService

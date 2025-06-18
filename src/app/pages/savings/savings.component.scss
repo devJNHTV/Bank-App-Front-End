@@ -534,15 +534,15 @@
   margin-bottom: 3rem;
 }
 
-.nav-grid {
+.savings-nav-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin: 2rem 0;
 }
 
-.nav-item {
-  background: linear-gradient(135deg, #659fceb5 0%, #0056b3 100%);
+.savings-nav-item {
+  background: linear-gradient(135deg, #659fceb5 0%, #0056b3 100%) ;
   border-radius: 16px;
   padding: 2rem 1.5rem;
   text-align: center;
@@ -559,12 +559,12 @@
   overflow: hidden;
 }
 
-.nav-item:hover {
+.savings-nav-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
-.nav-item:before {
+.savings-nav-item:before {
   content: '';
   position: absolute;
   top: 0;
@@ -575,20 +575,20 @@
   transition: left 0.5s;
 }
 
-.nav-item:hover:before {
+.savings-nav-item:hover:before {
   left: 100%;
 }
 
-.nav-icon {
+.savings-nav-icon {
   margin-bottom: 1rem;
 }
 
-.nav-icon i {
+.savings-nav-icon i {
   font-size: 2.5rem;
   display: block;
 }
 
-.nav-label {
+.savings-nav-label {
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.4;
@@ -844,27 +844,27 @@
 
 // Responsive design
 @media (max-width: 768px) {
-  .nav-grid {
+  .savings-nav-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
   
-  .nav-item {
+  .savings-nav-item {
     padding: 1.5rem 1rem;
     min-height: 120px;
   }
   
-  .nav-icon i {
+  .savings-nav-icon i {
     font-size: 2rem;
   }
   
-  .nav-label {
+  .savings-nav-label {
     font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
-  .nav-grid {
+  .savings-nav-grid {
     grid-template-columns: 1fr;
   }
 }

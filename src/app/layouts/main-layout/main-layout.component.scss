@@ -1,0 +1,120 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 280px;
+  background-color: white;
+  border-right: 1px solid #e0e0e0;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0; /* Giữ lại border-bottom nếu bạn muốn */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Giữ lại gap cho logo nếu bạn muốn khoảng cách giữa icon/ảnh và text */
+}
+
+.logo-image {
+  height: 32px;
+  margin-right: 8px;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #006341; /* Màu xanh đặc trưng KienlongBank */
+}
+
+.nav-menu {
+  padding: 0;
+}
+
+.nav-item {
+  height: 48px !important;
+  margin: 4px 16px !important;
+  border-radius: 8px !important;
+  color: #6b7280 !important;
+  transition: all 0.2s !important;
+}
+
+.nav-item:hover {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+}
+
+/* Lưu ý: `active-link` là class bạn dùng trong routerLinkActive, không phải `active` */
+.active-link {
+  background-color: #22c55e;
+  color: white;
+}
+
+.header-toolbar { /* Đổi từ .header thành .header-toolbar để khớp với HTML */
+  background-color: white;
+  color: #1f2937;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 24px;
+  height: 64px;
+}
+
+.spacer { /* Thường được sử dụng để tạo khoảng trống linh hoạt */
+  flex: 1 1 auto;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Đảm bảo căn phải */
+}
+
+.user-menu-trigger { /* Thêm selector cho nút trigger menu người dùng */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px; /* Dù bạn dùng icon, nếu sau này có text thì vẫn cần */
+  font-weight: 600;
+}
+
+.user-info { /* Class cho phần thông tin người dùng trong menu */
+  padding: 10px 16px;
+  text-align: center;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* Media query để ẩn nút menu trên desktop, giữ lại trên mobile */
+@media (min-width: 1025px) {
+  .menu-button {
+    display: none;
+  }
+}
+
+/* Bạn có thể giữ hoặc bỏ @media (max-width: 1024px) tùy theo thiết kế responsive */
+@media (max-width: 1024px) {
+  .sidenav {
+    width: 260px;
+  }
+}

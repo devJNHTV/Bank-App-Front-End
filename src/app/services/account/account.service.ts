@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Account, AccountSavings, creditCards, Term, Transaction } from '../../interfaces/account.interface';
 import { HttpClient } from '@angular/common/http';
@@ -9,8 +9,8 @@ import { HttpClient } from '@angular/common/http';
 export class AccountService {
   private apiUrl = 'http://localhost:8888/account';
   private apiUrlTransaction = 'http://localhost:8888/api/transactions';
+  private http = inject(HttpClient);
   token = localStorage.getItem('access-token');
-  constructor(private http: HttpClient) { }
 
   getAccounts(): Observable<Account[]>  {
     return this.http.get<Account[]>(`${this.apiUrl}/getAllPaymentAccount`, {

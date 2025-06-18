@@ -1,0 +1,208 @@
+<div class="container">
+  <div class="form-container">
+    <div class="logo-container">
+      <img
+        src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon-logo-klb.jpg"
+        alt="KienlongBank Logo"
+        class="logo"
+      />
+    </div>
+
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>Đăng ký tài khoản</mat-card-title>
+        <mat-card-subtitle>Vui lòng điền đầy đủ thông tin bên dưới</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="form">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Tên đăng nhập</mat-label>
+              <input matInput formControlName="username" placeholder="Nhập tên đăng nhập" type="text" />
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error *ngIf="registerForm.get('username')?.hasError('required')">
+                Vui lòng nhập tên đăng nhập
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('username')?.hasError('minlength')">
+                Tên đăng nhập phải có ít nhất 3 ký tự
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Họ và tên</mat-label>
+              <input matInput formControlName="fullName" placeholder="Nhập họ và tên" type="text" />
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error *ngIf="registerForm.get('fullName')?.hasError('required')">
+                Vui lòng nhập họ và tên
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" placeholder="Nhập email" type="email" />
+              <mat-icon matSuffix>email</mat-icon>
+              <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
+                Vui lòng nhập email
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
+                Email không hợp lệ
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Số điện thoại</mat-label>
+              <input matInput formControlName="phoneNumber" placeholder="Nhập số điện thoại" type="tel" />
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error *ngIf="registerForm.get('phoneNumber')?.hasError('required')">
+                Vui lòng nhập số điện thoại
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('phoneNumber')?.hasError('pattern')">
+                Số điện thoại phải là 10 chữ số
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Số CMND/CCCD</mat-label>
+              <input matInput formControlName="identityNumber" placeholder="Nhập số CMND/CCCD" type="text" />
+              <mat-icon matSuffix>badge</mat-icon>
+              <mat-error *ngIf="registerForm.get('identityNumber')?.hasError('required')">
+                Vui lòng nhập số CMND/CCCD
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('identityNumber')?.hasError('pattern')">
+                Số CMND/CCCD phải là 12 chữ số
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Địa chỉ</mat-label>
+              <input matInput formControlName="address" placeholder="Nhập địa chỉ" type="text" />
+              <mat-icon matSuffix>home</mat-icon>
+              <mat-error *ngIf="registerForm.get('address')?.hasError('required')">
+                Vui lòng nhập địa chỉ
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ngày sinh</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="dateOfBirth"
+                placeholder="YYYY/MM/DD"
+              />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="registerForm.get('dateOfBirth')?.hasError('required')">
+                Vui lòng nhập ngày sinh
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('dateOfBirth')?.hasError('matDatepickerParse')">
+                Ngày sinh phải có định dạng YYYY/MM/DD
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Giới tính</mat-label>
+              <mat-select formControlName="gender">
+                <mat-option value="male">Nam</mat-option>
+                <mat-option value="female">Nữ</mat-option>
+                <mat-option value="other">Khác</mat-option>
+              </mat-select>
+              <mat-icon matSuffix>people</mat-icon>
+              <mat-error *ngIf="registerForm.get('gender')?.hasError('required')">
+                Vui lòng chọn giới tính
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Mật khẩu</mat-label>
+              <input
+                matInput
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Nhập mật khẩu (ít nhất 8 ký tự, 1 chữ hoa, 1 ký tự đặc biệt)"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="togglePasswordVisibility('password')"
+              >
+                <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+                Vui lòng nhập mật khẩu
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
+                Mật khẩu phải có ít nhất 8 ký tự
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('password')?.hasError('pattern')">
+                Mật khẩu phải chứa ít nhất 1 chữ hoa và 1 ký tự đặc biệt
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Xác nhận mật khẩu</mat-label>
+              <input
+                matInput
+                [type]="showConfirmPassword ? 'text' : 'password'"
+                formControlName="confirmPassword"
+                placeholder="Nhập lại mật khẩu"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="togglePasswordVisibility('confirmPassword')"
+              >
+                <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
+                Vui lòng xác nhận mật khẩu
+              </mat-error>
+              <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('mismatch')">
+                Mật khẩu không khớp
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+          <div class="form-actions">
+            <button mat-stroked-button color="primary" type="button" routerLink="/login">
+              Đã có tài khoản?
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid || isLoading">
+              <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+              <span *ngIf="!isLoading">Đăng ký</span>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="additional-info">
+      <a href="#" class="info-link">Điều khoản sử dụng</a>
+      <a href="#" class="info-link">Hướng dẫn giao dịch an toàn</a>
+      <a href="#" class="info-link">Biểu phí dịch vụ</a>
+    </div>
+  </div>
+</div>

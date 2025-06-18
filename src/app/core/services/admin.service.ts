@@ -1,0 +1,80 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { UserService } from './user.service';
+import { HttpClient } from '@angular/common/http';
+import { catchError, tap } from 'rxjs/operators';
+import { ApiEndpointsService } from './api-endpoints.service'; 
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AdminService {
+  private isAdminSubject = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    private userService: UserService,
+    private http: HttpClient,
+    private apiEndpointsService: ApiEndpointsService
+  ) {
+    this.restoreAdminState();
+  }
+
+  private restoreAdminState(): void {
+    const userInfo = this.userService.getUserInfo();
+    if (userInfo && userInfo.realm_access && userInfo.realm_access.roles && userInfo.realm_access.roles.includes('ADMIN')) {
+      this.isAdminSubject.next(true);
+    }
+  }
+
+  isAdmin(): Observable<boolean> {
+    return this.isAdminSubject.asObservable();
+  }
+
+  checkAdminAccess(): boolean {
+    const userInfo = this.userService.getUserInfo();
+    return (
+      userInfo &&
+      userInfo.realm_access &&
+      userInfo.realm_access.roles &&
+      (userInfo.realm_access.roles.includes('ADMIN') ||
+        userInfo.realm_access.roles.includes('ROLE_ADMIN'))
+    );
+  }
+
+  getCustomerList(page: number, size: number, keyword: string): Observable<any> {
+    if (!this.checkAdminAccess()) {
+      console.log(this.userService.getUserInfo())
+      return throwError(() => new Error('Bạn không có quyền xem danh sách khách hàng'));
+    }
+
+    return this.http.get(this.apiEndpointsService.getCustomerListEndpoint(page, size, keyword)).pipe(
+      tap((res) => console.log('Customer List:', res)),
+      catchError((error) =>
+        throwError(() => new Error('Lấy danh sách khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
+      )
+    );
+  }
+
+  getCustomerDetailByCifcode(cifCode: string): Observable<any> {
+    return this.http.get(this.apiEndpointsService.getCustomerDetailByCifCodeEndpoint(cifCode)).pipe(
+      tap((res) => console.log('Customer Detail Response:', res)),
+      catchError((error) =>
+        throwError(() => new Error(error.error?.message || 'Lấy thông tin khách hàng thất bại'))
+      )
+    );
+  }
+
+  updateCustomerStatus(cifCode: string, newStatus: string): Observable<any> {
+    if (!this.checkAdminAccess()) {
+      return throwError(() => new Error('Bạn không có quyền cập nhật trạng thái khách hàng'));
+    }
+
+    const payload = { cifCode, status: newStatus };
+    return this.http.put(this.apiEndpointsService.getCustomerStatusEndpoint(), payload).pipe(
+      tap((res) => console.log('Phản hồi cập nhật trạng thái khách hàng:', res)),
+      catchError((error) =>
+        throwError(() => new Error('Cập nhật trạng thái khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
+      )
+    );
+  }
+}
