@@ -1,0 +1,224 @@
+<div class="apply-credit-wrapper">
+
+  <!-- Bước 1: Form đăng ký -->
+  <form *ngIf="step === 1" [formGroup]="formCredit" class="form-container" (ngSubmit)="submitForm()">
+    <h2 class="form-title">Đăng ký thẻ tín dụng</h2>
+    <p class="form-desc">Vui lòng kiểm tra thông tin và cung cấp thông tin nghề nghiệp để chúng tôi xét duyệt đơn đăng ký của bạn.</p>
+
+    <!-- Thông tin thẻ -->
+    <div class="form-section" *ngIf="selectedCard">
+      <div class="section-title">Thông tin thẻ</div>
+      <div class="card-info-display">
+        <div class="info-row">
+          <span class="label">Tên thẻ:</span>
+          <span class="value">{{ selectedCard.typeName }}</span>    
+        </div>
+        <div class="info-row">
+          <span class="label">Mức lương tối thiểu:</span>
+          <span class="value">{{ formatCurrency(selectedCard.minimumIncome) }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Hạn mức tối đa:</span>
+          <span class="value">{{ formatCurrency(selectedCard.defaultCreditLimit) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thông tin cá nhân (hiển thị, không cho sửa) -->
+    <div class="form-section">
+      <div class="section-title">Thông tin cá nhân</div>
+      <div class="customer-info-display">
+        <div class="info-row">
+          <span class="label">Họ và tên:</span>
+          <span class="value">{{ customerInfo.fullName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Số CMND/CCCD:</span>
+          <span class="value">{{ customerInfo.identityNumber }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Ngày sinh:</span>
+          <span class="value">{{ customerInfo.dateOfBirth | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Số điện thoại:</span>
+          <span class="value">{{ customerInfo.phoneNumber }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Email:</span>
+          <span class="value">{{ customerInfo.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Địa chỉ:</span>
+          <span class="value">{{ customerInfo.address }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thông tin nghề nghiệp (form input) -->
+    <div class="form-section">
+      <div class="section-title">Thông tin nghề nghiệp <span style="color: #e53935; font-size: 0.9rem;">(Vui lòng nhập thông tin)</span></div>
+      <div class="grid">
+        <div class="col-12 md:col-6 mb-2" style="margin-bottom: 10px;">
+          <label>Nghề nghiệp <span class="required">*</span></label>
+          <p-select [options]="jobList" formControlName="occupation" placeholder="Chọn nghề nghiệp" (onChange)="onJobChange($event)" [ngClass]="{'p-invalid': submitted && formCredit.get('occupation')?.invalid}" styleClass="w-full"></p-select>
+          <small *ngIf="submitted && formCredit.get('occupation')?.invalid" class="p-error">Vui lòng chọn nghề nghiệp</small>
+        </div>
+        <div class="col-12 md:col-6 mb-2" *ngIf="showOtherJob" style="margin-bottom: 10px;">
+          <label>Nhập nghề nghiệp</label>
+          <input pInputText formControlName="otherJob" placeholder="Nhập nghề nghiệp cụ thể" />
+        </div>
+        <div class="col-12 md:col-6 mb-2" style="margin-bottom: 10px;">
+          <label>Tên công ty/Đơn vị công tác</label>
+          <input pInputText formControlName="company" placeholder="Nhập tên công ty hoặc đơn vị công tác" />
+        </div>
+        <div class="col-12 md:col-6 mb-2" style="margin-bottom: 10px;">
+          <label>Mức lương hàng tháng <span class="required">*</span></label>
+          <p-inputnumber formControlName="monthlyIncome" 
+                        mode="currency" 
+                        currency="VND" 
+                        locale="vi-VN"
+                        [ngClass]="{'p-invalid': submitted && formCredit.get('monthlyIncome')?.invalid}" 
+                        styleClass="w-full">
+          </p-inputnumber>
+          <small *ngIf="submitted && formCredit.get('monthlyIncome')?.invalid" class="p-error">
+            <span *ngIf="formCredit.get('monthlyIncome')?.errors?.['required']">Vui lòng nhập mức lương</span>
+            <span *ngIf="formCredit.get('monthlyIncome')?.errors?.['salaryTooLow']">
+              Mức lương phải lớn hơn hoặc bằng mức lương tối thiểu
+            </span>
+          </small>
+          <small *ngIf="selectedCard" class="salary-note">
+            Mức lương tối thiểu là {{ formatCurrency(selectedCard.minimumIncome) }}
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Đồng ý điều khoản -->
+    <div class="form-section no-border">
+      <div class="flex align-items-center">
+        <p-checkbox formControlName="agree" [binary]="true" styleClass="mr-2"></p-checkbox>
+        <label (click)="openTerms()" class="terms-label">Tôi đồng ý với <span class="terms-link">điều khoản và điều kiện</span> của ngân hàng.</label>
+      </div>
+      <small *ngIf="submitted && formCredit.get('agree')?.invalid" class="p-error">Bạn phải đồng ý với điều khoản</small>
+    </div>
+
+    <div class="flex justify-content-center mt-4">
+      <button pButton type="submit" label="Gửi đơn đăng ký" class="submit-button" [loading]="isLoading"></button>
+    </div>
+  </form>
+
+  <!-- Bước 2: Xác thực OTP -->
+  <div *ngIf="step === 2" class="otp-container">
+    <div class="otp-header">
+      <div class="otp-icon">
+        <i class="pi pi-shield"></i>
+      </div>
+      <h2 class="otp-title">Xác thực bảo mật</h2>
+      <p class="otp-desc">Mã xác thực OTP đã được gửi tới số điện thoại của bạn. Vui lòng nhập mã để tiếp tục.</p>
+    </div>
+    
+    <div class="otp-input-section">
+      <div class="otp-input-wrapper">
+        <input pInputText maxlength="6" class="otp-input" [(ngModel)]="otpCode" placeholder="000000" [disabled]="isLoading" />
+        <div class="otp-input-label">Nhập mã OTP (6 chữ số)</div>
+      </div>
+    </div>
+    
+    <div class="otp-info-section">
+      <div class="countdown-info" *ngIf="!canResendOtp">
+        <i class="pi pi-clock"></i>
+        <span>Gửi lại mã sau: <strong>{{ otpCountdownDisplay }}</strong></span>
+      </div>
+      <button pButton type="button" 
+              label="Gửi lại mã OTP" 
+              class="p-button-link resend-btn" 
+              (click)="resendOtp()" 
+              *ngIf="canResendOtp" 
+              [disabled]="isLoading">
+        <i class="pi pi-refresh"></i>
+        Gửi lại mã
+      </button>
+    </div>
+    
+    <div class="button-group">
+      <button pButton type="button" 
+              label="Quay lại" 
+              icon="pi pi-arrow-left"
+              class="p-button-outlined back-btn" 
+              (click)="prevStep()" 
+              [disabled]="isLoading"></button>
+      <button pButton type="button" 
+              label="Xác nhận" 
+              icon="pi pi-check"
+              class="confirm-btn" 
+              (click)="submitOtp()" 
+              [loading]="isLoading" 
+              [disabled]="otpCode.length !== 6"></button>
+    </div>
+    
+    <div class="security-notice">
+      <i class="pi pi-info-circle"></i>
+      <div class="notice-content">
+        <div class="notice-title">Lưu ý bảo mật</div>
+        <div class="notice-text">Không chia sẻ mã OTP với bất kỳ ai. Mã có hiệu lực trong 2 phút.</div>
+      </div>
+    </div>
+    <p-toast></p-toast>
+  </div>
+
+  <!-- Bước 3: Thành công -->
+  <div *ngIf="step === 3" class="success-container">
+    <div class="success-animation">
+      <div class="success-icon">
+        <i class="pi pi-check-circle"></i>
+      </div>
+      <div class="success-checkmark">
+        <i class="pi pi-check"></i>
+      </div>
+    </div>
+    
+    <div class="success-content">
+      <h2 class="success-title">Đăng ký thành công!</h2>
+      <p class="success-message">
+        Đơn đăng ký thẻ tín dụng của bạn đã được ghi nhận và đang trong quá trình xét duyệt.
+      </p>
+      <div class="success-details">
+        <div class="detail-item">
+          <i class="pi pi-envelope"></i>
+          <span>Kết quả sẽ được thông báo qua email và SMS</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="success-actions">
+      <button pButton type="button" 
+              label="Đăng ký thẻ khác" 
+              icon="pi pi-plus"
+              class="p-button-outlined secondary-btn" 
+              (click)="resetAll()"></button>
+      <button pButton type="button" 
+              label="Về trang chủ" 
+              icon="pi pi-home"
+              class="submit-button primary-btn" 
+              routerLink="/dashboard"></button>
+    </div>
+  </div>
+
+  <!-- Popup điều khoản -->
+  <p-dialog header="Điều khoản và điều kiện" [(visible)]="showTerms" [modal]="true" [style]="{width: '600px'}" (onHide)="closeTerms()">
+    <div style="max-height: 400px; overflow-y: auto;">
+      <p>Đây là nội dung điều khoản và điều kiện mẫu. Bạn có thể thay thế bằng nội dung thực tế của ngân hàng.</p>
+      <ul>
+        <li>Khách hàng cam kết cung cấp thông tin chính xác.</li>
+        <li>Ngân hàng có quyền kiểm tra, xác minh thông tin.</li>
+        <li>Thẻ tín dụng chỉ được sử dụng cho mục đích cá nhân hợp pháp.</li>
+        <li>Khách hàng chịu trách nhiệm thanh toán đầy đủ, đúng hạn các khoản nợ.</li>
+        <li>Ngân hàng có quyền từ chối phát hành thẻ mà không cần giải thích lý do.</li>
+      </ul>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton type="button" label="Đóng" (click)="closeTerms()"></button>
+    </ng-template>
+  </p-dialog>
+</div>

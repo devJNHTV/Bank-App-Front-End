@@ -2,6 +2,7 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    font :100% "Roboto", "SF Pro Display", Arial, sans-serif;
     
     h1 {
       color: #2c3e50;
@@ -100,7 +101,7 @@
                 font-weight: 700;
                 margin: 0 0 4px 0;
                 color: #2c3e50;
-                font-family: 'Courier New', monospace;
+                font : 100% "Roboto", "SF Pro Display", Arial, sans-serif;
               }
 
               .account-type {
@@ -137,7 +138,7 @@
               .balance-amount {
                 font-size: 2rem;
                 font-weight: 700;
-                font-family: 'Courier New', monospace;
+                font-family: 'Roboto', sans-serif;
 
                 &.balance-success {
                   color: #28a745;
@@ -523,9 +524,11 @@
   }
   
 // Navigation styles
-.savings-container {
-  padding: 1rem;
-}
+    .savings-container {
+      padding: 1rem;
+      width: 70%;
+      margin-left: 15%;    
+    }
 
 .savings-navigation {
   margin-bottom: 3rem;
@@ -709,9 +712,10 @@
             }
 
             .balance-amount {
-              font-size: 2rem;
-              font-weight: 700;
-              font-family: 'Courier New', monospace;
+              font-size: 3rem;
+      
+              font-weight: bold;
+              font : 100% "Roboto", "SF Pro Display", Arial, sans-serif;
 
               &.balance-success {
                 color: #28a745;

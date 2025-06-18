@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Account, AccountSavings, Term, Transaction } from '../../interfaces/account.interface';
+import { Account, AccountSavings, creditCards, Term, Transaction } from '../../interfaces/account.interface';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -38,7 +38,7 @@ export class AccountService {
  
 
   verifyOtp(otpCode: string, savingRequestID: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/confirm-otp-and-create-account`, {
+    return this.http.post(`${this.apiUrl}/confirm-otp-and-create-Saving-account`, {
       otpCode: otpCode,
       savingRequestID: savingRequestID
     }, {
@@ -124,4 +124,35 @@ export class AccountService {
       }
     });
   }
+  getCreditCards(): Observable<creditCards[]> {
+    return this.http.get<creditCards[]>(`${this.apiUrl}/getAllCreditCard`, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+  }
+  applyCredit(formData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/create-credit-request`, formData, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+  }
+  verifyOtpCredit(otpCode: string, creditRequestId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/confirm-otp-credit`, {
+      otpCode: otpCode,
+      creditRequestId: creditRequestId
+    }, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+  }
+  resendOtpCredit(creditRequestId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/resend-otp-credit/${creditRequestId}`, {} , {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
   }     
+}

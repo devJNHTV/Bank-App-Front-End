@@ -45,7 +45,7 @@ import { CardModule } from 'primeng/card';
               required
               pattern="[0-9]{6}"
               maxlength="6"
-              placeholder="Nhập 6 chữ số"
+              placeholder="Nhập mã OTP"
               class="otp-input"
               autocomplete="one-time-code"
               (input)="clearMessages(); formatOtpInput($event)">

@@ -38,12 +38,7 @@
         <span class="nav-label">Tiết kiệm tự động</span>
       </div>
       
-      <div class="nav-item" (click)="setCurrentView('cancel-auto')">
-        <div class="nav-icon">
-          <i class="pi pi-ban"></i>
-        </div>
-        <span class="nav-label">Hủy tiết kiệm tự động</span>
-      </div>
+
     </div>
   </div>
 
@@ -62,20 +57,14 @@
                   <h3 class="account-number">{{ accountSavings.accountNumber }}</h3>
                   <p class="account-type">Tài khoản tiết kiệm</p>
                 </div>
-                <div class="account-status">
-                  <p-tag 
-                    [value]="getSavingsStatus(accountSavings.balance) === 'success' ? 'Phát triển tốt' : 
-                            getSavingsStatus(accountSavings.balance) === 'warn' ? 'Ổn định' : 'Cần quan tâm'"
-                    [severity]="getSavingsStatus(accountSavings.balance)">
-                  </p-tag>
-                </div>
+          
               </div>
             </ng-template>
 
             <div class="card-content">
               <div class="balance-section">
                 <label class="balance-label">Số dư tiết kiệm:</label>
-                  <div class="balance-amount" [ngClass]="'balance-' + getSavingsStatus(accountSavings.balance)">
+                  <div class="balance-amount">
                   {{ formatCurrency(accountSavings.balance) }}
                 </div>
               </div>
@@ -90,8 +79,12 @@
                   <span class="value rate">{{ accountSavings.interestRate * 100 }}%/năm</span>
                 </div>
                 <div class="info-row">
-                  <span class="label">Ngày mở:</span>
-                  <span class="value">{{ accountSavings.openedDate | date:'dd/MM/yyyy' }}</span>
+                  <span class="label">Hình thức trả lãi:</span>
+                  <span class="value">{{ accountSavings.interestPaymentType === 'AT_MATURITY' ? 'Trả lãi vào cuối kỳ' : 'Hàng tháng' }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Rút tiền:</span>
+                  <span class="value">{{ accountSavings.interestPaymentType === 'MONTHLY' ? 'Không thể rút tiền trước hạn' : 'Có thể rút tiền trước hạn' }}</span>
                 </div>
               </div>
 

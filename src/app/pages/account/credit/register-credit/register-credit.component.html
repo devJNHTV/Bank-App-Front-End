@@ -1,0 +1,66 @@
+<!-- Slide Show Banner -->
+<div class="banner-carousel">
+  <p-galleria [value]="banners" [showThumbnails]="false" [showIndicators]="true" [circular]="true" [autoPlay]="true" [transitionInterval]="4000">
+    <ng-template pTemplate="item" let-item>
+      <img [src]="item.image" [alt]="item.alt" class="banner-img" />
+    </ng-template>
+  </p-galleria>
+</div>
+
+<!-- Danh sách thẻ tín dụng -->
+<div class="credit-card-list">
+  <div class="container">
+    <div *ngFor="let card of creditCards; let last = last" class="card-row">
+      <!-- Card Image -->
+      <div class="card-image-section">
+        <img [src]="'assets/img/' + card.imgURL" [alt]="card.typeName" class="credit-card-img" />
+      </div>
+      
+      <!-- Card Info -->
+      <div class="card-info-section">
+        <div class="card-title">{{card.typeName}}</div>
+        <div class="card-headline">Hạn mức từ {{card.defaultCreditLimit | currency:'VND':'symbol':'1.0-0'}}</div>
+        <ul class="benefits-list">
+          <li *ngFor="let benefit of benefits">
+            <i class="pi pi-check-circle"></i>{{benefit}}
+          </li>
+        </ul>
+      </div>
+      <!-- Card Gift & Actions -->
+      <div class="card-actions-section">
+        <div class="gifts-section">
+          <div class="gifts-title">Quà tặng mở thẻ</div>
+          <ul class="gifts-list">
+            <!-- <li *ngFor="let gift of card.gifts">
+              <li>
+              <i class="pi pi-circle"></i>{{gift}}
+            </li> -->
+            <li>
+              <i class="pi pi-circle"></i>
+              <p>
+                <span>
+                 Miễn  phí thường niên cho năm đầu
+                </span>
+              </p>
+          </ul>
+        </div>
+        
+        <div class="action-buttons">
+          <p-button label="So sánh thẻ" [outlined]="true" size="large"></p-button>
+          <p-button label="Tìm hiểu thêm" [outlined]="true" size="large"></p-button>
+          <p-button label="Mở thẻ ngay" icon="pi pi-arrow-right" severity="warn" size="large" (click)="openRegisterCredit(card.cardID)"></p-button>
+        </div>
+      </div>
+      
+      <!-- Divider between cards (not after the last card) -->
+      <div *ngIf="!last" class="page-actions-divider"></div>
+    </div>
+   
+  </div>
+</div>
+
+<!-- Footer Section -->
+
+
+<!-- Chat Support Button -->
+<p-button icon="pi pi-comments" rounded styleClass="chat-button" severity="success"></p-button>

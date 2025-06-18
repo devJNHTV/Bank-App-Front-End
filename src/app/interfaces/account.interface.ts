@@ -31,4 +31,16 @@ export interface AccountSavings {
     interestRate: number;
     initialDeposit: number;
     termValueMonths: number;
+    renewOption: string;   
+    interestPaymentType: string;
+}
+export interface creditCards
+{
+    cardID: string;  
+    typeName: string;
+    defaultCreditLimit: number;
+    interestRate: number;
+    annualFee: number;
+    minimumIncome: number;
+    imgURL: string;     
 }

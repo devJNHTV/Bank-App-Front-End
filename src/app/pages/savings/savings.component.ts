@@ -279,7 +279,7 @@ export class SavingsComponent {
           }
           if(error.error.status === 1024) {
             errorMessage = 'Bạn đã nhập sai OTP quá nhiều lần. Vui lòng thử lại.';
-            this.currentStep = 1;
+            this.withdrawStep = 1;
           }
           if(error.error.status === 1025) {
             errorMessage = 'Mã OTP không đúng. Vui lòng thử lại.';
@@ -317,11 +317,6 @@ export class SavingsComponent {
     }).format(amount);
   }
 
-  getSavingsStatus(balance: number): 'success' | 'warn' | 'danger' {
-    if (balance >= 50000000) return 'success';
-    if (balance >= 10000000) return 'warn';
-    return 'danger';
-  }
 
   trackByAccountNumber(index: number, account: Account): string {
     return account.accountNumber;

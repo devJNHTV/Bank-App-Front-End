@@ -1,0 +1,320 @@
+// Header styles
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+// Banner styles
+.banner {
+  height: 500px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-200) 100%);
+  color: white;
+
+  .banner-content {
+    padding: 2rem;
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+// Search and Filter styles
+.search-filter {
+  background-color: var(--surface-ground);
+
+  .p-card {
+    .grid {
+      margin: 0;
+    }
+  }
+}
+
+// Banner Carousel Styles
+.banner-carousel {
+  width: 100%;
+  
+  .banner-img {
+    width: 100%;
+    max-height: 650px;
+    object-fit: cover;
+  }
+}
+
+// Credit Card List Styles
+.credit-card-list {
+  padding: 40px 20px;
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .card-row {
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+    
+    // Card Image Section
+    .card-image-section {
+      flex: 0 0 300px;
+      height: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 32px;
+      
+      .credit-card-img {
+        width: 300px;
+        height: 200px;
+        object-fit:  cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+    }
+    
+    // Card Info Section
+    .card-info-section {
+      flex: 1;
+      margin-right: 32px;
+      
+      .card-title {
+        color: #6c757d;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .card-headline {
+        color: #212529;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        line-height: 1.3;
+      }
+      
+      .benefits-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        
+        li {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 12px;
+          font-size: 14px;
+          line-height: 1.5;
+          color: #495057;
+          
+          i {
+            color: #ffc107;
+            margin-right: 8px;
+            margin-top: 2px;
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+    
+    // Card Actions Section
+    .card-actions-section {
+      flex: 0 0 280px;
+      height: 300px;
+      
+      .gifts-section {
+        margin-bottom: 20px;
+        
+        .gifts-title {
+          font-weight: 600;
+          color: #212529;
+          margin-bottom: 12px;
+          font-size: 16px;
+        }
+        
+        .gifts-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          
+          li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #495057;
+            
+            i {
+              color: #28a745;
+              margin-right: 8px;
+              font-size: 8px;
+            }
+          }
+        }
+      }
+      
+      .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        
+        p-button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Footer styles
+.footer {
+  background-color: var(--surface-900);
+  color: var(--surface-0);
+  padding: 3rem 2rem 1rem;
+
+  h3 {
+    color: var(--surface-0);
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 0.5rem;
+
+      a {
+        color: var(--surface-0);
+        text-decoration: none;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--surface-700);
+  }
+}
+
+// Chat button styles
+.chat-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+}
+
+// Responsive Design
+@media screen and (max-width: 1024px) {
+  .credit-card-list {
+    .card-row {
+      flex-direction: column;
+      text-align: center;
+      
+      .card-image-section {
+        flex: none;
+        margin-right: 0;
+        margin-bottom: 24px;
+        
+        .credit-card-img {
+          width: 220px;
+          height: 140px;
+        }
+      }
+      
+      .card-info-section {
+        flex: none;
+        margin-right: 0;
+        margin-bottom: 24px;
+        
+        .benefits-list li {
+          justify-content: center;
+        }
+      }
+      
+      .card-actions-section {
+        flex: none;
+        width: 100%;
+        max-width: 300px;
+        
+        .action-buttons {
+          flex-direction: row;
+          flex-wrap: wrap;
+          gap: 12px;
+          
+          p-button {
+            flex: 1;
+            min-width: 120px;
+          }
+        }
+      }
+    }
+  }
+}
+.page-actions-divider{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-top: 1px solid hsla(0, 60%, 36%, 0.11);
+}
+@media screen and (max-width: 768px) {
+  .banner-carousel {
+    padding: 10px;
+    
+    .banner-img {
+      height: 200px;
+    }
+  }
+  
+  .credit-card-list {
+    padding: 20px 10px;
+    
+    .card-row {
+      padding: 20px;
+      
+      .card-image-section .credit-card-img {
+        width: 200px;
+        height: 120px;
+      }
+      
+      .card-info-section .card-headline {
+        font-size: 20px;
+      }
+      
+      .card-actions-section .action-buttons {
+        flex-direction: column;
+        
+        p-button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

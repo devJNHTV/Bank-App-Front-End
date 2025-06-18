@@ -258,6 +258,7 @@ export class WithdrawStep1Component implements OnInit {
   }
 
   prepareAccountOptions() {
+    this.savingsAccounts = this.savingsAccounts.filter(account => account.interestPaymentType === 'AT_MATURITY');
     this.savingsAccountOptions = this.savingsAccounts.map(account => ({
       label: `${account.accountNumber} - ${this.formatCurrency(account.balance)}`,
       value: account.accountNumber
