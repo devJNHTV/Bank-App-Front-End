@@ -29,6 +29,9 @@ import { CustomerListComponent } from './admin/customer-list/customer-list.compo
 import { CustomerDetailAdminComponent } from './admin/customer-detail/customer-detail-admin.component';
 import { ChangePasswordComponent } from './auth/change-password/change-password.component';
 import { KycComponent } from './auth/kyc/kyc.component';
+import { TransactionListComponent } from './admin/transaction/transaction-list/transaction-list.component';
+import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
+import { ExternalTransferComponent } from './transactions/external-transfer/external-transfer.component';
     
 export const routes: Routes = [
 
@@ -44,11 +47,14 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent, canActivate: [KycGuard] },
       { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
       { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
+      { path: 'admin/transactions', component: TransactionListComponent, canActivate: [KycGuard] },
+
 
       { path: 'customers', component: CustomerListComponent, canActivate: [KycGuard] },
       { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent, canActivate: [KycGuard] },
       { path: 'transactions', component: TransactionHomeComponent, canActivate: [KycGuard]   },
       { path: 'transactions/transfer', component: TransferComponent, canActivate: [KycGuard]   },
+      { path: 'transactions/external-transfer', component: ExternalTransferComponent, canActivate: [KycGuard]   },
       { path: 'transactions/deposit', component: DepositComponent, canActivate: [KycGuard]   },
       { path: 'transactions/withdraw', component: WithdrawComponent, canActivate: [KycGuard]   },
       { path: 'transactions/transaction-result', component: TransactionResultComponent, canActivate: [KycGuard]   },
@@ -75,5 +81,5 @@ export const routes: Routes = [
       { path: 'verify-otp', component: VerifyOtpComponent },
     ]
   },
-  
+  { path: 'forbidden', component: ForbiddenComponent },
 ];

@@ -198,7 +198,8 @@
                 {{transaction.type==='TRANSFER' ? 'Chuyển tiền' : 
                 transaction.type==='DEPOSIT' ? 'Nạp tiền' :
                 transaction.type==='WITHDRAW' ? 'Rút tiền' :
-                transaction.type==='PAY_BILL' ? 'Thanh toán hóa đơn' : 'Không xác định'
+                transaction.type==='PAY_BILL' ? 'Thanh toán hóa đơn' :
+                transaction.type==='EXTERNAL_TRANSFER' ? 'Chuyển khoản liên ngân hàng' : 'Không xác định'
               }}
               </span>
             </td>

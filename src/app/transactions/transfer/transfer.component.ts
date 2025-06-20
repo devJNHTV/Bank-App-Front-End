@@ -59,7 +59,7 @@ export class TransferComponent implements OnInit{
     toCustomerName: string | null;
     fromCustomerName: string | null;
     type: string;
-  } | null = null;
+    } | null = null;
 
   
   constructor(

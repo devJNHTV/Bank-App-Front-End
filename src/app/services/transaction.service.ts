@@ -31,7 +31,7 @@ export class TransactionService {
     });
   }
   getTransactionByReferenceCode(referenceCode: string): Observable<any> {
-    return this.http.get(`${this.baseUrlTransaction}/${referenceCode}`, {
+    return this.http.get(`${this.baseUrlTransaction}/getByReferenceCode/${referenceCode}`, {
       headers: this.getAuthHeaders()
     });
   }
@@ -39,6 +39,12 @@ export class TransactionService {
 
 transfer(payload: any): Observable<any> {
   return this.http.post(`${this.baseUrlTransaction}/transfer`, payload, {
+    headers: this.getAuthHeaders()
+  });
+}
+// External Transfer
+externalTransfer(payload: any): Observable<any> {
+  return this.http.post(`${this.baseUrlTransaction}/external-transfer`, payload, {
     headers: this.getAuthHeaders()
   });
 }
@@ -58,6 +64,11 @@ confirmTransaction(payload: any): Observable<any> {
  getCustomerByAccountNumber(accountNumber: string): Observable<any> {
   return this.http.get(`${this.baseUrl}/account/get-customer/${accountNumber}`, {
     headers: this.getAuthHeaders()
+  }); 
+ }
+ getCustomerByAccountNumberExternalTransfer(payload: any): Observable<any> {
+  return this.http.post(`${this.baseUrlTransaction}/inquiry-destination-account`,payload, {
+    headers: this.getAuthHeaders()  
   }); 
  }
   getTransactionById(id: string): Observable<any> {
@@ -106,6 +117,16 @@ withdraw(payload: any): Observable<any> {
       params: params
     });
   }
+
+  // Get ALl Transaction
+
+  getAllsTransaction(params: any): Observable<any> {
+    return this.http.get(`${this.baseUrlTransaction}/getAllTransactions`, {
+      headers: this.getAuthHeaders(),
+      params: params
+    });
+  }
+
   getFilterMetadata(): Observable<any> {
     return this.http.get(`${this.baseUrlTransaction}/getFilterMetadata`, {
       headers: this.getAuthHeaders()

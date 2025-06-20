@@ -27,6 +27,8 @@ export class TransactionResultComponent  {
   toCustomerName: string | null = null;
   message: string = '';
   transactionType: string = '';
+  destinationBankCode: string = '';
+  destinationBankName: string = '';
   constructor(
     private router: Router,
     private location: Location,
@@ -39,13 +41,17 @@ export class TransactionResultComponent  {
       toCustomerName: string | null;
       message: string;
       type: string;
-    };
+      destinationBankCode: string;
+      destinationBankName: string;
+      };
     this.success = state?.success ?? false;
     this.transactionData = state?.transactionData ?? {};
     this.fromCustomerName = state?.fromCustomerName ?? null;
     this.toCustomerName = state?.toCustomerName ?? null;
     this.message = state?.message ?? '';
     this.transactionType = state?.type ?? '';
+    this.destinationBankCode = state?.destinationBankCode ?? '';
+    this.destinationBankName = state?.destinationBankName ?? '';
     console.log(' Dữ liệu từ router state:', this.transactionData);
   }
 

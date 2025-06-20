@@ -83,8 +83,6 @@ export class PayBillComponent implements OnInit {
   }
 
   ngOnInit() {
-    
-
     this.transactionService.getAccountForCustomer().subscribe({
         next: (res) => {
           this.accounts = res.data.map((acc: any) => ({

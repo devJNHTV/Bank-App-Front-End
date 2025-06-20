@@ -16,6 +16,7 @@
     <!-- Navigation Menu -->
     <mat-nav-list class="nav-menu">
       <a
+      *ngIf="!isAdmin()" 
         mat-list-item
         routerLink="/customer-dashboard"
         routerLinkActive="active-link"
@@ -27,6 +28,7 @@
       </a>
 
       <a
+      *ngIf="!isAdmin()"
         mat-list-item
         routerLink="/transactions"
         routerLinkActive="active-link"
@@ -58,6 +60,18 @@
       >
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Danh sách người dùng</span>
+      </a>
+      <a
+        *ngIf="isAdmin()"
+        mat-list-item
+        routerLink="/admin/transactions"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>receipt_long
+        </mat-icon>
+        <span matListItemTitle>Danh sách giao dịch</span>
       </a>
     </mat-nav-list>
   </mat-sidenav>

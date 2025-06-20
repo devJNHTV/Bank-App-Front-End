@@ -40,6 +40,8 @@ export class ConfirmTransactionComponent {
     fromCustomerName: string | null;
     toCustomerName: string | null;
     type: string;
+    destinationBankCode?: string;
+    destinationBankName?: string;
   } = {
     fromAccountNumber: '',
     toAccountNumber: '',
@@ -49,6 +51,8 @@ export class ConfirmTransactionComponent {
     fromCustomerName: '',
     toCustomerName: '',
     type: '',
+    destinationBankCode: '',
+    destinationBankName: '',
   };
 
   otpCode: string = '';
@@ -83,6 +87,8 @@ export class ConfirmTransactionComponent {
             toCustomerName: this.transactionData.toCustomerName,
             message: finalMessage,
             type: this.transactionType,
+            destinationBankCode: this.transactionData.destinationBankCode ?? '',
+            destinationBankName: this.transactionData.destinationBankName ?? '',
           }
         });
       },
@@ -102,6 +108,8 @@ export class ConfirmTransactionComponent {
               toCustomerName: this.transactionData.toCustomerName,
               message: finalMessage,
               type: this.transactionType,
+              destinationBankCode: this.transactionData.destinationBankCode ?? '',
+              destinationBankName: this.transactionData.destinationBankName ?? '',
             }
           });
         }
@@ -159,6 +167,7 @@ resendInterval: any;
       case 'DEPOSIT': return 'nạp tiền';
       case 'WITHDRAW': return 'rút tiền';
       case 'PAY_BILL': return 'thanh toán hóa đơn';
+      case 'EXTERNAL_TRANSFER': return 'chuyển khoản liên ngân hàng';
       default: return 'không xác định';
     }
   }

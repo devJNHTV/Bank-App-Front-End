@@ -1,5 +1,6 @@
 <p-card class="confirm-container" header="Xác nhận giao dịch {{transactionData.type == 'TRANSFER' ?
- 'Chuyển khoản' : transactionData.type == 'WITHDRAW' ? 'Rút tiền' : transactionData.type == 'DEPOSIT' ? 'Nạp tiền' : 
+ 'Chuyển khoản' : transactionData.type == 'WITHDRAW' ? 'Rút tiền' : transactionData.type == 'DEPOSIT' ? 'Nạp tiền' :
+ transactionData.type == 'EXTERNAL_TRANSFER' ? 'Chuyển khoản liên ngân hàng' :
  'Thanh toán hóa đơn'}}" styleClass="p-mt-4">
   <div class="p-fluid">
     <div class="p-field">
@@ -13,7 +14,7 @@
       </label>
     </div>
 
-    <div class="p-field">
+    <div class="p-field" *ngIf="transactionData.type !== 'EXTERNAL_TRANSFER'">
       <label *ngIf="transactionData.toAccountNumber"><i class="pi pi-building-columns mr-2"></i>Đến tài khoản:
         <small *ngIf="transactionData.toCustomerName" style="font-size: 14px;">
           <br>
@@ -24,7 +25,21 @@
         </small>
       </label>
     </div>
+    <div class="p-field" *ngIf="transactionData.type === 'EXTERNAL_TRANSFER'">
+      <label *ngIf="transactionData.toAccountNumber">Đến tài khoản:
+        <small *ngIf="transactionData.destinationBankCode" style="font-size: 14px;">
+          <br>
+            <strong><i class="pi pi-building-columns mr-2 ml-2"></i>{{ transactionData.destinationBankName }}</strong>
+        </small>
+        <small  style="font-size: 14px;">
+          <br>
+          <strong><i class="pi pi-user mr-2 ml-2"></i>
+             {{ transactionData.toAccountNumber }}
+          </strong>
+        </small>
+      </label>
 
+    </div>  
     <div class="p-field">
       <label>Số tiền giao dịch:</label>
       <p><i class="pi pi-money-bill mr-2"></i> {{ transactionData.amount | number : "1.0-0" }} VNĐ</p>
