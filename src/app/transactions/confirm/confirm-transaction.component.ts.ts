@@ -42,6 +42,10 @@ export class ConfirmTransactionComponent {
     type: string;
     destinationBankCode?: string;
     destinationBankName?: string;
+    provider?: string;
+    customerCode?: string;
+    billType?: string;
+    
   } = {
     fromAccountNumber: '',
     toAccountNumber: '',
@@ -53,6 +57,9 @@ export class ConfirmTransactionComponent {
     type: '',
     destinationBankCode: '',
     destinationBankName: '',
+    provider: '',
+    customerCode: '',
+    billType:'',
   };
 
   otpCode: string = '';
@@ -89,6 +96,9 @@ export class ConfirmTransactionComponent {
             type: this.transactionType,
             destinationBankCode: this.transactionData.destinationBankCode ?? '',
             destinationBankName: this.transactionData.destinationBankName ?? '',
+            billType: this.transactionData.billType??'',
+            provider: this.transactionData.provider??'',
+            customerCode: this.transactionData.customerCode??'',
           }
         });
       },
@@ -110,6 +120,9 @@ export class ConfirmTransactionComponent {
               type: this.transactionType,
               destinationBankCode: this.transactionData.destinationBankCode ?? '',
               destinationBankName: this.transactionData.destinationBankName ?? '',
+              billType: this.transactionData.billType??'',
+            provider: this.transactionData.provider??'',
+            customerCode: this.transactionData.customerCode??'',
             }
           });
         }

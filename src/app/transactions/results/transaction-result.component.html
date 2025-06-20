@@ -43,6 +43,28 @@
         <div class="field" *ngIf="transactionData.failedReason">
           <strong><i class="pi pi-info-circle mr-2"></i> Lý do thất bại:</strong> {{ transactionData.failedReason }}
         </div>
+
+        <div class="p-field p-col-12" *ngIf="transactionData.type=='PAY_BILL'">
+          <label>Thông tin hóa đơn</label>
+          <div class="p-3 border-1 border-round surface-border">
+              <div class="grid">
+                  <div class="col-12 md:col-4">
+                      <div class="text-sm font-semibold mb-2">Loại hóa đơn</div>
+                      <div>{{ transactionData.billType=='ELECTRICITY' ? 'Điện' : transactionData.billType=='TELEPHONE' ? 'Điện thoại'
+    : transactionData.billType=='WATER' ? 'Nước' : 'Internet' }}</div>
+                  </div>
+                  <div class="col-12 md:col-4">
+                      <div class="text-sm font-semibold mb-2">Nhà cung cấp</div>
+                      <div>{{transactionData.billProviderCode}}</div>
+                  </div>
+                  <div class="col-12 md:col-4">
+                      <div class="text-sm font-semibold mb-2">Mã khách hàng</div>
+                      <div>{{transactionData.billCustomerCode}}</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+        
       </div>  
   
       <p><i 

@@ -76,6 +76,7 @@ confirmTransaction(payload: any): Observable<any> {
       headers: this.getAuthHeaders()
     });
   }
+    
 // Deposit
 deposit(payload: any): Observable<any> {
   return this.http.post(`${this.baseUrlTransaction}/deposit`, payload, {
