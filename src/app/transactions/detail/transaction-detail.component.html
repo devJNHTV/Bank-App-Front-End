@@ -66,10 +66,12 @@
             <p class="account-number">
               
                 <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8oY35Q0HkxU8Z5UGiUOeGQl_5DFxpz0yv1g&s" width="50" height="50" alt="icon" />
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8oY35Q0HkxU8Z5UGiUOeGQl_5DFxpz0yv1g&s" width="50" height="40" alt="icon" />
                   </button>
                   {{ transaction.toAccountNumber }} <br>
-                {{ transaction.destinationBankName }} 
+          
+                <p class="account-name">{{ toCustomerName }} <br>
+                  {{ transaction.destinationBankName }} 
                </p>
           </div>
         </p-card>

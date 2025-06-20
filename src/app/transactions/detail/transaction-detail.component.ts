@@ -32,6 +32,10 @@ export class TransactionDetailComponent implements OnInit {
   fromCustomerName: string = '';
   toCustomerName: string = '';
   accountNumber: string = '';
+  destinationCustomer: any = {
+    accountNumber: '',
+    bankCode: '',
+  };
   constructor(
     private route: ActivatedRoute,
     private transactionService: TransactionService,
@@ -47,7 +51,7 @@ export class TransactionDetailComponent implements OnInit {
     this.loadTransaction();
    
   }
-  loadCustomerName(fromAccountNumber: string, toAccountNumber: string) {
+  loadFromCustomerName(fromAccountNumber: string) {
     this.transactionService.getCustomerByAccountNumber(fromAccountNumber).subscribe({
       next: (response: any) => {
         this.fromCustomerName    = this.removeVietnameseTones(response.data.fullName.toUpperCase());
@@ -62,19 +66,8 @@ export class TransactionDetailComponent implements OnInit {
         });
       }
     });
-    this.transactionService.getCustomerByAccountNumber(toAccountNumber).subscribe({
-      next: (response: any) => {
-        this.toCustomerName    = this.removeVietnameseTones(response.data.fullName.toUpperCase());  
-      },
-      error: (error) => {
-        this.error = 'Có lỗi xảy ra khi tải thông tin khách hàng';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Lỗi',
-          detail: 'Không thể tải thông tin khách hàng'
-        });
-      }
-    });
+    
+    
   }
   loadTransaction() {
     const referenceCode = this.route.snapshot.paramMap.get('referenceCode');
@@ -90,7 +83,40 @@ export class TransactionDetailComponent implements OnInit {
       next: (response: any) => {
         this.transaction = response.result;     
         console.log(this.transaction);
-        this.loadCustomerName(this.transaction.fromAccountNumber, this.transaction.toAccountNumber);
+        this.loadFromCustomerName(this.transaction.fromAccountNumber);
+        if(this.transaction.type=='EXTERNAL_TRANSFER'){
+          this.destinationCustomer.accountNumber= this.transaction.toAccountNumber;
+          this.destinationCustomer.bankCode=this.transaction.destinationBankCode;
+          console.log(this.destinationCustomer)
+          this.transactionService.getCustomerByAccountNumberExternalTransfer(this.destinationCustomer).subscribe({
+            next: (response: any) => {
+              this.toCustomerName    = this.removeVietnameseTones(response.result.customerName.toUpperCase());  
+              console.log(this.toCustomerName)
+            },
+            error: (error) => {
+              this.error = 'Có lỗi xảy ra khi tải thông tin khách hàng';
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Lỗi',
+                detail: 'Không thể tải thông tin khách hàng'
+              });
+            }
+          })
+        }else{
+          this.transactionService.getCustomerByAccountNumber(this.transaction.toAccountNumber).subscribe({
+            next: (response: any) => {
+              this.toCustomerName    = this.removeVietnameseTones(response.data.fullName.toUpperCase());  
+            },
+            error: (error) => {
+              this.error = 'Có lỗi xảy ra khi tải thông tin khách hàng';
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Lỗi',
+                detail: 'Không thể tải thông tin khách hàng'
+              });
+            }
+          });
+        }
       },
       error: (error) => {
         this.error = 'Có lỗi xảy ra khi tải thông tin giao dịch';
