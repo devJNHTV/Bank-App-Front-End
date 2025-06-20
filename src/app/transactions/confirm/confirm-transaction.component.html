@@ -56,8 +56,8 @@
           <div class="grid">
               <div class="col-12 md:col-4">
                   <div class="text-sm font-semibold mb-2">Loại hóa đơn</div>
-                  <div>{{ transactionData.billType=='electricity' ? 'Điện' : transactionData.billType=='phone' ? 'Điện thoại'
-: transactionData.billType=='water' ? 'Nước' : 'Internet' }}</div>
+                  <div>{{ transactionData.billType=='ELECTRICITY' ? 'Điện' : transactionData.billType=='TELEPHONE' ? 'Điện thoại'
+    : transactionData.billType=='WATER' ? 'Nước' : 'Internet' }}</div>
               </div>
               <div class="col-12 md:col-4">
                   <div class="text-sm font-semibold mb-2">Nhà cung cấp</div>
@@ -70,7 +70,7 @@
           </div>
       </div>
   </div>
-  
+
     <div class="p-field">
       <label for="otp">Nhập mã OTP:</label>
       <p-inputotp

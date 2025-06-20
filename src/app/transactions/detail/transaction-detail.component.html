@@ -30,7 +30,7 @@
     <!-- Thông tin tài khoản -->
     <div class="formgrid grid">
       <div class="field col-12 md:col-6" *ngIf="transaction.type == 'TRANSFER'||transaction.type == 'WITHDRAW'||
-      transaction.type == 'PAY_BILL'">
+      transaction.type == 'PAY_BILL'||transaction.type == 'EXTERNAL_TRANSFER'">
         <p-card styleClass="h-full" >
           <ng-template pTemplate="header">
             <div class="p-3 bg-primary text-white">
@@ -47,20 +47,30 @@
         </p-card>
       </div>    
 
-      <div class="field col-12 md:col-6" *ngIf="transaction.type == 'TRANSFER'||transaction.type == 'DEPOSIT'">
+      <div class="field col-12 md:col-6" *ngIf="transaction.type == 'TRANSFER'||transaction.type == 'DEPOSIT'||transaction.type == 'EXTERNAL_TRANSFER'">
         <p-card styleClass="h-full" >
-          <ng-template pTemplate="header">
+          <ng-template pTemplate="header" >
             <div class="p-3 bg-primary text-white">
               <i class="pi pi-inbox mr-2"></i>Tài khoản đích
             </div>
           </ng-template>
-          <div class="account-info">
+          <div class="account-info" *ngIf="transaction.type == 'TRANSFER'||transaction.type == 'DEPOSIT'">
             <p class="account-number">
                 <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
                     <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
                   </button>
                 {{ transaction.toAccountNumber }}</p>
             <p class="account-name">{{ toCustomerName }}</p>
+          </div>
+          <div class="account-info" *ngIf="transaction.type == 'EXTERNAL_TRANSFER'">
+            <p class="account-number">
+              
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8oY35Q0HkxU8Z5UGiUOeGQl_5DFxpz0yv1g&s" width="50" height="50" alt="icon" />
+                  </button>
+                  {{ transaction.toAccountNumber }} <br>
+                {{ transaction.destinationBankName }} 
+               </p>
           </div>
         </p-card>
       </div>
@@ -75,26 +85,53 @@
               <i class="pi pi-info-circle mr-2"></i>Thông tin giao dịch
             </div>
           </ng-template>
-          <div class="transaction-info">
-            <div class="p-grid">
-              <div class="p-col-12 p-md-6">
-                <label>Mã giao dịch:</label>
-                <p class="value">{{ transaction.referenceCode }}</p>
-              </div>
-              <div class="p-col-12">
-                <label>Nội dung:</label>
-                <p class="value">{{ transaction.description || 'Không có nội dung' }}</p>
-              </div>
-              <div class="p-col-12">
-                <label>Loại hình:</label>
-                <p class="value">{{ transaction.bankType == 'INTERNAL'? 'Chuyển tiền nội bộ' : 'Chuyển tiền liên ngân hàng' }}</p>
-              </div>
-              <div class="p-col-12" *ngIf="transaction.failedReason">
-                <label>Lý do thất bại:</label>
-                <p class="value">{{ transaction.failedReason || 'Không có nội dung' }}</p>
+          <div class="flex justify-content-between">
+            <div class="transaction-info">
+              <div class="p-grid">
+                <div class="p-col-12 p-md-6">
+                  <label>Mã giao dịch:</label>
+                  <p class="value">{{ transaction.referenceCode }}</p>
+                </div>
+                <div class="p-col-12">
+                  <label>Nội dung:</label>
+                  <p class="value">{{ transaction.description || 'Không có nội dung' }}</p>
+                </div>
+                <div class="p-col-12">
+                  <label>Loại hình:</label>
+                  <p class="value">{{ transaction.bankType == 'INTERNAL'? 'Chuyển tiền nội bộ' : 'Chuyển tiền liên ngân hàng' }}</p>
+                </div>
+                <div class="p-col-12" *ngIf="transaction.failedReason">
+                  <label>Lý do thất bại:</label>
+                  <p class="value">{{ transaction.failedReason || 'Không có nội dung' }}</p>
+                </div>
               </div>
             </div>
+            <div class="transaction-info mr-3" *ngIf="transaction.type=='PAY_BILL'">
+              <label>Thông tin hóa đơn</label>
+        <div class="p-3 border-1 border-round surface-border">
+          <div class="grid">
+            <div class="col-12 md:col-3">
+              <div class="text-sm font-semibold mb-2">Mã hóa đơn</div>
+              <div>{{transaction.billId}}</div>
           </div>
+              <div class="col-12 md:col-3">
+                  <div class="text-sm font-semibold mb-2">Loại hóa đơn</div>
+                  <div class="text-center">{{ transaction.billType=='ELECTRICITY' ? 'Điện' : transaction.billType=='TELEPHONE' ? 'Điện thoại'
+                        : transaction.billType=='WATER' ? 'Nước' : 'Internet' }}</div>
+              </div>
+              <div class="col-12 md:col-3">
+                  <div class="text-sm font-semibold mb-2">Nhà cung cấp</div>
+                  <div>{{transaction.billProviderCode}}</div>
+              </div>
+              <div class="col-12 md:col-3">
+                  <div class="text-sm font-semibold mb-2">Mã khách hàng</div>
+                  <div>{{transaction.billCustomerCode}}</div>
+              </div>
+          </div>
+      </div>
+            </div>
+          </div>
+          
         </p-card>
       </div>
     </div>

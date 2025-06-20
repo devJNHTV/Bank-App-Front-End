@@ -111,8 +111,10 @@ export class TransactionDetailComponent implements OnInit {
         return 'Nạp tiền';
       case 'WITHDRAW':
         return 'Rút tiền';
+      case 'EXTERNAL_TRANSFER':
+        return 'Chuyển khoản liên ngân hàng';
       case 'PAY_BILL':
-        return 'Thanh toán hóa đơn';
+        return 'Thanh toán hóa đơn'
       default:
         return 'Không xác định';
     }
