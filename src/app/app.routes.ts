@@ -33,6 +33,16 @@ import { KycComponent } from './auth/kyc/kyc.component';
 import { TransactionListComponent } from './admin/transaction/transaction-list/transaction-list.component';
 import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
 import { ExternalTransferComponent } from './transactions/external-transfer/external-transfer.component';
+import { OrverviewLoanComponent } from './loan/my-loans-overview/orverview-loan.component';
+import { LoanHistoryComponent } from './loan/loan-history/loan-history.component';
+import { CurrentRepaymentScheduleComponent } from './loan/current-repayment-schedule/current-repayment-schedule.component';
+import { PayRepaymentComponent } from './loan/pay-repayment/pay-repayment.component';
+import { DetailLoanComponent } from './loan/detail-loan/detail-loan.component';
+import { DetailLoanRejectComponent } from './loan/detail-loan-reject/detail-loan-reject.component';
+import { PendingLoanListComponent } from './loan-employee/pending-loans-list/pending-loans-list.component';
+import { LoanDetailViewComponent } from './loan-employee/loan-detail-view/loan-detail-view.component';
+import { WarningApplyLoanComponent } from './loan/warning-apply-loan/warning-apply-loan.component';
+import { AboutComponent } from './pages/about/about.component';
     
 export const routes: Routes = [
 
