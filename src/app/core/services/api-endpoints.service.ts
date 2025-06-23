@@ -16,6 +16,10 @@ export class ApiEndpointsService {
     return `${this.apiUrl}/register/kyc-and-otp`;
   }
 
+  reSentOtpEndpoint(): string {
+    return `${this.apiUrl}/register/send-otp`;
+  }
+
   getConfirmRegisterEndpoint(): string {
     return `${this.apiUrl}/register/confirm`;
   }

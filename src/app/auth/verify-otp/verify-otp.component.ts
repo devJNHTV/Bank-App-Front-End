@@ -111,11 +111,10 @@ export class VerifyOtpComponent implements OnInit {
 
   resendOtp(): void {
     if (!this.email) {
-      this.errorMessage = 'Email không hợp lệ.';
       Swal.fire({
         icon: 'error',
         title: 'Lỗi',
-        text: this.errorMessage,
+        text: "Email không hợp l",
         timer: 3000,
       });
       return;
@@ -124,7 +123,7 @@ export class VerifyOtpComponent implements OnInit {
     this.isResending = true;
     this.errorMessage = null;
 
-    this.registrationService.processKycAndSendOtp(this.email, {}).subscribe({
+    this.registrationService.resendVerificationCode(this.email).subscribe({
       next: () => {
         this.isResending = false;
         Swal.fire({
@@ -136,7 +135,10 @@ export class VerifyOtpComponent implements OnInit {
       },
       error: (error) => {
         this.isResending = false;
-        this.errorMessage = error.message || 'Không thể gửi lại mã OTP. Vui lòng thử lại.';
+
+        const serverMessage = error?.error?.message || error?.message;
+        this.errorMessage = serverMessage || 'Không thể gửi lại mã OTP. Vui lòng thử lại sau.';
+
         Swal.fire({
           icon: 'error',
           title: 'Lỗi',
