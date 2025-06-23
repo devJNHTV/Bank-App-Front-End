@@ -1,0 +1,87 @@
+<p-card class="result-card result-container" > 
+    <div class="result-content">
+      <i
+        class="pi"
+        [ngClass]="success ? 'pi-check-circle' : 'pi-times-circle'"
+        [style.color]="success ? '#2e7d32' : '#c62828'"
+      ></i>
+  
+      <h2>{{ success ? 'Giao dịch ' + transactionType + ' thành công!' : 'Giao dịch ' + transactionType + ' thất bại' }}</h2>
+        <p style="font-size: 16px;">{{message}}</p>
+      <div class="info-grid ">
+        <div class="field" *ngIf="transactionData.type !== 'DEPOSIT'"><strong>
+            <i class="pi pi-building-columns mr-2"></i> Từ tài khoản:</strong>
+            <br>
+            <small *ngIf="fromCustomerName" style="font-size: 14px;">
+              <strong><i class="pi pi-user mr-2 ml-2"></i>{{ fromCustomerName }} - </strong>
+            </small>
+             {{ transactionData.fromAccountNumber }}
+        </div>
+        <div class="field" *ngIf="transactionData.type !== 'WITHDRAW'&& transactionData.type !== 'PAY_BILL'"><strong>  
+            <i class="pi pi-building-columns mr-2"></i> Đến tài khoản:</strong> 
+            <br>
+            <span *ngIf="transactionData.type === 'EXTERNAL_TRANSFER'">
+              <br>
+              <small *ngIf="transactionData.destinationBankName" style="font-size: 14px;">
+                <strong><i class="pi pi-building-columns mr-2"></i>{{ transactionData.destinationBankName }}</strong>
+              </small>
+            </span>
+            <small *ngIf="toCustomerName" style="font-size: 14px;">
+              <strong><i class="pi pi-user mr-2 ml-2"></i>{{ toCustomerName }} -</strong>
+            </small>
+            {{ transactionData.toAccountNumber }}
+        </div>
+        
+        <div class="field"><strong><i class="pi pi-money-bill mr-2"></i> Số tiền:</strong> 
+            {{ transactionData.amount | number: '1.0-0' }} {{ transactionData.currency }}</div>
+        <div class="field" *ngIf="transactionData.description">
+          <strong><i class="pi pi-info-circle mr-2"></i> Nội dung:</strong> {{ transactionData.description }}
+        </div>
+        <div class="field">
+          <strong><i class="pi pi-clock mr-2"></i> Thời gian:</strong> {{ transactionData.timestamp | date: 'dd/MM/yyyy HH:mm:ss' }}
+        </div>
+        <div class="field" *ngIf="transactionData.failedReason">
+          <strong><i class="pi pi-info-circle mr-2"></i> Lý do thất bại:</strong> {{ transactionData.failedReason }}
+        </div>
+
+        <div class="p-field p-col-12" *ngIf="transactionData.type=='PAY_BILL'">
+          <label>Thông tin hóa đơn</label>
+          <div class="p-3 border-1 border-round surface-border">
+              <div class="grid">
+                  <div class="col-12 md:col-4">
+                      <div class="text-sm font-semibold mb-2">Loại hóa đơn</div>
+                      <div>{{ transactionData.billType=='ELECTRICITY' ? 'Điện' : transactionData.billType=='TELEPHONE' ? 'Điện thoại'
+    : transactionData.billType=='WATER' ? 'Nước' : 'Internet' }}</div>
+                  </div>
+                  <div class="col-12 md:col-4">
+                      <div class="text-sm font-semibold mb-2">Nhà cung cấp</div>
+                      <div>{{transactionData.billProviderCode}}</div>
+                  </div>
+                  <div class="col-12 md:col-4">
+                      <div class="text-sm font-semibold mb-2">Mã khách hàng</div>
+                      <div>{{transactionData.billCustomerCode}}</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+        
+      </div>  
+  
+      <p><i 
+        class="pi pi-verified" 
+        style="font-size: 1rem; color: #4caf50; margin-right: 0.5rem; line-height: 1; user-select: none;"
+      ></i>
+       Cảm ơn bạn đã tin tưởng dịch vụ của chúng tôi</p>
+      <button pButton type="button" class="p-button-rounded p-button-text">
+        <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
+      </button>
+      <br>
+      <button pButton 
+        label="Quay lại trang chính" 
+        icon="pi pi-home" 
+        class="p-mt-3" 
+        (click)="goHome()">
+    </button>
+    </div>
+  </p-card>
+  <p-toast></p-toast>

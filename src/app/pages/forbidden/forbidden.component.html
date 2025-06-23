@@ -1,0 +1,15 @@
+<div class="forbidden-container">
+    <p-card styleClass="p-shadow-5 text-center">
+      <ng-template pTemplate="header">
+        <div class="forbidden-header">
+          <i class="pi pi-lock forbidden-icon"></i>
+          <h1 class="forbidden-title">403</h1>
+        </div>
+      </ng-template>
+      <h2>TRUY CẬP BỊ TỪ CHỐI</h2>
+      <p>Rất tiếc, bạn không có quyền truy cập trang này.</p>
+      <ng-template pTemplate="footer">
+        <button pButton type="button" label="Quay về trang chủ" icon="pi pi-home" (click)="goHome()"></button>
+      </ng-template>
+    </p-card>
+  </div>

@@ -1,0 +1,262 @@
+.savings-account-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    
+    .breadcrumb {
+      color: #6c757d;
+      margin-bottom: 20px;
+      
+      .text-primary {
+        color: #007ad9 !important;
+        font-weight: 500;
+      }
+    }
+    
+    .form-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-top: 20px;
+    }
+    
+    .form-section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e9ecef;
+      
+      &:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+    }
+    
+    label {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 15px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    
+    .col-12 {
+      width: 100%;
+    }
+    
+    @media (min-width: 768px) {
+      .col-md-4 {
+        width: 33.33%;
+        padding-right: 15px;
+      }
+      
+      .col-md-8 {
+        width: 66.67%;
+      }
+    }
+    
+    .font-medium {
+      font-weight: 600;
+      color: #28a745;
+      font-size: 16px;
+    }
+    
+    .terms-text {
+      color: #007ad9;
+      text-decoration: underline;
+      cursor: pointer;
+      
+      &:hover {
+        color: #0056b3;
+      }
+    }
+    
+    .submit-button {
+      background: #007ad9;
+      border: none;
+      padding: 12px 40px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 6px;
+      
+      &:enabled:hover {
+        background: #0056b3;
+      }
+      
+      &:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+      }
+    }
+    
+    .p-error {
+      color: #dc3545;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    
+    // PrimeNG customizations
+    .p-select {
+      width: 100%;
+      
+      .p-select-label {
+        padding: 12px;
+      }
+    }
+    
+    .p-inputnumber {
+      width: 100%;
+      
+      .p-inputnumber-input {
+        padding: 12px;
+        width: 100%;
+      }
+    }
+    
+    .p-checkbox {
+      .p-checkbox-box {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    
+    // Flex utilities
+    .flex {
+      display: flex;
+    }
+    
+    .align-items-center {
+      align-items: center;
+    }
+    
+    .justify-content-center {
+      justify-content: center;
+    }
+    
+    .mt-3 {
+      margin-top: 1rem;
+    }
+    
+    .mt-4 {
+      margin-top: 1.5rem;
+    }
+    
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+    
+    .mb-4 {
+      margin-bottom: 1.5rem;
+    }
+    
+    .ml-2 {
+      margin-left: 0.5rem;
+    }
+    
+    .mr-2 {
+      margin-right: 0.5rem;
+    }
+    
+    .block {
+      display: block;
+    }
+  }
+  
+  // Success step styling
+  .success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    
+    .success-content {
+      text-align: center;
+      background: white;
+      border-radius: 12px;
+      padding: 48px 32px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      
+      .success-icon {
+        font-size: 4rem;
+        color: #28a745;
+        margin-bottom: 24px;
+        display: block;
+      }
+      
+      h2 {
+        color: #28a745;
+        margin-bottom: 16px;
+      }
+      
+      p {
+        line-height: 1.6;
+        margin-bottom: 32px;
+      }
+      
+      .button-group {
+        display: flex;
+        justify-content: center;
+        
+        button {
+          min-width: 160px;
+          padding: 12px 24px;
+        }
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    .savings-account-form {
+      padding: 10px;
+      
+      .form-container {
+        padding: 20px;
+      }
+      
+      .grid {
+        flex-direction: column;
+        align-items: flex-start;
+        
+        .col-12 {
+          margin-bottom: 10px;
+        }
+      }
+    }
+    
+    .success-container {
+      .success-content {
+        padding: 32px 20px;
+        margin: 16px;
+        
+        .success-icon {
+          font-size: 3rem;
+        }
+        
+        h2 {
+          font-size: 1.5rem;
+        }
+        
+        .button-group button {
+          width: 100%;
+        }
+      }
+    }
+  }
+  
