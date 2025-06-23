@@ -1,25 +1,9 @@
 <div class="account-detail">
   <!-- Header section -->
-  <div class="header-section">
-    <div class="breadcrumb">
-      <i class="pi pi-home"></i>
-      <span>Trang chủ</span>
-      <i class="pi pi-angle-right"></i>
-      <span>Tài khoản</span>
-      <i class="pi pi-angle-right"></i>
-      <span class="current">Chi tiết tài khoản</span>
-    </div>
-
-  </div>
 
   <div class="content">
     <!-- Cột trái: Thông tin tài khoản -->
     <div class="left-column">
-      <div class="bank-title">
-        <h2 class="detail-title">
-          KLB Digital Bank
-        </h2>
-      </div>
 
       <!-- Card 1: Lời chào -->
       <p-card styleClass="greeting-card">
@@ -189,9 +173,9 @@
                 <span class="balance">{{ formatCurrency(transaction.balance) }}</span>
               </td> -->
               <td>
-                <span class="status success">
+                <span  [ngClass]="transaction.status==='COMPLETED' ? 'status success' : 'status error'">
                   <i class="pi pi-check-circle"></i>
-                  {{ transaction.status ? 'Thành công' : 'Thất bại' }}
+                  {{ transaction.status==='COMPLETED' ? 'Thành công' : 'Thất bại' }}
                 </span>
               </td>
               <td>

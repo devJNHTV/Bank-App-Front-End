@@ -56,7 +56,7 @@ $text-muted: #94a3b8;
     grid-template-columns: 400px 1fr;
     gap: 2rem;
     padding: 2rem;
-    max-width: 1400px;
+    max-width: 100%;
     margin: 0 auto;
 
 
@@ -590,6 +590,9 @@ $text-muted: #94a3b8;
 
             &.success {
               color: $success-color;
+            }
+            &.error {
+              color: $error-color;
             }
           }
         }

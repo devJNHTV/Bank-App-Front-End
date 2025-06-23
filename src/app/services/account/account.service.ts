@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Account, AccountSavings, creditCards, Term, Transaction } from '../../interfaces/account.interface';
+import { Account, AccountSavings, CreditAccount, creditCards, Term, Transaction } from '../../interfaces/account.interface';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -154,5 +154,26 @@ export class AccountService {
         'Authorization': `Bearer ${this.token}`
       }
     });
-  }     
+  }
+  getCreditAccounts(): Observable<CreditAccount[]> {
+    return this.http.get<CreditAccount[]>(`${this.apiUrl}/getAllCreditAccount`);
+  }
+  sendOtpForCardDetails(accountNumber: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/send-otp/credit/getSensitiveInfo/${accountNumber}`, {}, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+  }
+  verifyOtpForCardDetails(otpCode: string, transactionId: string, accountNumber: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/confirm-otp/credit/getSensitiveInfo`, { 
+      otpCode: otpCode,
+      tempRequestKey: transactionId,
+      accountNumber: accountNumber
+    }, {
+      headers: {
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+  }
 }

@@ -1,0 +1,768 @@
+.credit-detail {
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  .content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 30px;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  // Card styles
+  :host ::ng-deep .p-card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .p-card-header {
+      padding: 0;
+      border-bottom: none;
+    }
+
+  }
+
+  .card-header {
+    color: white; 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px 25px;
+    border-radius: 12px 12px 0 0;
+
+    .section-title {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      i {
+        font-size: 1.3rem;
+      }
+    }
+  }
+
+  // Greeting card
+  .greeting-header {
+    text-align: center;
+    padding: 30px 25px;
+    .greeting-title {
+      font-size: 1.1rem;
+      margin: 0 0 5px 0;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .customer-name {
+      font-size: 1.8rem;
+      margin: 0;
+      font-weight: 700;
+    }
+  }
+
+  // Credit card info
+  .credit-card-info {
+    .credit-info {
+      padding: 25px;
+
+      .credit-summary {
+        .info-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 0;
+          border-bottom: 1px solid #f0f0f0;
+
+          &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+          }
+
+          .label {
+            font-weight: 500;
+            color: #666;
+            font-size: 0.95rem;
+          }
+
+          .value {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+
+            &.amount {
+              font-size: 1.1rem;
+              font-weight: 700;
+
+              &.available {
+                color: #27ae60;
+              }
+
+              &.used {
+                color: #e74c3c;
+              }
+            }
+
+            &.status {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              font-size: 0.9rem;
+
+              &.active {
+                color: #27ae60;
+              }
+
+              &.blocked {
+                color: #e74c3c;
+              }
+
+              &.expired {
+                color: #f39c12;
+              }
+
+              &.inactive {
+                color: #95a5a6;
+              }
+            }
+
+            &.masked {
+              font-family: 'Courier New', monospace;
+              letter-spacing: 1px;
+            }
+          }
+
+          .value-with-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  // Customer service card
+  .customer-service-card {
+    .service-info {
+      padding: 25px;
+
+      .service-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+
+        .service-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 1.1rem;
+        }
+
+        .service-details {
+          flex: 1;
+
+          .service-label {
+            display: block;
+            font-weight: 500;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+          }
+
+          .service-value {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+
+  // Transactions section
+  .transactions-section {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    .section-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .section-title {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header-actions {
+        :host ::ng-deep .p-button {
+          border-color: white;
+          color: white;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
+    }
+
+    .filter-section {
+      padding: 20px 25px;
+      background: #f8f9fa;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+
+      .search-box {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+
+        i {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #666;
+        }
+
+        :host ::ng-deep .p-inputtext {
+          padding-left: 35px;
+          width: 100%;
+        }
+      }
+
+      :host ::ng-deep .p-dropdown {
+        min-width: 150px;
+      }
+    }
+
+    :host ::ng-deep .transaction-table {
+      .p-datatable-tbody > tr {
+        &:hover {
+          background: #f8f9fa;
+        }
+
+        td {
+          padding: 15px 25px;
+          border-bottom: 1px solid #eee;
+
+          .transaction-date {
+            .date {
+              display: block;
+              font-weight: 600;
+              color: #2c3e50;
+              margin-bottom: 2px;
+            }
+
+            .time {
+              display: block;
+              color: #666;
+              font-size: 0.85rem;
+            }
+          }
+
+          .transaction-desc {
+            .desc {
+              display: block;
+              font-weight: 500;
+              color: #2c3e50;
+              margin-bottom: 2px;
+            }
+
+            .ref {
+              display: block;
+              color: #666;
+              font-size: 0.85rem;
+            }
+          }
+
+          .amount {
+            font-weight: 700;
+            font-size: 1rem;
+
+            &.positive {
+              color: #27ae60;
+            }
+
+            &.negative {
+              color: #e74c3c;
+            }
+          }
+
+          .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+
+            &.success {
+              color: #27ae60;
+            }
+
+            &.error {
+              color: #e74c3c;
+            }
+          }
+        }
+      }
+    }
+
+    .pagination-section {
+      padding: 20px 25px;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+    }
+  }
+
+  // Card Management Section
+  .card-management-section {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    .section-header {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      color: white;
+      padding: 20px 25px;
+
+      .section-title {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+    }
+
+    .management-grid {
+      padding: 25px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+
+      .management-card {
+        :host ::ng-deep .p-card {
+          border: 1px solid #e0e0e0;
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+          }
+
+          .p-card-header {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+          }
+        }
+
+        .management-header {
+          padding: 15px 20px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          i {
+            font-size: 1.3rem;
+            color: #667eea;
+          }
+
+          h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+          }
+        }
+
+        .management-content {
+          padding: 20px;
+
+          p {
+            margin: 0 0 15px 0;
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+          }
+
+          :host ::ng-deep .p-button {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+
+  // OTP Dialog styles
+  .otp-verification-content {
+    padding: 20px 0;
+
+    .otp-header-info {
+      text-align: center;
+      margin-bottom: 30px;
+
+      .otp-security-icon {
+        font-size: 3rem;
+        color: #667eea;
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      .otp-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0 0 12px 0;
+      }
+
+      .otp-description {
+        color: #6c757d;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin: 0;
+      }
+    }
+
+    .otp-input-section {
+      margin-bottom: 25px;
+
+      .otp-label {
+        display: block;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 12px;
+        text-align: center;
+      }
+
+      .otp-input-field {
+        width: 100%;
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: 8px;
+        padding: 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        transition: border-color 0.3s ease;
+        font-family: 'Courier New', monospace;
+
+        &:focus {
+          border-color: #667eea;
+          box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        &::placeholder {
+          color: #ced4da;
+          font-weight: normal;
+        }
+      }
+
+      .otp-help-info {
+        margin-top: 15px;
+        text-align: center;
+
+        .countdown-info {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          color: #6c757d;
+          font-size: 0.9rem;
+
+          i {
+            color: #ffc107;
+          }
+        }
+
+        .resend-otp-button {
+          background: none;
+          border: none;
+          color: #667eea;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin: 0 auto;
+          padding: 8px 16px;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+
+          &:hover:not(:disabled) {
+            background-color: #f8f9fa;
+            color: #5a6fd8;
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+
+    .security-reminder {
+      background: #e7f3ff;
+      border: 1px solid #b8daff;
+      border-radius: 8px;
+      padding: 18px;
+
+      .reminder-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        font-weight: 600;
+        color: #004085;
+
+        i {
+          color: #0066cc;
+        }
+      }
+
+      .reminder-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          color: #004085;
+          margin-bottom: 6px;
+          font-size: 0.9rem;
+          position: relative;
+          padding-left: 16px;
+
+          &:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #0066cc;
+            font-weight: bold;
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          strong {
+            color: #e74c3c;
+          }
+        }
+      }
+    }
+  }
+
+  .otp-dialog-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+
+    :host ::ng-deep .p-button {
+      min-width: 120px;
+      padding: 12px 24px;
+      font-weight: 600;
+    }
+  }
+
+  // Dialog styles
+  .card-details-dialog {
+    .card-visual {
+      margin-bottom: 20px;
+
+      .credit-card-display {
+        perspective: 1000px;
+
+        .card-front {
+          width: 350px;
+          height: 220px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 15px;
+          padding: 25px;
+          color: white;
+          position: relative;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+          font-family: 'Courier New', monospace;
+
+          .card-bank {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: right;
+          }
+
+          .card-chip {
+            position: absolute;
+            top: 80px;
+            left: 25px;
+            font-size: 2rem;
+            color: #ffd700;
+          }
+
+          .card-number {
+            position: absolute;
+            top: 130px;
+            left: 25px;
+            font-size: 1.4rem;
+            letter-spacing: 4px;
+            font-weight: bold;
+          }
+
+          .card-holder {
+            position: absolute;
+            bottom: 40px;
+            left: 25px;
+            font-size: 1rem;
+            text-transform: uppercase;
+          }
+
+          .card-expiry {
+            position: absolute;
+            bottom: 40px;
+            right: 25px;
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    .card-security-info {
+      .info-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+
+        .label {
+          font-weight: 600;
+          color: #2c3e50;
+        }
+
+        .value {
+          font-family: 'Courier New', monospace;
+          font-size: 1.1rem;
+          font-weight: bold;
+        }
+      }
+
+      .security-notice {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 15px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+
+        i {
+          color: #f39c12;
+          margin-top: 2px;
+        }
+
+        p {
+          margin: 0;
+          color: #856404;
+          font-size: 0.9rem;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+
+  // Dark mode support
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+
+    :host ::ng-deep .p-card {
+      background: #34495e;
+      color: #ecf0f1;
+    }
+
+    .transactions-section,
+    .card-management-section {
+      background: #34495e;
+
+      .filter-section {
+        background: #2c3e50;
+      }
+
+      .pagination-section {
+        background: #2c3e50;
+        border-top-color: #4a6741;
+      }
+    }
+
+    .credit-info,
+    .service-info,
+    .management-content {
+      .info-item,
+      .service-item {
+        border-bottom-color: #4a6741;
+
+        .label,
+        .service-label {
+          color: #bdc3c7;
+        }
+
+        .value,
+        .service-value {
+          color: #ecf0f1;
+        }
+      }
+    }
+  }
+} 

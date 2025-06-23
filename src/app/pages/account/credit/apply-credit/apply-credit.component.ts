@@ -50,6 +50,7 @@ export class ApplyCreditComponent implements OnInit {
   canResendOtp = false;
   otpInterval: any;
   success = false;
+  requestID = '';
   
   // Card information
   cardID: string = '';

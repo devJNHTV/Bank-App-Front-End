@@ -27,6 +27,7 @@ import { DetailComponent } from './pages/account/payment/detail/detail.component
 import { PaymentComponent } from './pages/account/payment/payment.component';
 import { RegisterCreditComponent } from './pages/account/credit/register-credit/register-credit.component';
 import { ApplyCreditComponent } from './pages/account/credit/apply-credit/apply-credit.component';
+import { CreditDetailComponent } from './pages/account/credit/detail/credit-detail.component';
 export const routes: Routes = [
   // Layout cho các route cần đăng nhập
   
@@ -50,6 +51,7 @@ export const routes: Routes = [
             { path: 'saving', component: SavingsComponent }, // Có thể tạo TransactionsComponent
             { path: 'payment/detail/:accountNumber', component: DetailComponent },
             { path: 'credit', component: CreditComponent },
+            { path: 'credit/detail/:cardAccountNumber', component: CreditDetailComponent },
             { path: 'credit/register', component: RegisterCreditComponent },
             { path: 'credit/register/apply-credit/:cardID', component: ApplyCreditComponent },  
         ]

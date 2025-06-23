@@ -1,11 +1,10 @@
 <div class="payment-accounts-container">
-  <!-- <div class="page-header">
+  <div class="page-header">
     <h2 class="page-title">
       <i class="pi pi-credit-card"></i>
       Tài khoản thanh toán
     </h2>
-    <p class="page-description">Quản lý các tài khoản thanh toán của bạn</p>
-  </div> -->
+  </div>
     <div class="page-actions" *ngIf="!addAccount">
       <p-button 
               label="Mở tài khoản " 
@@ -69,6 +68,7 @@
       </p-card>
     </div>
   </div>
+  
 
   <!-- Loading state -->
   <div class="loading-state" *ngIf="loading">
@@ -91,13 +91,6 @@
     <p-toast></p-toast>
     
     <!-- Header -->
-    <div class="form-header" *ngIf="currentStep === 1">
-      <h2 class="form-title">
-        <i class="pi pi-plus"></i>
-        Mở tài khoản thanh toán mới
-      </h2>
-      <p class="form-description">Vui lòng kiểm tra và xác nhận thông tin để mở tài khoản</p>
-    </div>
 
     <!-- Step 1: Xác nhận thông tin khách hàng -->
     <div class="confirmation-step" *ngIf="currentStep === 1">

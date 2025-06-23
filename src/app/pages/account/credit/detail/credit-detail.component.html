@@ -1,0 +1,424 @@
+<div class="credit-detail">
+  <!-- Content -->
+  <div class="content">
+    <!-- Cột trái: Thông tin thẻ tín dụng -->
+    <div class="left-column">
+
+      <!-- Card 1: Lời chào -->
+      <p-card styleClass="greeting-card">
+        <ng-template pTemplate="header">
+          <div class="greeting-header">
+            <h2 class="greeting-title" style="text-align: center;">Xin chào,</h2>
+            <h2 class="customer-name">{{ customer.fullName }}</h2>
+          </div>
+        </ng-template>
+      </p-card>
+
+      <!-- Card 2: Thông tin thẻ tín dụng -->
+      <p-card styleClass="credit-card-info">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <h3 class="section-title">
+              <i class="pi pi-credit-card"></i>
+              Thông tin thẻ tín dụng
+            </h3>
+          </div>
+        </ng-template>
+        
+        <div class="credit-info">
+          <div class="credit-summary">
+            
+            <div class="info-item">
+              <span class="label">Hạn mức khả dụng</span>
+              <span class="value amount available">{{ formatCurrency(creditCard.availableCredit) }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Tổng hạn mức</span>
+              <span class="value amount">{{ formatCurrency(creditCard.creditLimit) }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Đã sử dụng</span>
+              <span class="value amount used">{{ formatCurrency(creditCard.currentDebt) }}</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="label">Chủ thẻ</span>
+              <span class="value">{{ customer.fullName }}</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="label">Loại thẻ</span>
+              <span class="value">{{ creditCard.typeName }}</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="label">Ngày phát hành</span>
+              <span class="value">{{ creditCard.openedDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Trạng thái</span>
+              <span class="value status {{ getCardStatus(creditCard.status) }}">
+                <i class="pi" [ngClass]="creditCard.status === 'ACTIVE' ? 'pi-check-circle' : 'pi-times-circle'"></i>
+                {{ getCardStatusText(creditCard.status) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Card 3: Dịch vụ khách hàng -->
+      <p-card styleClass="customer-service-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <h3 class="section-title">
+              <i class="pi pi-phone"></i>
+              Dịch vụ khách hàng
+            </h3>
+          </div>
+        </ng-template>
+        
+        <div class="service-info">
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="pi pi-phone"></i>
+            </div>
+            <div class="service-details">
+              <span class="service-label">Hotline 24/7</span>
+              <span class="service-value">1900 1234</span>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="pi pi-envelope"></i>
+            </div>
+            <div class="service-details">
+              <span class="service-label">Email hỗ trợ</span>
+              <span class="service-value">support&#64;klbbank.com</span>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="pi pi-shield"></i>
+            </div>
+            <div class="service-details">
+              <span class="service-label">Báo mất thẻ</span>
+              <span class="service-value">1900 5678 (24/7)</span>
+            </div>
+          </div>
+        </div>
+      </p-card>
+
+    </div>
+    
+    <!-- Cột phải: Lịch sử giao dịch & Quản lý thẻ -->
+    <div class="right-column">
+      <!-- Lịch sử giao dịch -->
+      <div class="transactions-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="pi pi-history"></i>
+            Lịch sử giao dịch
+          </h2>
+          <div class="header-actions">
+            <p-button icon="pi pi-download" label="Xuất file" styleClass="p-button-outlined p-button-sm"></p-button>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="search-box">
+            <i class="pi pi-search"></i>
+            <p-inputText placeholder="Tìm kiếm giao dịch..."></p-inputText>
+          </div>
+          <p-dropdown placeholder="30 ngày gần nhất" styleClass="time-filter"></p-dropdown>
+          <p-dropdown placeholder="Tất cả loại GD" styleClass="type-filter"></p-dropdown>
+        </div>
+
+        <p-table [value]="transactions" [tableStyle]="{'min-width': '100%'}" styleClass="transaction-table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Ngày giờ</th>
+              <th>Mô tả giao dịch</th>
+              <th>Số tiền</th>
+              <th>Trạng thái</th>
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-transaction>
+            <tr>
+              <td>
+                <div class="transaction-date">
+                  <span class="date">{{ transaction.timestamp | date:'dd/MM/yyyy' }}</span> 
+                  <span class="time">{{ transaction.timestamp | date:'HH:mm:ss' }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="transaction-desc">
+                  <span class="desc">{{ transaction.description }}</span>
+                  <span class="ref">Ref: {{ transaction.referenceCode }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="amount" [ngClass]="getTransactionType(transaction.type)">
+                  {{ transaction.type === 'CREDIT' ? '+ ' : '- ' }}{{ formatCurrency(transaction.amount) }}
+                </span>
+              </td>
+              <td>
+                <span [ngClass]="transaction.status==='COMPLETED' ? 'status success' : 'status error'">
+                  <i class="pi pi-check-circle"></i>
+                  {{ transaction.status==='COMPLETED' ? 'Thành công' : 'Thất bại' }}
+                </span>
+              </td>
+              <td>
+                <p-button icon="pi pi-eye" styleClass="p-button-text p-button-sm" 
+                         pTooltip="Xem chi tiết"></p-button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        
+        <!-- Pagination -->
+        <div class="pagination-section">
+          <p-paginator 
+            [first]="first" 
+            [rows]="rows" 
+            [totalRecords]="totalRecords" 
+            (onPageChange)="onPageChange($event)"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Hiển thị {first} - {last} của {totalRecords} giao dịch">
+          </p-paginator>
+        </div>
+      </div>
+
+      <!-- Quản lý thẻ tín dụng -->
+      <div class="card-management-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="pi pi-cog"></i>
+            Quản lý thẻ tín dụng
+          </h2>
+        </div>
+        
+        <div class="management-grid">
+          <!-- Thông tin thẻ -->
+          <p-card styleClass="management-card">
+            <ng-template pTemplate="header">
+              <div class="management-header">
+                <i class="pi pi-id-card"></i>
+                <h4>Thông tin thẻ</h4>
+              </div>
+            </ng-template>
+            <div class="management-content">
+              <p>Xem chi tiết thông tin thẻ, CVV, ngày hết hạn</p>
+              <p-button 
+                label="Xem chi tiết" 
+                icon="pi pi-eye"
+                styleClass="p-button-outlined p-button-sm"
+                pTooltip="Yêu cầu xác thực OTP để bảo mật"
+                (click)="viewCardDetails()">
+              </p-button>
+            </div>
+          </p-card>
+
+          <!-- Khóa/Mở khóa thẻ -->
+          <p-card styleClass="management-card">
+            <ng-template pTemplate="header">
+              <div class="management-header">
+                <i class="pi pi-lock"></i>
+                <h4>Khóa/Mở khóa thẻ</h4>
+              </div>
+            </ng-template>
+            <div class="management-content">
+              <p>Tạm khóa hoặc mở khóa thẻ tín dụng</p>
+              <p-button 
+                [label]="creditCard.status === 'ACTIVE' ? 'Khóa thẻ' : 'Mở khóa thẻ'" 
+                [icon]="creditCard.status === 'ACTIVE' ? 'pi pi-lock' : 'pi pi-unlock'"
+                [styleClass]="creditCard.status === 'ACTIVE' ? 'p-button-danger p-button-sm' : 'p-button-success p-button-sm'"
+                (click)="toggleCardStatus()">
+              </p-button>
+            </div>
+          </p-card>
+
+          <!-- Đổi mã PIN -->
+          <p-card styleClass="management-card">
+            <ng-template pTemplate="header">
+              <div class="management-header">
+                <i class="pi pi-key"></i>
+                <h4>Đổi mã PIN</h4>
+              </div>
+            </ng-template>
+            <div class="management-content">
+              <p>Thay đổi mã PIN cho thẻ tín dụng</p>
+              <p-button 
+                label="Đổi PIN" 
+                icon="pi pi-key"
+                styleClass="p-button-warning p-button-sm"
+                (click)="changePIN()">
+              </p-button>
+            </div>
+          </p-card>
+
+          <!-- Thiết lập hạn mức -->
+          <p-card styleClass="management-card">
+            <ng-template pTemplate="header">
+              <div class="management-header">
+                <i class="pi pi-chart-line"></i>
+                <h4>Thiết lập hạn mức</h4>
+              </div>
+            </ng-template>
+            <div class="management-content">
+              <p>Điều chỉnh hạn mức giao dịch hàng ngày</p>
+              <p-button 
+                label="Thiết lập" 
+                icon="pi pi-cog"
+                styleClass="p-button-info p-button-sm"
+                (click)="setTransactionLimit()">
+              </p-button>
+            </div>
+          </p-card>
+
+          <!-- Báo mất thẻ -->
+          <p-card styleClass="management-card">
+            <ng-template pTemplate="header">
+              <div class="management-header">
+                <i class="pi pi-exclamation-triangle"></i>
+                <h4>Báo mất thẻ</h4>
+              </div>
+            </ng-template>
+            <div class="management-content">
+              <p>Báo mất thẻ và yêu cầu làm thẻ mới</p>
+              <p-button 
+                label="Báo mất" 
+                icon="pi pi-exclamation-triangle"
+                styleClass="p-button-danger p-button-sm"
+                (click)="reportLostCard()">
+              </p-button>
+            </div>
+          </p-card>
+
+          <!-- Sao kê thẻ -->
+          <p-card styleClass="management-card">
+            <ng-template pTemplate="header">
+              <div class="management-header">
+                <i class="pi pi-file-pdf"></i>
+                <h4>Sao kê thẻ</h4>
+              </div>
+            </ng-template>
+            <div class="management-content">
+              <p>Tải sao kê chi tiết giao dịch theo tháng</p>
+              <p-button 
+                label="Tải sao kê" 
+                icon="pi pi-download"
+                styleClass="p-button-outlined p-button-sm"
+                (click)="downloadStatement()">
+              </p-button>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dialog xác thực OTP -->
+<p-dialog header="Xác thực để xem thông tin thẻ" [(visible)]="showOtpDialog" [style]="{width: '500px'}" [modal]="true" [closable]="false">
+  <div class="otp-verification-content">
+    <div class="otp-header-info">
+      <i class="pi pi-shield otp-security-icon"></i>
+      <h3 class="otp-title">Xác thực bảo mật</h3>
+      <p class="otp-description">
+       Vui lòng nhập mã OTP đã được gửi đến email của bạn.
+      </p>
+    </div>
+
+    <div class="otp-input-section">
+      <label class="otp-label">Nhập mã OTP (6 số)</label>
+      <input 
+        type="text" 
+        pInputText 
+        class="otp-input-field"
+        [(ngModel)]="otpCode"
+        placeholder="000000"
+        maxlength="6"
+        autocomplete="off"
+        [disabled]="isLoadingOtp"
+      />
+      
+      <div class="otp-help-info">
+        <div class="countdown-info" *ngIf="!canResendOtp">  
+          <span>Gửi lại OTP sau: {{ formatOtpCountdown() }}</span>
+        </div>
+        
+        <button 
+          *ngIf="canResendOtp"
+          type="button"
+          class="resend-otp-button"
+          (click)="resendOtpForCardDetails()"
+          [disabled]="isLoadingOtp">
+          <i class="pi pi-refresh"></i>
+          Gửi lại OTP
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <div class="otp-dialog-actions">
+      <p-button 
+        label="Hủy" 
+        icon="pi pi-times"
+        styleClass="p-button-outlined"
+        (click)="closeOtpDialog()"
+        [disabled]="isLoadingOtp">
+      </p-button>
+      <p-button 
+        label="Xác nhận" 
+        icon="pi pi-check"
+        styleClass="p-button-success"
+        [loading]="isLoadingOtp"
+        [disabled]="otpCode.length !== 6"
+        (click)="verifyOtpForCardDetails()">
+      </p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Dialog xem chi tiết thẻ -->
+<p-dialog header="Chi tiết thẻ tín dụng" [(visible)]="showCardDetailsDialog" [style]="{width: '450px'}" [modal]="true">
+  <div class="card-details-dialog">
+    <div class="card-visual">
+      <div class="credit-card-display">
+        <div class="card-front">
+          <div class="card-number">Số thẻ: {{ creditCardDetails.cardNumber }}</div>
+          <div class="card-holder">Chủ thẻ: {{ creditCardDetails.cardHolderName }}</div>
+          <div class="card-expiry">Ngày hết hạn: {{ creditCardDetails.cardExpiryDate | date:'MM/yy' }}</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-security-info">
+      <div class="info-row">
+        <span class="label">CVV:</span>
+        <span class="value">***</span>
+        <p-button icon="pi pi-eye" styleClass="p-button-text p-button-sm" 
+                 pTooltip="Hiển thị CVV" (click)="toggleCVVVisibility()"></p-button>
+      </div>
+      
+      <div class="security-notice">
+        <i class="pi pi-exclamation-triangle"></i>
+        <p>Không chia sẻ thông tin thẻ với bất kỳ ai. CVV chỉ được sử dụng cho giao dịch trực tuyến.</p>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <p-button label="Đóng" icon="pi pi-times" (click)="showCardDetailsDialog = false"></p-button>
+  </ng-template>
+</p-dialog>
+
+<!-- Confirmation dialogs và các dialog khác sẽ được thêm vào đây -->
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast> 

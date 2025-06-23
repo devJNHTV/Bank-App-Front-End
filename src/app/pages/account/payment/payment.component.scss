@@ -1,15 +1,13 @@
 .payment-accounts-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 0 20px;
 
   .page-header {
-    margin-bottom: 32px;
+    margin-bottom: 10px;
     text-align: center;
-
     .page-title {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+     
       gap: 12px;
       font-size: 2rem;
       font-weight: 600;
@@ -67,22 +65,23 @@
         justify-content: space-between;
         align-items: center;
         padding: 20px 24px;
-        background: linear-gradient(135deg, #f8f9fa 0%, #0867a185 100%);
+        background: #133c65;
+        color: white;
 
         .account-info {
           .account-number {
             font-size: 0.9rem;
             font-weight: 700;
             margin: 0 0 4px 0;
-            color: #6c757d;
+            color: white;
             padding-bottom: 10px;
            
           }
 
           .account-type {
            
-            color: #2c3e50;
-            font-size: 1rem;
+            color: white;
+            font-size: 1.5rem;
             margin: 0;
           }
         }
@@ -111,7 +110,7 @@
           }
 
           .balance-amount {
-            font-size: 2rem;
+            font-size: 1.2rem;
             font-weight: 700;
             font: 100% "Roboto", "SF Pro Display",Arial,sans-serif;
 
@@ -211,6 +210,7 @@
   margin-top: 10px;
   margin-bottom: 10px;
   border-top: 1px solid #255d95;
+  width: 100%;
 }
 
 // Styling cho form mở tài khoản mới
@@ -246,11 +246,10 @@
   // Step 1: Customer Confirmation
   .confirmation-step {
     .customer-info-card {
-      background: rgb(218, 226, 240);
       border-radius: 12px;
       padding: 32px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      border: 1px solid #e9ecef;
+      box-shadow: 0 4px 12px rgba(218, 158, 158, 0.1);
+      border: 1px solid #94b7da;
 
       .card-header {
         text-align: center;
@@ -312,13 +311,13 @@
       }
 
       .account-type-info {
-        background: #f8f9fa;
+        background: #adc9e5;
         border-radius: 8px;
         padding: 20px;
         margin-bottom: 24px;
 
         .account-type-title {
-          color: #28a745;
+          color: #d69025;
           font-size: 1.125rem;
           font-weight: 600;
           margin: 0 0 16px 0;
@@ -349,8 +348,8 @@
       }
 
       .warning-notice {
-        background: #fff3cd;
-        border: 1px solid #ffeaa7;
+        background: #adc9e5;  
+        border: 1px solid #94b7da;
         border-radius: 8px;
         padding: 16px;
         margin-bottom: 24px;
@@ -359,7 +358,7 @@
         gap: 12px;
 
         i {
-          color: #856404;
+          color: #d69025; 
           font-size: 1.25rem;
           margin-top: 2px;
         }

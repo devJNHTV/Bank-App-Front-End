@@ -54,9 +54,8 @@
     // Savings accounts container
     .savings-accounts-container {
       .accounts-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-        gap: 24px;
+        grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+        gap: 30px;
         margin-bottom: 24px;
 
         @media (max-width: 768px) {
@@ -525,9 +524,8 @@
   
 // Navigation styles
     .savings-container {
-      padding: 1rem;
-      width: 70%;
-      margin-left: 15%;    
+      padding: 0 20px;
+      width: 100%;   
     }
 
 .savings-navigation {
@@ -542,14 +540,13 @@
 }
 
 .savings-nav-item {
-  background: linear-gradient(135deg, #659fceb5 0%, #0056b3 100%) ;
+  background: #133c65;
   border-radius: 16px;
   padding: 2rem 1.5rem;
   text-align: center;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
   min-height: 140px;
   display: flex;
   flex-direction: column;

@@ -14,6 +14,8 @@ import { AccountService } from '../../../services/account/account.service';
 import { Customer } from '../../../interfaces/customer.inteface';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { Router } from '@angular/router';
+import { KycService } from '../../../core/services/kyc.service';
+import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-payment',
   standalone: true,
@@ -57,12 +59,13 @@ export class PaymentComponent implements OnInit, OnDestroy {
   countdown: number = 120; // 2 phút
   canResend: boolean = false;
   private countdownInterval: any;
-
+  private isKycVerifiedSubject = new BehaviorSubject<boolean>(false);
   constructor(
     private accountService: AccountService,
     private messageService: MessageService,
     private customerService: CustomerService,
-    private router: Router
+    private router: Router,
+    private kycService: KycService
   ) {}
 
   ngOnInit(): void {
@@ -108,9 +111,10 @@ export class PaymentComponent implements OnInit, OnDestroy {
     return account.accountNumber;
   }
 
-  createAccount(): void {
+  createAccount(): void {    
     this.addAccount = true;
     this.currentStep = 1;
+
   }
 
   // Xác nhận thông tin customer và chuyển sang bước OTP

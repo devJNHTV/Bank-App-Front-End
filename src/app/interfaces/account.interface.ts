@@ -44,3 +44,22 @@ export interface creditCards
     minimumIncome: number;
     imgURL: string;     
 }
+export interface CreditAccount {
+    accountNumber: string;
+    cifCode: string;
+    accountType: string;
+    balance: number;
+    status: string;
+    openedDate: Date;
+    creditLimit: number; 
+    currentDebt: number;
+    typeName: string;
+    imageUrl: string;
+    availableCredit: number;
+}
+export interface CreditCardDetails {
+    cardNumber: string;
+    cardHolderName: string;
+    cardExpiryDate: string;
+   
+}
