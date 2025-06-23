@@ -1,0 +1,305 @@
+.otp-container {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 500px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 24px 16px;
+    margin: 0 16px;
+  }
+}
+
+.otp-header {
+  text-align: center;
+  margin-bottom: 32px;
+  
+  .otp-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 12px;
+  }
+  
+  .otp-description {
+    font-size: 1rem;
+    color: #6b7280;
+    line-height: 1.5;
+    margin: 0;
+    
+    strong {
+      color: #1976d2;
+      font-weight: 600;
+    }
+  }
+}
+
+.otp-form {
+  .otp-section {
+    margin-bottom: 32px;
+    
+    .otp-label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 12px;
+      font-size: 1rem;
+    }
+    
+    .otp-input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      letter-spacing: 0.5rem;
+      transition: all 0.3s ease;
+      
+      &:focus {
+        border-color: #1976d2;
+        box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+        outline: none;
+      }
+      
+      &:disabled {
+        background-color: #f7fafc;
+        color: #a0aec0;
+        cursor: not-allowed;
+      }
+      
+      &::placeholder {
+        color: #cbd5e0;
+        font-size: 1rem;
+        letter-spacing: normal;
+      }
+    }
+    
+    .otp-info {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      .countdown-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #f59e0b;
+        font-weight: 500;
+        
+        .pi-clock {
+          font-size: 0.875rem;
+        }
+        
+        span {
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+        }
+      }
+      
+      .resend-button {
+        background: none;
+        border: none;
+        color: #1976d2;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        
+        &:hover:not(:disabled) {
+          background-color: #eff6ff;
+          color: #1565c0;
+        }
+        
+        &:disabled {
+          color: #9ca3af;
+          cursor: not-allowed;
+        }
+        
+        .pi-refresh {
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+  
+  .transaction-info {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    border-left: 4px solid #1976d2;
+    
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .info-label {
+        font-weight: 500;
+        color: #4b5563;
+      }
+      
+      .info-value {
+        font-weight: 600;
+        color: #1f2937;
+        font-family: 'Courier New', monospace;
+      }
+    }
+  }
+  
+  .security-notice {
+    background: #fef3cd;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 32px;
+    
+    .notice-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      
+      .pi-shield {
+        color: #f59e0b;
+        font-size: 1.125rem;
+      }
+      
+      span {
+        font-weight: 600;
+        color: #92400e;
+        font-size: 0.95rem;
+      }
+    }
+    
+    .notice-list {
+      margin: 0;
+      padding-left: 20px;
+      color: #92400e;
+      
+      li {
+        margin-bottom: 4px;
+        font-size: 0.875rem;
+        line-height: 1.4;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    
+    @media (max-width: 480px) {
+      flex-direction: column;
+    }
+    
+    .back-button,
+    .confirm-button {
+      min-width: 140px;
+      padding: 14px 24px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      
+      @media (max-width: 480px) {
+        width: 100%;
+      }
+      
+      &:not(:disabled):hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+      
+      i {
+        margin-right: 8px;
+      }
+    }
+    
+    .back-button {
+      border-color: #e2e8f0;
+      color: #6b7280;
+      
+      &:hover:not(:disabled) {
+        border-color: #cbd5e0;
+        background: #f7fafc;
+        color: #4b5563;
+      }
+    }
+    
+    .confirm-button {
+      background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+      
+      &:disabled {
+        background: #e2e8f0;
+        color: #9ca3af;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+      }
+    }
+  }
+}
+
+// Animation for OTP input
+.otp-input:focus {
+  animation: pulse 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Custom styling for PrimeNG components
+:host ::ng-deep {
+  .p-toast {
+    z-index: 9999;
+  }
+  
+  .p-toast .p-toast-message {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .p-button {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .p-inputtext {
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+    
+    &:focus {
+      border-color: #1976d2;
+      box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.1);
+    }
+  }
+}

@@ -4,7 +4,7 @@ export const environment = {
   keycloak: {
     url: 'http://localhost:8081/realms/myrealm/protocol/openid-connect/token',
     clientId: 'customer-service',
-    clientSecret: 'sQLQKPqW2lbTYQJWKvN8zy7Ioi5p6UCn',
+    clientSecret: 'EcfYDIYEVUMnyQa2KBYIxrqx4feXpYvM',
     realm: 'myrealm'
   }
 };

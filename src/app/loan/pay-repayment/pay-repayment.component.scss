@@ -1,0 +1,389 @@
+$primary-gradient: linear-gradient(135deg, #00c03a 0%, #005610c9 100%);
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-border: rgba(255, 255, 255, 0.2);
+$text-primary: #004a15;
+$text-secondary: rgba(0, 61, 15, 0.8);
+$shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+$shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+@mixin glassmorphism {
+  background: $glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  box-shadow: $shadow-light;
+}
+
+@mixin smooth-transition {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Base grid container */
+.master-container {
+  max-width: 80%;
+  margin: 2rem auto;
+  padding: 2rem;
+  min-height: 100vh;
+  position: relative;
+
+}
+
+/* Card styles */
+.card {
+  @include glassmorphism;
+  border-radius: 24px;
+  overflow: hidden;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* Card header */
+.card-header {
+  padding: 2rem;
+  background: $primary-gradient;
+  color: white;
+  text-align: center;
+
+  .title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    letter-spacing: -1px;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0.5rem 0 0;
+  }
+}
+
+/* Loading & error overlays */
+.loading-overlay,
+.error-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.error-overlay span {
+  color: #ff6b6b;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+/* Card content */
+.content {
+  padding: 2rem;
+  position: relative;
+}
+
+/* Summary section */
+.summary {
+  @include glassmorphism;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .label {
+    color: $text-secondary;
+    font-size: 1rem;
+  }
+
+  .value {
+    font-weight: 600;
+    color: $text-primary;
+    font-size: 1.1rem;
+  }
+
+  &.total {
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+
+    .label, .value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #004a15;
+    }
+  }
+
+  &.remaining {
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+
+    .label, .value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #004a15;
+    }
+  }
+}
+
+/* Form styles */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-secondary;
+  }
+
+  small {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+  }
+}
+
+/* Input styles */
+:host ::ng-deep {
+  .p-dropdown,
+  .p-inputnumber {
+    width: 100%;
+    
+    .p-dropdown-label,
+    .p-inputtext {
+      @include glassmorphism;
+      padding: 1rem;
+      border-radius: 12px;
+      color: $text-primary;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      &:focus {
+        border-color: #ff9a9e;
+        box-shadow: 0 0 0 3px rgba(255, 154, 158, 0.2);
+      }
+    }
+  }
+}
+
+/* Action button */
+.action-btn {
+  @include smooth-transition;
+  align-self: flex-end;
+  background: $primary-gradient;
+  border: none;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  color: white;
+  border-radius: 12px;
+  font-size: 1.1rem;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 154, 158, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+/* OTP Dialog styles */
+.otp-dialog-content {
+  padding: 2rem !important;
+  background: linear-gradient(135deg, rgba(255, 154, 158, 0.1) 0%, rgba(254, 207, 239, 0.1) 100%);
+  border-radius: 16px;
+}
+
+.otp-content {
+  .otp-message {
+    color: $text-secondary;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+
+  .form {
+    .field {
+      input {
+        text-align: center;
+        letter-spacing: 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        @include glassmorphism;
+        padding: 1rem;
+        border-radius: 12px;
+        color: $text-primary;
+      }
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .master-container {
+    max-width: 95%;
+    padding: 1rem;
+  }
+
+  .card-header {
+    padding: 1.5rem;
+
+    .title {
+      font-size: 2rem;
+    }
+  }
+
+  .content {
+    padding: 1.5rem;
+  }
+
+  .summary {
+    padding: 1rem;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+}
+
+/* From Uiverse.io by Nawsome */ 
+.socket {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  left: 50%;
+  margin-left: -100px;
+  top: 50%;
+  margin-top: -100px;
+}
+
+.hex-brick {
+  background: #128500;
+  width: 30px;
+  height: 17px;
+  position: absolute;
+  top: 5px;
+  animation-name: fade00;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: fade00;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+}
+
+.h2 {
+  transform: rotate(60deg);
+  -webkit-transform: rotate(60deg);
+}
+
+.h3 {
+  transform: rotate(-60deg);
+  -webkit-transform: rotate(-60deg);
+}
+
+.gel {
+  height: 30px;
+  width: 30px;
+  transition: all .3s;
+  -webkit-transition: all .3s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.center-gel {
+  margin-left: -15px;
+  margin-top: -15px;
+  animation-name: pulse00;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: pulse00;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+}
+
+.c1 { margin-left: -47px; margin-top: -15px; }
+.c2 { margin-left: -31px; margin-top: -43px; }
+.c3 { margin-left: 1px; margin-top: -43px; }
+.c4 { margin-left: 17px; margin-top: -15px; }
+.c5 { margin-left: -31px; margin-top: 13px; }
+.c6 { margin-left: 1px; margin-top: 13px; }
+.c7 { margin-left: -63px; margin-top: -43px; }
+.c8 { margin-left: 33px; margin-top: -43px; }
+.c9 { margin-left: -15px; margin-top: 41px; }
+.c10 { margin-left: -63px; margin-top: 13px; }
+.c11 { margin-left: 33px; margin-top: 13px; }
+.c12 { margin-left: -15px; margin-top: -71px; }
+.c13 { margin-left: -47px; margin-top: -71px; }
+.c14 { margin-left: 17px; margin-top: -71px; }
+.c15 { margin-left: -47px; margin-top: 41px; }
+.c16 { margin-left: 17px; margin-top: 41px; }
+.c17 { margin-left: -79px; margin-top: -15px; }
+.c18 { margin-left: 49px; margin-top: -15px; }
+.c19 { margin-left: -63px; margin-top: -99px; }
+.c20 { margin-left: 33px; margin-top: -99px; }
+.c21 { margin-left: 1px; margin-top: -99px; }
+.c22 { margin-left: -31px; margin-top: -99px; }
+.c23 { margin-left: -63px; margin-top: 69px; }
+.c24 { margin-left: 33px; margin-top: 69px; }
+.c25 { margin-left: 1px; margin-top: 69px; }
+.c26 { margin-left: -31px; margin-top: 69px; }
+.c27 { margin-left: -79px; margin-top: -15px; }
+.c28 { margin-left: -95px; margin-top: -43px; }
+.c29 { margin-left: -95px; margin-top: 13px; }
+.c30 { margin-left: 49px; margin-top: 41px; }
+.c31 { margin-left: -79px; margin-top: -71px; }
+.c32 { margin-left: -111px; margin-top: -15px; }
+.c33 { margin-left: 65px; margin-top: -43px; }
+.c34 { margin-left: 65px; margin-top: 13px; }
+.c35 { margin-left: -79px; margin-top: 41px; }
+.c36 { margin-left: 49px; margin-top: -71px; }
+.c37 { margin-left: 81px; margin-top: -15px; }
+
+.r1 { animation-name: pulse00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .2s; -webkit-animation-name: pulse00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .2s; }
+.r2 { animation-name: pulse00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .4s; -webkit-animation-name: pulse00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .4s; }
+.r3 { animation-name: pulse00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .6s; -webkit-animation-name: pulse00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .6s; }
+
+.r1 > .hex-brick { animation-name: fade00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .2s; -webkit-animation-name: fade00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .2s; }
+.r2 > .hex-brick { animation-name: fade00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .4s; -webkit-animation-name: fade00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .4s; }
+.r3 > .hex-brick { animation-name: fade00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .6s; -webkit-animation-name: fade00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .6s; }
+
+@keyframes pulse00 { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.01); transform: scale(0.01); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
+@keyframes fade00 { 0% { background: #0c5200; } 50% { background: #009c1d; } 100% { background: #80ffa2; } }

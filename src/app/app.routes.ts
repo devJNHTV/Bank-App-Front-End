@@ -14,10 +14,11 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { KycGuard } from './core/guards/kyc.guard';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { CustomerDetailComponent } from './customer/customer-detail/customer-detail.component';
+import { DashboardLoanComponent } from './loan/dashboard-loan/dashboard-loan.component';
+import { ApplyNewLoanComponent } from './loan/apply-new-loan/apply-newloan.component';
 import { HomeComponent } from './pages/home/home.component';
 import { CustomerDashboardComponent } from './customer/customer-dashboard/customer-dashboard.component';
 import { CustomerAccountsComponent } from './customer/customer-accounts/customer-accounts.component';
-import { AboutComponent } from './pages/about/about.component';
 import { SavingsComponent } from './pages/savings/savings.component';
 
 import { LoginComponent } from './auth/login/login.component';
@@ -63,6 +64,19 @@ export const routes: Routes = [
       { path: 'transactions/payment', component: PaymentSelectionComponent, canActivate: [KycGuard]   },
       { path: 'transactions/payment/:type', component: BillLookupComponent, canActivate: [KycGuard]   },
       { path: 'transactions/pay-bill', component: PayBillComponent, canActivate: [KycGuard]   },
+      { path: 'loans', component: DashboardLoanComponent },
+      { path: 'loans/create', component: ApplyNewLoanComponent },
+      { path: 'loans/overview', component: OrverviewLoanComponent },
+      { path: 'loans/history', component: LoanHistoryComponent },
+      { path: 'loans/current', component: CurrentRepaymentScheduleComponent },
+      { path: 'loans/pay/:id', component: PayRepaymentComponent },
+      { path: 'loans/detail/:id', component: DetailLoanComponent },
+      { path: 'loans/reject/:id', component: DetailLoanRejectComponent },
+      { path: 'employee/loans', component: PendingLoanListComponent },
+      { path: 'employee/loans/pending', component: PendingLoanListComponent },
+      { path: 'employee/loans/:id', component: LoanDetailViewComponent },
+      { path: 'loan/current-repayments', redirectTo: '' },
+      { path: 'loan/warning-apply-loan', component: WarningApplyLoanComponent },
     ]
   },
   { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard, KycGuard] },

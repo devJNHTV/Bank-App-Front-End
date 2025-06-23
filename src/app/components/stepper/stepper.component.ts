@@ -12,10 +12,10 @@ import { CommonModule } from '@angular/common';
              [class.active]="currentStep >= 1" 
              [class.completed]="currentStep > 1">
           <div class="step-circle">1</div>
-          <span class="step-label">Nhập thông tin</span>
+          <span class="step-label">Khởi tạo</span>
         </div>
 
-        <div class="step-divider"></div>
+        <div  [class.completed]="currentStep > 1" class="step-divider"></div>
 
         <div class="step-item" 
              [class.active]="currentStep >= 2" 
@@ -23,6 +23,7 @@ import { CommonModule } from '@angular/common';
           <div class="step-circle">2</div>
           <span class="step-label">Xác nhận</span>
         </div>
+        
 
         <div class="step-divider"></div>
 
@@ -30,6 +31,16 @@ import { CommonModule } from '@angular/common';
              [class.active]="currentStep >= 3" 
              [class.completed]="currentStep > 3">
           <div class="step-circle">3</div>
+          <span class="step-label">Xác thực</span>
+        </div>
+
+        
+        <div class="step-divider"></div>
+
+        <div class="step-item" 
+             [class.active]="currentStep >= 4" 
+             [class.completed]="currentStep > 4">
+          <div class="step-circle">4</div>
           <span class="step-label">Hoàn thành</span>
         </div>
       </div>
@@ -98,7 +109,9 @@ import { CommonModule } from '@angular/common';
       margin: 0 20px;
       max-width: 100px;
     }
-    
+    .step-divider.completed {
+  background-color: green; /* Khi có class 'completed' → đổi màu */
+}
     .step-item.active ~ .step-item .step-divider {
       background: #007ad9;
     }
