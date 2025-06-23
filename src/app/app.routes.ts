@@ -29,7 +29,6 @@ import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
 import { CustomerListComponent } from './admin/customer-list/customer-list.component';
 import { CustomerDetailAdminComponent } from './admin/customer-detail/customer-detail-admin.component';
 import { ChangePasswordComponent } from './auth/change-password/change-password.component';
-import { KycComponent } from './auth/kyc/kyc.component';
 import { TransactionListComponent } from './admin/transaction/transaction-list/transaction-list.component';
 import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
 import { ExternalTransferComponent } from './transactions/external-transfer/external-transfer.component';
@@ -43,12 +42,8 @@ import { PendingLoanListComponent } from './loan-employee/pending-loans-list/pen
 import { LoanDetailViewComponent } from './loan-employee/loan-detail-view/loan-detail-view.component';
 import { WarningApplyLoanComponent } from './loan/warning-apply-loan/warning-apply-loan.component';
 import { AboutComponent } from './pages/about/about.component';
-    
-import { CustomerDashboardComponent } from './customer/customer-dashboard/customer-dashboard.component';
-import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+
 import { KycOtpComponent } from './auth/kyc-otp/kyc-otp.component';
-import { KycComponent } from './customer/kyc/kyc.component';
 import { CreditComponent } from './pages/account/credit/credit.component';
 import { AccountComponent } from './pages/account/account.component';
 import { DetailComponent } from './pages/account/payment/detail/detail.component';
@@ -56,6 +51,8 @@ import { PaymentComponent } from './pages/account/payment/payment.component';
 import { RegisterCreditComponent } from './pages/account/credit/register-credit/register-credit.component';
 import { ApplyCreditComponent } from './pages/account/credit/apply-credit/apply-credit.component';
 import { CreditDetailComponent } from './pages/account/credit/detail/credit-detail.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { KycComponent } from './customer/kyc/kyc.component';
 export const routes: Routes = [
 
   {
