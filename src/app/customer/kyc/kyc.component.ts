@@ -70,7 +70,6 @@ export class KycComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.kycService.checkKycStatus().subscribe({
       next: (res) => {
         if (res.verified) {
@@ -81,14 +80,6 @@ export class KycComponent implements OnInit {
             timer: 3000,
           }).then(() => {
             this.router.navigate(['/customer-dashboard']);
-          });
-        } else {
-          Swal.fire({
-            icon: 'info',
-            title: 'Thông báo',
-            text: 'Vui lòng xác minh danh tính để tiếp tục!',
-            timer: 3000,
-            timerProgressBar: true,
           });
         }
       },
