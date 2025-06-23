@@ -18,7 +18,7 @@
         </div>
       </div>
       
-      <div class="grid mt-10" style="margin-top: 10px;">
+      <div class="grid mt-3" >
         <div class="col-12 md:col-4">
           <label class="block mb-2">Số dư khả dụng</label>
         </div>
@@ -59,6 +59,7 @@
         </div>
       </div>
       
+        
       <div class="grid mt-3">
         <div class="col-12 md:col-4">
           <label for="initialDeposit" class="block mb-2">Số tiền gửi</label>
@@ -86,6 +87,43 @@
           </small>
         </div>
       </div>
+      
+      <div class="grid mt-3">
+        <div class="col-12 md:col-4">
+          <label for="interestPaymentType" class="block mb-2">Hình thức trả lãi</label>
+        </div>
+        <div class="col-12 md:col-8">
+          <p-select 
+            inputId="interestPaymentType"
+            formControlName="interestPaymentType" 
+            [options]="interestTypes" 
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Chọn hình thức trả lãi"
+            [showClear]="false">
+          </p-select>
+          <small *ngIf="interestPaymentType?.invalid && interestPaymentType?.touched" class="p-error block mt-1">
+            Vui lòng chọn hình thức trả lãi
+          </small>
+        </div>
+      </div>
+      
+      <div class="grid mt-3">
+        <div class="col-12 md:col-8">
+          <div class="flex align-items-center">
+            <p-checkbox 
+              inputId="renewOption"
+              formControlName="renewOption" 
+              [binary]="true" 
+              styleClass="mr-2">
+            </p-checkbox>
+            <label for="renewOption" class="ml-2">
+              Tự động đáo hạn
+            </label>
+          </div>
+        </div>
+      </div>
+      
     </div>
 
     <div class="mt-4 flex align-items-center">
@@ -97,7 +135,7 @@
       </p-checkbox>
       <label for="termsAgreement" class="ml-2">
         Tôi đã đọc, hiểu rõ, đồng ý và cam kết tuân thủ các điều khoản, điều kiện và
-        <span class="terms-text">Thỏa thuận mở và sử dụng dịch vụ tiền gửi trực tuyến</span> của Ngân hàng TMCP Ngoại Thương Việt Nam (Vietcombank)
+        <span class="terms-text">Thỏa thuận mở và sử dụng dịch vụ tiền gửi trực tuyến</span> của Ngân hàng
       </label>
     </div>
     <small *ngIf="termsAgreement?.invalid && termsAgreement?.touched" class="p-error block mt-1">

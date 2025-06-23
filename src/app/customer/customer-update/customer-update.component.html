@@ -4,6 +4,21 @@
       </mat-card-header>
       <mat-card-content>
         <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+          <div class="form-row" *ngIf="isAdmin">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>User ID</mat-label>
+              <input
+                matInput
+                formControlName="userId"
+                placeholder="Nhập User ID của khách hàng"
+                required
+              />
+              <mat-error *ngIf="customerForm.get('userId')?.hasError('required')">
+                User ID là bắt buộc
+              </mat-error>
+            </mat-form-field>
+          </div>
+
           <div class="form-row">
             <mat-form-field appearance="outline">
               <mat-label>Họ và Tên</mat-label>

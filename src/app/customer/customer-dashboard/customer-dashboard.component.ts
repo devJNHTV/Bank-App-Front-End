@@ -1,20 +1,21 @@
 // app.component.ts
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatListModule } from '@angular/material/list';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatBadgeModule } from '@angular/material/badge';
-import { AuthService } from '../../core/services/auth.service';
-import { RouterModule, RouterOutlet } from '@angular/router';
-import { UserService } from '../../core/services/user.service';
+
+import { MatBadgeModule } from "@angular/material/badge";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatListModule } from "@angular/material/list";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { RouterModule } from "@angular/router";
+import { AuthService } from "../../core/services/auth.service";
+import { UserService } from "../../core/services/user.service";
+import { MatCardModule } from "@angular/material/card";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";         
+import { Component } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
 interface Account {
   type: string;
@@ -42,8 +43,8 @@ interface Beneficiary {
   standalone: true,
   imports: [
     CommonModule,
-    MatSidenavModule,
-    MatToolbarModule,
+    MatSidenavModule, 
+    MatToolbarModule, 
     MatIconModule,
     MatButtonModule,
     MatCardModule,
@@ -52,7 +53,7 @@ interface Beneficiary {
     MatFormFieldModule,
     MatInputModule,
     MatMenuModule,
-    MatBadgeModule,
+    MatBadgeModule,               
     RouterModule,
   ],
   templateUrl: './customer-dashboard.component.html',

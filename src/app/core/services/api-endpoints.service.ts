@@ -8,12 +8,16 @@ export class ApiEndpointsService {
   private apiUrl = environment.apiUrl;
   private keycloakUrl = environment.keycloak.url;
 
-  getRegisterEndpoint(): string {
-    return `${this.apiUrl}/register`;
+  getRegisterInitiateEndpoint(): string {
+    return `${this.apiUrl}/register/initiate`;
+  }
+
+  getKycAndOtpEndpoint(): string {
+    return `${this.apiUrl}/register/kyc-and-otp`;
   }
 
   getConfirmRegisterEndpoint(): string {
-    return `${this.apiUrl}/confirm-register`;
+    return `${this.apiUrl}/register/confirm`;
   }
 
   getKycStatusEndpoint(): string {

@@ -3,6 +3,8 @@
   border-radius: 8px;
   padding: 24px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  margin-left: 10%;
 }
 
 .form-section {
@@ -12,7 +14,7 @@
 
   &:last-child {
     border-bottom: none;
-    margin-bottom: 0;
+    margin-bottom: 10px;
     padding-bottom: 0;
   }
 }

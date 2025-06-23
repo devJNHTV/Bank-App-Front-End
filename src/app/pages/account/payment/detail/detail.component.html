@@ -1,0 +1,222 @@
+<div class="account-detail">
+  <!-- Header section -->
+
+  <div class="content">
+    <!-- Cột trái: Thông tin tài khoản -->
+    <div class="left-column">
+
+      <!-- Card 1: Lời chào -->
+      <p-card styleClass="greeting-card">
+        <ng-template pTemplate="header">
+          <div class="card-header greeting-header">
+            <h2 class="greeting-title" style="text-align: center;">Xin chào,</h2>
+            <h2 class="customer-name">{{ customer.fullName }}</h2>
+          </div>
+        </ng-template>
+      </p-card>
+
+      <!-- Card 2: Thông tin tài khoản -->
+      <p-card styleClass="account-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <h3 class="section-title">
+              <i class="pi pi-user"></i>
+              Thông tin tài khoản
+            </h3>
+          </div>
+        </ng-template>
+        
+        <div class="account-info">
+          <div class="account-summary">
+            <div class="info-item">
+              <span class="label">Số tài khoản</span>
+              <div class="value-with-action">
+                <span class="value masked" id="accountNumber">{{ account.accountNumber }}</span>
+                <p-button icon="pi pi-copy" styleClass="p-button-text p-button-sm" 
+                         pTooltip="Sao chép" (onClick)="copyAccountNumber()"></p-button>
+              </div>
+            </div>
+            
+            <div class="info-item">
+              <span class="label">Số dư khả dụng</span>
+              <span class="value amount">{{ formatCurrency(account.balance) }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="label">Chủ tài khoản</span>
+              <span class="value">{{ customer.fullName }}</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="label">Loại tài khoản</span>
+              <span class="value">{{ account.accountType ? 'Tài khoản thanh toán  ' : '' }}</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="label">Ngày mở</span>
+              <span class="value">{{ account.openedDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+            
+            <div class="info-item">
+              <span class="label">Trạng thái</span>
+              <span class="value status {{ account.status ? 'active' : 'inactive' }}">
+                <i class="pi pi-check-circle"></i>
+                {{ account.status ? 'Hoạt động' : 'Không hoạt động' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </p-card>
+
+      <!-- Card 3: Dịch vụ khách hàng -->
+      <p-card styleClass="customer-service-card">
+        <ng-template pTemplate="header">
+          <div class="card-header">
+            <h3 class="section-title">
+              <i class="pi pi-phone"></i>
+              Dịch vụ khách hàng
+            </h3>
+          </div>
+        </ng-template>
+        
+        <div class="service-info">
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="pi pi-phone"></i>
+            </div>
+            <div class="service-details">
+              <span class="service-label">Hotline 24/7</span>
+              <span class="service-value">1900 1234</span>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="pi pi-envelope"></i>
+            </div>
+            <div class="service-details">
+              <span class="service-label">Email hỗ trợ</span>
+              <span class="service-value">support&#64;klbbank.com</span>
+            </div>
+          </div>
+          
+          <div class="service-item">
+            <div class="service-icon">
+              <i class="pi pi-comments"></i>
+            </div>
+            <div class="service-details">
+              <span class="service-label">Chat trực tuyến</span>
+              <span class="service-value">8:00 - 22:00 hàng ngày</span>
+            </div>
+          </div>
+        </div>
+      </p-card>
+
+
+    </div>
+    
+    <!-- Cột phải: Lịch sử giao dịch & Khoản vay -->
+    <div class="right-column">
+      <div class="transactions-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="pi pi-history"></i>
+            Lịch sử giao dịch
+          </h2>
+          <div class="header-actions">
+            <p-button icon="pi pi-download" label="Xuất file" styleClass="p-button-outlined p-button-sm"></p-button>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="search-box">
+            <i class="pi pi-search"></i>
+            <p-inputText placeholder="Tìm kiếm giao dịch..."></p-inputText>
+          </div>
+          <p-dropdown placeholder="30 ngày gần nhất" styleClass="time-filter"></p-dropdown>
+          <p-dropdown placeholder="Tất cả loại GD" styleClass="type-filter"></p-dropdown>
+        </div>
+
+      
+
+        <p-table [value]="transactions" [tableStyle]="{'min-width': '100%'}" styleClass="transaction-table">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Ngày giờ</th>
+              <th>Mô tả giao dịch</th>
+              <th>Số tiền</th>
+              <!-- <th>Số dư</th> -->
+              <th>Trạng thái</th>
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-transaction>
+            <tr>
+              <td>
+                <div class="transaction-date">
+                  <span class="date">{{ transaction.timestamp | date:'dd/MM/yyyy' }}</span> 
+                  <span class="time">{{ transaction.timestamp | date:'HH:mm:ss' }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="transaction-desc">
+                  <span class="desc">{{ transaction.description }}</span>
+                  <span class="ref">Ref: {{ transaction.referenceCode }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="amount" [ngClass]="transaction.toAccountNumber === account.accountNumber ? 'positive' : 'negative'">
+                  {{ transaction.toAccountNumber === account.accountNumber ? '+ ' : '- ' }}{{ formatCurrency(transaction.amount) }}
+                </span>
+              </td>
+              <!-- <td>
+                <span class="balance">{{ formatCurrency(transaction.balance) }}</span>
+              </td> -->
+              <td>
+                <span  [ngClass]="transaction.status==='COMPLETED' ? 'status success' : 'status error'">
+                  <i class="pi pi-check-circle"></i>
+                  {{ transaction.status==='COMPLETED' ? 'Thành công' : 'Thất bại' }}
+                </span>
+              </td>
+              <td>
+                <p-button icon="pi pi-eye" styleClass="p-button-text p-button-sm" 
+                         pTooltip="Xem chi tiết"></p-button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        
+        <!-- Pagination -->
+        <div class="pagination-section">
+          <p-paginator 
+            [first]="first" 
+            [rows]="rows" 
+            [totalRecords]="totalRecords" 
+            (onPageChange)="onPageChange($event)"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Hiển thị {first} - {last} của {totalRecords} giao dịch">
+          </p-paginator>
+        </div>
+      </div>
+
+      <div class="loans-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="pi pi-money-bill"></i>
+            Thông tin khoản vay
+          </h2>
+          <p-button icon="pi pi-plus" label="Đăng ký vay" styleClass="p-button-outlined p-button-sm"></p-button>
+        </div>
+        
+        <p-card styleClass="no-loan-card">
+          <div class="empty-state">
+            <i class="pi pi-info-circle"></i>
+            <h3>Chưa có khoản vay</h3>
+            <p>Bạn hiện không có khoản vay nào đang hoạt động.</p>
+            <p-button label="Tìm hiểu các gói vay" styleClass="p-button-outlined"></p-button>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</div>

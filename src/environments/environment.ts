@@ -2,7 +2,7 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:8888/api/customers',
   keycloak: {
-    url: 'http://localhost:8081/realms/myrealm/protocol/openid-connect/token',
+    url: 'http://localhost:8180/realms/myrealm/protocol/openid-connect/token',
     clientId: 'customer-service',
     clientSecret: 'EcfYDIYEVUMnyQa2KBYIxrqx4feXpYvM',
     realm: 'myrealm'

@@ -32,7 +32,13 @@ export class AdminService {
 
   checkAdminAccess(): boolean {
     const userInfo = this.userService.getUserInfo();
-    return userInfo && userInfo.realm_access && userInfo.realm_access.roles && userInfo.realm_access.roles.includes('ADMIN');
+    return (
+      userInfo &&
+      userInfo.realm_access &&
+      userInfo.realm_access.roles &&
+      (userInfo.realm_access.roles.includes('ADMIN') ||
+        userInfo.realm_access.roles.includes('ROLE_ADMIN'))
+    );
   }
 
   getCustomerList(page: number, size: number, keyword: string): Observable<any> {

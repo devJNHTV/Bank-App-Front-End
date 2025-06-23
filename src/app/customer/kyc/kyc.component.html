@@ -15,19 +15,7 @@
       </mat-card-header>
 
       <mat-card-content>
-        <div *ngIf="message" class="info-message">{{ message }}</div>
         <form [formGroup]="kycForm" (ngSubmit)="onSubmit()" class="form">
-          <!-- <div class="form-row">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Mã khách hàng</mat-label>
-              <input matInput formControlName="customerId" placeholder="Nhập mã khách hàng" readonly />
-              <mat-icon matSuffix>person</mat-icon>
-              <mat-error *ngIf="kycForm.get('customerId')?.hasError('required')">
-                Vui lòng nhập mã khách hàng
-              </mat-error>
-            </mat-form-field>
-          </div> -->
-
           <div class="form-row">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Số CMND/CCCD</mat-label>
@@ -53,21 +41,22 @@
             </mat-form-field>
           </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Ngày sinh</mat-label>
-            <input
-              matInput
-              [matDatepicker]="picker"
-              formControlName="dateOfBirth"
-              placeholder="YYYY-MM-DD"
-            />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="kycForm.get('dateOfBirth')?.hasError('required')">
-              Vui lòng nhập ngày sinh
-            </mat-error>
-          </mat-form-field>
-
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ngày sinh</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="dateOfBirth"
+                placeholder="YYYY-MM-DD"
+              />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="kycForm.get('dateOfBirth')?.hasError('required')">
+                Vui lòng nhập ngày sinh
+              </mat-error>
+            </mat-form-field>
+          </div>
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="full-width">
@@ -87,10 +76,15 @@
           <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
 
           <div class="form-actions">
-            <button mat-raised-button color="primary" type="submit">
-              <span routerLink="/login">Thoát</span>
+            <button mat-stroked-button color="primary" type="button" routerLink="/login">
+              Quay lại
             </button>
-            <button mat-raised-button color="primary" type="submit" [disabled]="kycForm.invalid || isLoading">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="kycForm.invalid || isLoading || !email"
+            >
               <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
               <span *ngIf="!isLoading">Gửi KYC</span>
             </button>
@@ -98,5 +92,11 @@
         </form>
       </mat-card-content>
     </mat-card>
+
+    <div class="additional-info">
+      <a href="#" class="info-link">Điều khoản sử dụng</a>
+      <a href="#" class="info-link">Hướng dẫn giao dịch an toàn</a>
+      <a href="#" class="info-link">Biểu phí dịch vụ</a>
+    </div>
   </div>
 </div>
