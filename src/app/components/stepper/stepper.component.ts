@@ -25,7 +25,7 @@ import { CommonModule } from '@angular/common';
         </div>
         
 
-        <div class="step-divider"></div>
+        <div  [class.completed]="currentStep > 2" class="step-divider"></div>
 
         <div class="step-item" 
              [class.active]="currentStep >= 3" 
@@ -35,7 +35,7 @@ import { CommonModule } from '@angular/common';
         </div>
 
         
-        <div class="step-divider"></div>
+        <div [class.completed]="currentStep > 3"  class="step-divider"></div>
 
         <div class="step-item" 
              [class.active]="currentStep >= 4" 

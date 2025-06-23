@@ -17,34 +17,70 @@ export class RegistrationService {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  register(userData: any): Observable<any> {
-    console.log('Registering user:', userData);
-    return this.http.post(this.apiEndpointsService.getRegisterEndpoint(), userData).pipe(
-      tap((response) => {
-        console.log('Register Response:', response);
-        if (isPlatformBrowser(this.platformId)) {
-          this.storageService.setItem('registerEmail', userData.email);
-        }
-      }),
-      catchError((error) => {
-        console.error('Register Error:', error);
-        return throwError(() => new Error('Đăng ký thất bại: ' + error.error.message));
+  // Bước 1: Khởi tạo đăng ký
+  initiateRegister(userData: any): Observable<any> {
+    console.log('Initiating registration for:', userData);
+    return this.http
+      .post(this.apiEndpointsService.getRegisterInitiateEndpoint(), userData, {
+        headers: { 'Content-Type': 'application/json' },
       })
-    );
+      .pipe(
+        tap((response) => {
+          console.log('Initiate Register Response:', response);
+          if (isPlatformBrowser(this.platformId)) {
+            this.storageService.setItem('registerEmail', userData.email);
+          }
+        }),
+        catchError((error) => {
+          console.error('Initiate Register Error:', error);
+          return throwError(
+            () => new Error(error.error?.message || 'Khởi tạo đăng ký thất bại')
+          );
+        })
+      );
   }
 
+  // Bước 2: Xác minh KYC & gửi OTP
+  processKycAndSendOtp(email: string, kycData: any): Observable<any> {
+    console.log('Processing KYC and OTP for:', email);
+    return this.http
+      .post(this.apiEndpointsService.getKycAndOtpEndpoint(), kycData, {
+        params: { email },
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .pipe(
+        tap((response) => {
+          console.log('KYC and OTP Response:', response);
+        }),
+        catchError((error) => {
+          console.error('KYC and OTP Error:', error);
+          return throwError(
+            () => new Error(error.error?.message || 'Xác minh KYC thất bại')
+          );
+        })
+      );
+  }
+
+  // Bước 3: Xác minh OTP
   verifyOtp(email: string, otp: string): Observable<any> {
+    console.log('Verifying OTP for:', email);
     const params = new HttpParams().set('email', email).set('otp', otp);
-    return this.http.post(this.apiEndpointsService.getConfirmRegisterEndpoint(), {}, { params }).pipe(
-      tap(() => {
-        if (isPlatformBrowser(this.platformId)) {
-          this.storageService.removeItem('registerEmail');
-        }
-      }),
-      catchError((error) =>
-        throwError(() => new Error('Xác minh OTP thất bại: ' + error.error.message))
-      )
-    );
+    return this.http
+      .post(this.apiEndpointsService.getConfirmRegisterEndpoint(), null, { params })
+      .pipe(
+        tap((response) => {
+          console.log('OTP Verification Success:', response);
+          if (isPlatformBrowser(this.platformId)) {
+            this.storageService.removeItem('registerEmail');
+          }
+        }),
+        catchError((error) => {
+          console.error('OTP Verification Error:', error);
+          return throwError(
+            () => new Error(error.error?.message || 'Xác minh OTP thất bại')
+          );
+        })
+      );
   }
 
   resendVerificationCode(email: string): Observable<any> {

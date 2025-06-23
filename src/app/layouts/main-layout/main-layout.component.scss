@@ -52,26 +52,26 @@
 
 .nav-item {
   height: 48px !important;
-  margin: 4px 16px;
-  border-radius: 8px;
-  color: #6b7280;
-  transition: all 0.2s;
+  margin: 4px 16px !important;
+  border-radius: 8px !important;
+  color: white;
+  transition: all 0.2s !important;
 }
 
 .nav-item:hover {
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
 }
 
 /* Lưu ý: `active-link` là class bạn dùng trong routerLinkActive, không phải `active` */
 .active-link {
-  background-color: #22c55e;
+  background-color: #a7c1db;
   color: white;
 }
 
 .header-toolbar { /* Đổi từ .header thành .header-toolbar để khớp với HTML */
   background-color: white;
-  color: #1f2937;
+  color: white;
   border-bottom: 1px solid #e0e0e0;
   padding: 0 24px;
   height: 64px;

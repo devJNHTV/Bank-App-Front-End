@@ -41,15 +41,6 @@ export class UserService {
     }
   }
 
-  // getCustomerList(): Observable<any> {
-  //   return this.http.get(this.apiEndpointsService.getCustomerListEndpoint()).pipe(
-  //     tap((res) => console.log('Customer List:', res)),
-  //     catchError((error) =>
-  //       throwError(() => new Error('Lấy danh sách khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
-  //     )
-  //   );
-  // }
-
   getCustomerDetail(userId: string): Observable<any> {
     return this.http.get(this.apiEndpointsService.getCustomerDetailEndpoint()).pipe(
       tap((res) => console.log('Customer Detail:', res)),

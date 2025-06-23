@@ -39,17 +39,28 @@
           <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
 
           <div class="form-actions">
-            <button mat-stroked-button color="primary" type="button" routerLink="/register">
+            <button mat-stroked-button color="primary" type="button" routerLink="/kyc-otp">
               Quay lại
             </button>
-            <button mat-raised-button color="primary" type="submit" [disabled]="otpForm.invalid || isLoading">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="otpForm.invalid || isLoading || !email"
+            >
               <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
               <span *ngIf="!isLoading">Xác minh</span>
             </button>
           </div>
 
           <div class="resend-otp">
-            <button mat-button color="primary" type="button" (click)="resendOtp()" [disabled]="isResending">
+            <button
+              mat-button
+              color="primary"
+              type="button"
+              (click)="resendOtp()"
+              [disabled]="isResending || !email"
+            >
               {{ isResending ? 'Đang gửi lại...' : 'Gửi lại mã OTP' }}
             </button>
           </div>

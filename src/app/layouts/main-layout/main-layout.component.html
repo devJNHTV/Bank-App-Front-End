@@ -24,9 +24,39 @@
         [routerLinkActiveOptions]="{ exact: true }"
         class="nav-item"
       >
-        <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
+        <mat-icon matListItemIcon>home</mat-icon>
+        <span matListItemTitle>Trang chủ</span>
       </a>
+      <a
+      mat-list-item
+      routerLink="/account/payment"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-item"
+    >
+      <mat-icon matListItemIcon>account_balance_wallet</mat-icon>
+      <span matListItemTitle>Tài khoản thanh toán</span>
+    </a>
+      <a
+      mat-list-item
+      routerLink="/account/saving"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-item"
+    >
+      <mat-icon matListItemIcon>savings</mat-icon>
+      <span matListItemTitle>Tài khoản tiết kiệm</span>
+    </a>
+    <a
+    mat-list-item
+    routerLink="/account/credit"
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="nav-item"
+  >
+    <mat-icon matListItemIcon>credit_card</mat-icon>
+    <span matListItemTitle>Tài khoản tín dụng</span>
+  </a>
 
       <a
       *ngIf="!isAdmin()"

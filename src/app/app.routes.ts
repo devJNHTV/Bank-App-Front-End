@@ -29,7 +29,6 @@ import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
 import { CustomerListComponent } from './admin/customer-list/customer-list.component';
 import { CustomerDetailAdminComponent } from './admin/customer-detail/customer-detail-admin.component';
 import { ChangePasswordComponent } from './auth/change-password/change-password.component';
-import { KycComponent } from './auth/kyc/kyc.component';
 import { TransactionListComponent } from './admin/transaction/transaction-list/transaction-list.component';
 import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
 import { ExternalTransferComponent } from './transactions/external-transfer/external-transfer.component';
@@ -43,7 +42,17 @@ import { PendingLoanListComponent } from './loan-employee/pending-loans-list/pen
 import { LoanDetailViewComponent } from './loan-employee/loan-detail-view/loan-detail-view.component';
 import { WarningApplyLoanComponent } from './loan/warning-apply-loan/warning-apply-loan.component';
 import { AboutComponent } from './pages/about/about.component';
-    
+
+import { KycOtpComponent } from './auth/kyc-otp/kyc-otp.component';
+import { CreditComponent } from './pages/account/credit/credit.component';
+import { AccountComponent } from './pages/account/account.component';
+import { DetailComponent } from './pages/account/payment/detail/detail.component';
+import { PaymentComponent } from './pages/account/payment/payment.component';
+import { RegisterCreditComponent } from './pages/account/credit/register-credit/register-credit.component';
+import { ApplyCreditComponent } from './pages/account/credit/apply-credit/apply-credit.component';
+import { CreditDetailComponent } from './pages/account/credit/detail/credit-detail.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { KycComponent } from './customer/kyc/kyc.component';
 export const routes: Routes = [
 
   {
@@ -61,6 +70,20 @@ export const routes: Routes = [
       { path: 'admin/transactions', component: TransactionListComponent, canActivate: [KycGuard] },
 
 
+      { 
+        path: 'account', 
+        component: AccountComponent,
+        children: [
+            { path: '', redirectTo: 'payment', pathMatch: 'full' }, // Redirect account to account/profile
+            { path: 'payment', component: PaymentComponent }, // Tạm dùng SavingsComponent, có thể tạo ProfileComponent riêng
+            { path: 'saving', component: SavingsComponent }, // Có thể tạo TransactionsComponent
+            { path: 'payment/detail/:accountNumber', component: DetailComponent },
+            { path: 'credit', component: CreditComponent },
+            { path: 'credit/detail/:cardAccountNumber', component: CreditDetailComponent },
+            { path: 'credit/register', component: RegisterCreditComponent },
+            { path: 'credit/register/apply-credit/:cardID', component: ApplyCreditComponent },  
+        ]
+        },  
       { path: 'customers', component: CustomerListComponent, canActivate: [KycGuard] },
       { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent, canActivate: [KycGuard] },
       { path: 'transactions', component: TransactionHomeComponent, canActivate: [KycGuard]   },
@@ -100,10 +123,15 @@ export const routes: Routes = [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
+      { path: 'kyc-otp', component: KycOtpComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'reset-password', component: ResetPasswordComponent },
-      { path: 'verify-otp', component: VerifyOtpComponent },
+      { path: 'confirm-otp', component: VerifyOtpComponent },
     ]
   },
   { path: 'forbidden', component: ForbiddenComponent },
+  
+
+  // Not Found
+  { path: '**', component: NotFoundComponent }
 ];

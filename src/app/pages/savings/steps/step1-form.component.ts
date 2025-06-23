@@ -28,12 +28,14 @@ export class Step1FormComponent implements OnInit {
 
   savingsForm: FormGroup;
   selectedAccount: Account | null = null;
-
+  interestTypes: any[] = [{label: 'Lãi trả vào tài khoản tiền gửi khi đến hạn trả lãi', value: 'AT_MATURITY'}, {label: 'Lãi trả vào tài khoản tiền gửi hàng tháng', value: 'MONTHLY'}];
   constructor(private fb: FormBuilder) {
     this.savingsForm = this.fb.group({
       accountNumberSource: ['', Validators.required],
       initialDeposit: ['', [Validators.required, Validators.min(1000000), this.balanceValidator.bind(this)]],
       term: ['', Validators.required],
+      interestPaymentType: ['', Validators.required],
+      renewOption: [false],
       termsAgreement: [false, Validators.requiredTrue]
     });
   }
@@ -56,6 +58,14 @@ export class Step1FormComponent implements OnInit {
     return this.savingsForm.get('termsAgreement');
   }
 
+  get interestPaymentType() {
+    return this.savingsForm.get('interestPaymentType');
+  }
+
+  get renewOption() {
+    return this.savingsForm.get('renewOption');
+  }
+
   // Format currency method
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('vi-VN', {
@@ -72,14 +82,34 @@ export class Step1FormComponent implements OnInit {
 
   // Submit method
   onSubmit(): void {
+    console.log('Form valid:', this.savingsForm.valid);
+    console.log('Form value:', this.savingsForm.value);
+    console.log('Form errors:', this.getFormErrors());
+    
     if (this.savingsForm.valid) {
-      this.formSubmit.emit(this.savingsForm.value);
+      const formData = {
+        ...this.savingsForm.value,
+        renewOption: this.savingsForm.value.renewOption ? 'AUTO_RENEW' : 'NO_RENEW'
+      };
+      this.formSubmit.emit(formData);
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(this.savingsForm.controls).forEach(key => {
         this.savingsForm.get(key)?.markAsTouched();
       });
     }
+  }
+
+  // Debug method to check form errors
+  getFormErrors(): any {
+    const errors: any = {};
+    Object.keys(this.savingsForm.controls).forEach(key => {
+      const control = this.savingsForm.get(key);
+      if (control && control.errors) {
+        errors[key] = control.errors;
+      }
+    });
+    return errors;
   }
 
   // Custom validator for checking balance
