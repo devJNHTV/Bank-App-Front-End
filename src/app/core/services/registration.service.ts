@@ -1,15 +1,17 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, switchMap } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 import { ApiEndpointsService } from './api-endpoints.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistrationService {
+
   constructor(
     private http: HttpClient,
     private storageService: StorageService,
@@ -65,26 +67,43 @@ export class RegistrationService {
   verifyOtp(email: string, otp: string): Observable<any> {
     console.log('Verifying OTP for:', email);
     const params = new HttpParams().set('email', email).set('otp', otp);
+
+    const headers = new HttpHeaders({
+      'X-API-Key': environment.apiKey
+    });
+
     return this.http
-      .post(this.apiEndpointsService.getConfirmRegisterEndpoint(), null, { params })
+      .post<any>(this.apiEndpointsService.getConfirmRegisterEndpoint(), null, {
+        params,
+        headers
+      })
       .pipe(
         tap((response) => {
-          console.log('OTP Verification Success:', response);
+          console.log('OTP Verification Success:', response.data.cifCode);
+        }),
+        switchMap((response) => {
+          const cifCode = response.data.cifCode;
+          return this.http.post(
+            `http://localhost:8888/account/api/v1/create-initial-payment-account`,
+            { cifCode },
+            { headers }
+          );
+        }),
+        tap(() => {
           if (isPlatformBrowser(this.platformId)) {
             this.storageService.removeItem('registerEmail');
           }
         }),
         catchError((error) => {
           console.error('OTP Verification Error:', error);
-          return throwError(
-            () => new Error(error.error?.message || 'Xác minh OTP thất bại')
-          );
+          return throwError(() => new Error(error.error?.message || 'Xác minh OTP thất bại'));
         })
       );
   }
 
   resendVerificationCode(email: string): Observable<any> {
-    return this.http.post(this.apiEndpointsService.getForgotPasswordEndpoint(), { email }).pipe(
+    const params = new HttpParams().set('email', email);
+    return this.http.post(this.apiEndpointsService.reSentOtpEndpoint(), null, { params }).pipe(
       catchError((error) =>
         throwError(() => new Error('Gửi lại mã OTP thất bại: ' + error.error.message))
       )

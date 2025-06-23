@@ -11,6 +11,7 @@
                 matInput
                 formControlName="userId"
                 placeholder="Nhập User ID của khách hàng"
+                readonly="true"
                 required
               />
               <mat-error *ngIf="customerForm.get('userId')?.hasError('required')">
