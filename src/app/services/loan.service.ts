@@ -9,7 +9,7 @@ import { LoanRejectionReason } from '../models/LoanRejectionReason.model';
 })
 export class LoanService {
   // URL gốc của backend Java
-  private readonly baseUrl = 'http://localhost:9827/api/loans';
+  private readonly baseUrl = 'http://localhost:8888/api/loans';
 
   constructor(
     private http: HttpClient
@@ -54,8 +54,8 @@ export class LoanService {
   }
 
   // 7. GET: Lấy danh sách khoản vay theo customerId
-  async getLoansByCustomerId(customerId: number): Promise<Observable<ApiResponseWrapper<Loan[]>>> {
-    return this.http.get<ApiResponseWrapper<Loan[]>>(`${this.baseUrl}/customer/${customerId}`,{ headers: this.getAuthHeaders() });
+  async getLoansByCustomerId(): Promise<Observable<ApiResponseWrapper<Loan[]>>> {
+    return this.http.get<ApiResponseWrapper<Loan[]>>(`${this.baseUrl}/customer`,{ headers: this.getAuthHeaders() });
   }
 
   // 8. DELETE: Xóa khoản vay

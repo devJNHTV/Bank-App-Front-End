@@ -38,8 +38,6 @@ export class CurrentRepaymentScheduleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    
-    
     this.loadCurrentRepayment();
   }
 
@@ -67,7 +65,7 @@ export class CurrentRepaymentScheduleComponent implements OnInit {
 
   handlePayment(): void {
     if (!this.currentRepayment) return;
-    this.router.navigate(['loan/pay-repayment/'+this.currentRepayment.repaymentId]);
+    this.router.navigate(['/loans/pay/'+this.currentRepayment.repaymentId]);
   }
 
   getStatusSeverity(status: string): string {
@@ -83,11 +81,8 @@ export class CurrentRepaymentScheduleComponent implements OnInit {
     }
   }
 
-  private showNotification(severity: string, summary: string, detail: string): void {
-    this.messageService.add({
-      severity,
-      summary,
-      detail
-    });
+
+  goToPayment(repaymentId: number) {
+    this.router.navigate(['/loans/pay', repaymentId]);
   }
 } 

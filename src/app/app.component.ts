@@ -16,10 +16,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
-
-
-
-
 @Component({
   selector: 'app-root',
   standalone: true,

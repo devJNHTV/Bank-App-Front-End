@@ -89,6 +89,7 @@ export class LoanDetailViewComponent implements OnInit {
     this.loanService.getLoanById(loanId).subscribe({
       next: ({ data }) => {
         this.loanDetail = data;
+        console.log(this.loanDetail);
         if (data.customerId) {
           this.loadCustomerInfo(data.customerId);
           this.loadAccounts();
@@ -158,6 +159,7 @@ export class LoanDetailViewComponent implements OnInit {
   }
 
   approveLoan() {
+    this.loading = true;
     this.processingAction = true;
     this.loanService.approveLoan(this.loanDetail?.loanId ?? 0).subscribe({
       next: () => {
@@ -169,6 +171,9 @@ export class LoanDetailViewComponent implements OnInit {
         this.processingAction = false;
         console.log(err);
         this.toastr.error( err.error.message, 'Thất bại');
+      },
+      complete: () => {
+        this.loading = false;
       }
     });
   }
@@ -184,6 +189,7 @@ export class LoanDetailViewComponent implements OnInit {
   }
 
   rejectLoan() {
+    this.loading = true;
     console.log(this.loanDetail);
     
     if (!this.loanDetail?.loanId) return;
@@ -205,6 +211,9 @@ export class LoanDetailViewComponent implements OnInit {
       error: (err) => {
         this.processingAction = false;
         this.toastr.error( err.error.message, 'Thất bại');
+      },
+      complete: () => {
+        this.loading = false;
       }
     });
   }

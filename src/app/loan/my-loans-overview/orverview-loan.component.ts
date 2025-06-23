@@ -25,13 +25,12 @@
     pendingLoans: Loan[] = [];
     rejectedLoans: Loan[] = [];
     expandedRows: { [key: number]: boolean } = {};
-
+    loading: boolean = true;
     constructor(private loanService: LoanService, private router: Router, private toastr: ToastrService) { }
 
     ngOnInit(): void {
-      const idCustomer = localStorage.getItem("idCustomer");
-      console.log(idCustomer);
-      this.loanService.getLoansByCustomerId(Number(idCustomer))
+      this.loading = true;
+      this.loanService.getLoansByCustomerId()
         .then((obs: Observable<ApiResponseWrapper<Loan[]>>) => {
           obs.subscribe({
             next: (response: ApiResponseWrapper<Loan[]>) => {
@@ -41,7 +40,7 @@
               this.approvedLoans = this.loans.filter(l => l.status === LoanStatus.APPROVED);
               this.pendingLoans = this.loans.filter(l => l.status === LoanStatus.PENDING);
               this.rejectedLoans = this.loans.filter(l => l.status === LoanStatus.REJECTED);
-
+              this.loading = false;
             },
             error: (err) => {
               console.error('Lỗi khi gọi API:', err);
@@ -52,6 +51,7 @@
         .catch((err) => {
           console.error('Promise từ getLoansByCustomerId bị lỗi:', err);
           this.toastr.error(`Không tải được danh sách khoản vay: ${err}`, 'Lỗi');
+          this.loading = false;
         });
 
 
@@ -65,6 +65,18 @@
     }
     getDetailReject(id : number) {
       this.router.navigate(['/detail/loan/reject', id]);
+    }
+
+    goToLoanDetail(id: number) {
+      this.router.navigate(['/loans/detail', id]);
+    }
+
+    goToUpdateLoan(id: number) {
+      this.router.navigate(['/loans/update', id]);
+    }
+
+    goToRejectedLoan(id: number) {
+      this.router.navigate(['/loans/reject', id]);
     }
 
   }

@@ -49,6 +49,7 @@ export class PayRepaymentComponent implements OnInit {
   
   accounts: Account[] = [];
   loading = false;
+  checkLoading : boolean = false;
   error: string | null = null;
   showOtpDialog = false;
   referenceCode: string | null = null;
@@ -83,9 +84,8 @@ export class PayRepaymentComponent implements OnInit {
   }
 
   loadRepayment(repaymentId: number): void {
-    this.loading = true;
     this.error = null;
-
+    this.checkLoading = false;
     this.repaymentService.getRepaymentById(repaymentId).subscribe({
       next: (response: ApiResponseWrapper<Repayment>) => {
         if (response.status === 200) {
@@ -108,12 +108,13 @@ export class PayRepaymentComponent implements OnInit {
         this.showNotification('error', 'Error', this.error);
       },
       complete: () => {
-        this.loading = false;
+        this.checkLoading = true;
       }
     });
   }
 
   loadAccounts(): void {
+    this.checkLoading = false;
     this.accountService.getAccounts().subscribe({
         next: (res: any) => {
             this.accounts = res.data;
@@ -122,9 +123,18 @@ export class PayRepaymentComponent implements OnInit {
           },
       error: (err) => {
         this.showNotification('error', 'Error', 'Error loading accounts');
+      },
+      complete: () => {
+        this.checkLoading = true;
       }
     });
   }
+  checkLoad():void{
+    if(this.checkLoading == true){
+      this.loading = true;
+    }
+  }
+
 
   onSubmit(): void {
     if (this.paymentForm.invalid) {
@@ -177,7 +187,7 @@ export class PayRepaymentComponent implements OnInit {
       next: (response: ApiResponseWrapper<Repayment>) => {
         if (response.status === 200) {
           this.showNotification('success', 'Success', 'Payment confirmed successfully');
-          this.router.navigate(['/loan/current']);
+          this.router.navigate(['/loans/current']);
         } else {
           this.showNotification('error', 'Error', response.message || 'Failed to confirm payment');
         }
@@ -210,5 +220,12 @@ export class PayRepaymentComponent implements OnInit {
       summary,
       detail
     });
+  }
+
+  onPaymentSuccess() {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payment successful' });
+    setTimeout(() => {
+      this.router.navigate(['/loans/current']);
+    }, 2000);
   }
 } 

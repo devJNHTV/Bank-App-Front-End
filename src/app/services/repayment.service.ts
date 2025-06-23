@@ -8,7 +8,7 @@ import { ApiResponseWrapper} from '../models/api-response-wrapper.model';
   providedIn: 'root'
 })
 export class RepaymentService {
-  private readonly apiUrl = 'http://localhost:9827/api/repayments';
+  private readonly apiUrl = 'http://localhost:8888/api/repayments';
 
   constructor(private http: HttpClient) {}
 

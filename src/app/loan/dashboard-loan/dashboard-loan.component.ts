@@ -1,4 +1,4 @@
-// src/app/dashboard-loan/dashboard-loan.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -7,34 +7,26 @@ import { ApiResponseWrapper } from '../../models/api-response-wrapper.model';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
-
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 @Component({
   selector: 'app-dashboard-loan',
   standalone: true,
-  imports: [CommonModule, CardModule, ButtonModule, PanelModule],
+  imports: [CommonModule, CardModule, ButtonModule, PanelModule, ProgressSpinnerModule],
   templateUrl: './dashboard-loan.component.html',
   styleUrls: ['./dashboard-loan.component.scss']
 })
 export class DashboardLoanComponent implements OnInit {
   totalBorrowed: number = 0;
   totalOutstanding: number = 0;
-
+  loading: boolean = true;
   constructor(private loanService: LoanService, private router: Router) {}
 
   ngOnInit(): void {
-    this.loanService.getCustomerId().subscribe({
-      next: (response: ApiResponseWrapper<number>) => {
-        console.log("set id"+response.data.toString());
-        
-        localStorage.setItem('idCustomer', response.data.toString());
-      },
-      error: (error) => console.error(error)
-    });
-    
 
     this.loanService.getTotalBorrowed().subscribe({
       next: (response: ApiResponseWrapper<number>) => {
         this.totalBorrowed = response.data || 0;
+        this.loading = false;
       },
       error: (error) => console.error('Error fetching total borrowed:', error)
     });
@@ -43,24 +35,25 @@ export class DashboardLoanComponent implements OnInit {
     this.loanService.getTotalOutstanding().subscribe({
       next: (response: ApiResponseWrapper<number>) => {
         this.totalOutstanding = response.data || 0;
+        this.loading = false;
       },
       error: (error) => console.error('Error fetching total outstanding:', error)
     });
   }
 
   navigateToCreateLoan() {
-    this.router.navigate(['/loan/create']);
+    this.router.navigate(['/loans/create']);
   }
 
   navigateToLoanOverview() {
-    this.router.navigate(['/loan/overview']);
+    this.router.navigate(['/loans/overview']);
   }
 
   navigateToLoanHistory() {
-    this.router.navigate(['/loan/history']);
+    this.router.navigate(['/loans/history']);
   }
 
   navigateToCurrentRepayments() {
-    this.router.navigate(['loan/current']);
+    this.router.navigate(['/loans/current']);
   }
 }

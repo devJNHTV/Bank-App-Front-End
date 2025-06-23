@@ -41,6 +41,7 @@ import { LoanDetailViewComponent } from './loan-employee/loan-detail-view/loan-d
 import { CurrentRepaymentScheduleComponent } from './loan/current-repayment-schedule/current-repayment-schedule.component';
 import { PayRepaymentComponent } from './loan/pay-repayment/pay-repayment.component';
 import { LoanHistoryComponent } from './loan/loan-history/loan-history.component';
+import { WarningApplyLoanComponent } from './loan/warning-apply-loan/warning-apply-loan.component';
 
 export const routes: Routes = [
 
@@ -69,6 +70,19 @@ export const routes: Routes = [
       { path: 'transactions/payment', component: PaymentSelectionComponent, canActivate: [KycGuard]   },
       { path: 'transactions/payment/:type', component: BillLookupComponent, canActivate: [KycGuard]   },
       { path: 'transactions/pay-bill', component: PayBillComponent, canActivate: [KycGuard]   },
+      { path: 'loans', component: DashboardLoanComponent },
+      { path: 'loans/create', component: ApplyNewLoanComponent },
+      { path: 'loans/overview', component: OrverviewLoanComponent },
+      { path: 'loans/history', component: LoanHistoryComponent },
+      { path: 'loans/current', component: CurrentRepaymentScheduleComponent },
+      { path: 'loans/pay/:id', component: PayRepaymentComponent },
+      { path: 'loans/detail/:id', component: DetailLoanComponent },
+      { path: 'loans/reject/:id', component: DetailLoanRejectComponent },
+      { path: 'employee/loans', component: PendingLoanListComponent },
+      { path: 'employee/loans/pending', component: PendingLoanListComponent },
+      { path: 'employee/loans/:id', component: LoanDetailViewComponent },
+      { path: 'loan/current-repayments', redirectTo: '' },
+      { path: 'loan/warning-apply-loan', component: WarningApplyLoanComponent },
     ]
   },
   { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard, KycGuard] },
@@ -88,19 +102,10 @@ export const routes: Routes = [
     ]
   },
   
-    { path: 'allloan', component: DashboardLoanComponent },
-    { path: 'loan/create', component: ApplyNewLoanComponent },
-    { path: 'loan/history', component: LoanHistoryComponent },
-    { path: 'loan/current-repayments', redirectTo: '' },
+
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent },
     { path: 'about', component: AboutComponent },
     { path: 'savings', component: SavingsComponent },
-    { path: 'loan/overview', component: OrverviewLoanComponent },
-    { path: 'detail/loan/:id', component: DetailLoanComponent },
-    { path: 'detail/loan/reject/:id', component: DetailLoanRejectComponent },
-    { path: 'employee/loans/pending', component: PendingLoanListComponent },
-    { path: 'employee/loans/:id', component: LoanDetailViewComponent },
-    { path: 'loan/current', component: CurrentRepaymentScheduleComponent },
-    { path: 'loan/pay-repayment/:id', component: PayRepaymentComponent }
+
 ];

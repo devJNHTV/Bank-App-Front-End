@@ -1,169 +1,394 @@
-<div class="loan-container">
+<div *ngIf="loading">
+  <div class="socket">
+    <div class="gel center-gel">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c1 r1">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c2 r1">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c3 r1">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c4 r1">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c5 r1">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c6 r1">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c7 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c8 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c9 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c10 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c11 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c12 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c13 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c14 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c15 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c16 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c17 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c18 r2">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c19 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c20 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c21 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c22 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c23 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c24 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c25 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c26 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c28 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c29 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c30 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c31 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c32 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c33 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c34 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c35 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c36 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+    <div class="gel c37 r3">
+      <div class="hex-brick h1"></div>
+      <div class="hex-brick h2"></div>
+      <div class="hex-brick h3"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="loan-container" *ngIf="!loading">
   <p-toast position="top-right"></p-toast>
 
-  <ng-container *ngIf="loading; else mainContent">
-    <div class="overlay">
-      <p-progressSpinner strokeWidth="6"></p-progressSpinner>
-    </div>
-  </ng-container>
+  <div class="main-layout">
 
-  <ng-template #mainContent>
-    <div *ngIf="error" class="banner error">
-      <i class="pi pi-exclamation-triangle"></i>
-      <span>{{ error }}</span>
-    </div>
+    <div class="main-content">
 
-    <div *ngIf="!error && loanDetail" class="grid-layout">
-      <!-- LOAN & CUSTOMER CARDS -->
-      <div class="cards-row">
-        <p-card class="card modern" headerTemplate>
-          <ng-template pTemplate="header">
-            <div class="card-header">
-              <i class="pi pi-money-bill card-icon"></i>
-              <h3>Chi tiết khoản vay</h3>
-            </div>
-          </ng-template>
+      <!-- Row 2: Loan Info -->
+      <div class="loan-info-row">
+        <div class="info-card">
+          <div class="card-header">
+            <i class="pi pi-info-circle"></i>
+            <h2>Thông tin khoản vay</h2>
+          </div>
           <div class="info-grid">
             <div class="info-item">
               <i class="pi pi-id-card"></i>
               <div class="info-content">
                 <label>Mã khoản vay</label>
-                <span>{{ loanDetail.loanId }}</span>
+                <span>{{ loanDetail?.loanId }}</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-credit-card"></i>
               <div class="info-content">
                 <label>Số tài khoản</label>
-                <span>{{ loanDetail.accountNumber }}</span>
-              </div>
-            </div>
-            <div class="info-item">
-              <i class="pi pi-calendar"></i>
-              <div class="info-content">
-                <label>Ngày tạo</label>
-                <span>{{ formatDate(loanDetail.createdAt) }}</span>
+                <span>{{ loanDetail?.accountNumber }}</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-dollar"></i>
               <div class="info-content">
-                <label>Số tiền</label>
-                <span>{{ formatCurrency(loanDetail.amount) }}</span>
+                <label>Số tiền vay</label>
+                <span>{{ formatCurrency(loanDetail?.amount || 0) }}</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-percentage"></i>
               <div class="info-content">
                 <label>Lãi suất</label>
-                <span>{{ loanDetail.interestRate }}%</span>
+                <span>{{ loanDetail?.interestRate }}%</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-clock"></i>
               <div class="info-content">
-                <label>Kỳ hạn</label>
-                <span>{{ loanDetail.termMonths }} tháng</span>
+                <label>Kỳ hạn (tháng)</label>
+                <span>{{ loanDetail?.termMonths }}</span>
               </div>
             </div>
             <div class="info-item">
               <i class="pi pi-wallet"></i>
               <div class="info-content">
                 <label>Thu nhập</label>
-                <span>{{ formatCurrency(loanDetail.declaredIncome) }}</span>
-              </div>
-            </div>
-          </div>
-        </p-card>
-
-        <p-card class="card modern" headerTemplate>
-          <ng-template pTemplate="header">
-            <div class="card-header">
-              <i class="pi pi-user card-icon"></i>
-              <h3>Thông tin khách hàng</h3>
-            </div>
-          </ng-template>
-          <div class="info-grid">
-            <div class="info-item">
-              <i class="pi pi-user"></i>
-              <div class="info-content">
-                <label>Họ tên</label>
-                <span>{{ customerInfo?.fullName }}</span>
+                <span>{{ formatCurrency(loanDetail?.declaredIncome || 0) }}</span>
               </div>
             </div>
             <div class="info-item">
-              <i class="pi pi-envelope"></i>
+              <i class="pi pi-calendar"></i>
               <div class="info-content">
-                <label>Email</label>
-                <span>{{ customerInfo?.email }}</span>
+                <label>Ngày tạo</label>
+                <span>{{ formatDate(loanDetail?.createdAt || null) }}</span>
               </div>
             </div>
-            <div class="info-item">
-              <i class="pi pi-phone"></i>
+            <div class="info-item" *ngIf="loanDetail?.approvedAt">
+              <i class="pi pi-calendar-check"></i>
               <div class="info-content">
-                <label>Số điện thoại</label>
-                <span>{{ customerInfo?.phoneNumber }}</span>
+                <label>Ngày duyệt</label>
+                <span>{{ formatDate(loanDetail?.approvedAt || null) }}</span>
               </div>
             </div>
-          </div>
-        </p-card>
-      </div>
-
-      <!-- ACTION BUTTONS -->
-      <div class="action-buttons" *ngIf="loanDetail.status === 'PENDING'">
-        <p-button 
-          label="Duyệt khoản vay" 
-          icon="pi pi-check" 
-          severity="success" 
-          (onClick)="approveLoan()" 
-          [loading]="processingAction">
-        </p-button>
-        <p-button 
-          label="Từ chối khoản vay" 
-          icon="pi pi-times" 
-          severity="danger" 
-          (onClick)="openRejectDialog()" 
-          [loading]="processingAction">
-        </p-button>
-      </div>
-
-      <!-- REJECT DIALOG -->
-      <p-dialog 
-        header="Reject Loan" 
-        [(visible)]="showRejectDialog" 
-        modal 
-        [style]="{ width: '450px' }"
-        [draggable]="false"
-        [resizable]="false">
-        <div class="dialog-content">
-          <div class="form-group">
-            <label for="reason">Reason for rejection:</label>
-            <textarea 
-              pInputTextarea 
-              id="reason" 
-              rows="4" 
-              [formControl]="rejectionReasonControl" 
-              placeholder="Enter reason..."
-              class="w-full">
-            </textarea>
           </div>
         </div>
-        <ng-template pTemplate="footer">
-          <p-button 
-            label="Cancel" 
-            icon="pi pi-times" 
-            (onClick)="closeRejectDialog()"
-            class="p-button-text">
-          </p-button>
-          <p-button 
-            label="Reject" 
-            icon="pi pi-check" 
-            severity="danger" 
-            (onClick)="rejectLoan()" 
-            [loading]="processingAction">
-          </p-button>
-        </ng-template>
-      </p-dialog>
+      </div>
+
+      <!-- Row 3: Account List -->
+      <div class="accounts-row" *ngIf="accounts && accounts.length">
+        <div class="accounts-card">
+          <div class="card-header">
+            <i class="pi pi-list"></i>
+            <h2>Danh sách tài khoản</h2>
+            <span class="accounts-count">({{ accounts.length }})</span>
+          </div>
+          <div class="accounts-table-wrapper">
+            <p-table [value]="accounts" responsiveLayout="scroll" [tableStyle]="{'min-width': '40rem'}">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Số tài khoản</th>
+                  <th>Loại tài khoản</th>
+                  <th>Số dư</th>
+                  <th>Trạng thái</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-account>
+                <tr>
+                  <td>{{ account.accountNumber }}</td>
+                  <td>{{ account.accountType }}</td>
+                  <td>{{ formatCurrency(account.balance) }}</td>
+                  <td>
+                    <span class="status-badge" [ngClass]="account.status?.toLowerCase()">{{ account.status }}</span>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 4: Customer Info + Actions -->
+      <div class="row">
+        <div class="customer-info-row">
+          <div class="customer-card horizontal">
+            <div class="customer-avatar">
+              <i class="pi pi-user"></i>
+            </div>
+            <div class="customer-details">
+              <!-- Row 1 -->
+              <div class="customer-meta row1">
+                <div><b>Mã KH:</b> {{ customerInfo?.cifCode }}</div>
+                <div><b>Ngày sinh:</b> {{ formatDate(customerInfo?.dateOfBirth) }}</div>
+                <div><b>Địa chỉ:</b> {{ customerInfo?.address }}</div>
+              </div>
+              <!-- Row 2 -->
+              <div class="customer-meta row2">
+                <div>
+                  <b>Trạng thái:</b>
+                  <span class="status-badge" [ngClass]="customerInfo?.status?.toLowerCase()">
+                    {{ customerInfo?.status }}
+                  </span>
+                </div>
+                <div>
+                  <b>KYC:</b>
+                  <span class="status-badge" [ngClass]="customerInfo?.kycStatus?.toLowerCase()">
+                    {{ customerInfo?.kycStatus }}
+                  </span>
+                </div>
+              </div>
+              <!-- Row 3 -->
+              <div class="customer-meta row3">
+                <div><b>SĐT:</b> {{ customerInfo?.phoneNumber }}</div>
+                <div><b>Email:</b> {{ customerInfo?.email }}</div>
+              </div>
+             
+            </div>
+
+            <!-- Buttons -->
+            <div class="actions-container">
+              <div class="actions-buttons">
+                <p-button
+                  label="Từ chối"
+                  icon="pi pi-times"
+                  styleClass="reject-btn"
+                  (onClick)="openRejectDialog()"
+                  [loading]="processingAction">
+                </p-button>
+                <p-button
+                  label="Duyệt khoản vay"
+                  icon="pi pi-check"
+                  styleClass="approve-btn"
+                  (onClick)="approveLoan()"
+                  [loading]="processingAction">
+                </p-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- .main-content -->
+
+  </div> <!-- .main-layout -->
+
+  <!-- Reject Dialog -->
+  <p-dialog header="Từ chối khoản vay"
+            [(visible)]="showRejectDialog"
+            modal
+            [style]="{ width: '400px' }"
+            [draggable]="false"
+            [resizable]="false"
+            styleClass="reject-dialog">
+    <div class="dialog-content reject-simple">
+      <div class="form-group">
+        <label for="reason">Lý do từ chối <span class="required">*</span></label>
+        <textarea pInputTextarea
+                  id="reason"
+                  rows="3"
+                  [formControl]="rejectionReasonControl"
+                  placeholder="Nhập lý do từ chối khoản vay..."
+                  class="reason-input"></textarea>
+      </div>
+      <div class="dialog-actions">
+        <p-button label="Hủy" icon="pi pi-times" styleClass="cancel-btn" (onClick)="closeRejectDialog()"></p-button>
+        <p-button label="Xác nhận từ chối"
+                  icon="pi pi-check"
+                  styleClass="reject-btn"
+                  (onClick)="rejectLoan()"
+                  [loading]="processingAction">
+        </p-button>
+      </div>
     </div>
-  </ng-template>
-</div>
+  </p-dialog>
+
+</div> <!-- .loan-container -->

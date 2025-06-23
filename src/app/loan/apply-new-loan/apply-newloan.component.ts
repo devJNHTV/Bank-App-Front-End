@@ -85,7 +85,7 @@ function computeInterestRate(amount: number, term: number): number {
 export class ApplyNewLoanComponent implements OnInit {
   loanForm: FormGroup;
   accounts: Account[] = [];
-  loading = false;
+  loading = true; 
   computedRate: number | null = null;
 
   constructor(
@@ -131,43 +131,59 @@ export class ApplyNewLoanComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  this.loadAccounts();
+    this.loanService.getLoansByCustomerId().then(obs => {
+      obs.subscribe({
+        next: (res) => {
+          const loans = res.data || [];
+          const hasActiveLoan = loans.some((loan: Loan) => loan.status === 'APPROVED' || loan.status === 'PENDING');
+          if (hasActiveLoan) {
+            this.router.navigate(['/loan/warning-apply-loan']);
+          } else {
+            this.loadAccounts();
+          }
+        },
+        error: (err) => {
+          this.loadAccounts();
+        }
+      });
+    });
+    // this.loadAccounts();
+    this.declaredIncomeControl.valueChanges.subscribe(() => {
+      this.amountControl.setValidators([
+        Validators.required,
+        Validators.min(1_000_000)
+      ]);
+      this.amountControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    });
 
+    // 2. Khi amount blur → gán validator cho termMonths & tính lãi suất
+    this.amountControl.valueChanges.subscribe((amt) => {
+      this.termControl.setValidators([
+        Validators.required,
+        Validators.min(1),
+        termMaxByAmountValidator(this.amountControl)
+      ]);
+      this.termControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+      const term = this.termControl.value;
+      if (amt != null && term != null && !isNaN(term)) {
+        this.computedRate = computeInterestRate(amt, term);
+        this.rateControl.setValue(this.computedRate, { emitEvent: false });
+          console.log(this.loanForm.value.interestRate.value);
+      }
+    });
 
-  this.declaredIncomeControl.valueChanges.subscribe(() => {
-    this.amountControl.setValidators([
-      Validators.required,
-      Validators.min(1_000_000)
-    ]);
-    this.amountControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-  });
+    // 3. Khi termMonths blur → tính lãi suất
+    this.termControl.valueChanges.subscribe((term) => {
+      const amt = this.amountControl.value;
+      if (amt != null && term != null && !isNaN(amt)) {
+        this.computedRate = computeInterestRate(amt, term);
+        this.rateControl.setValue(this.computedRate, { emitEvent: false });
+          console.log(this.loanForm.value);
+      }
+    });
 
-  // 2. Khi amount blur → gán validator cho termMonths & tính lãi suất
-  this.amountControl.valueChanges.subscribe((amt) => {
-    this.termControl.setValidators([
-      Validators.required,
-      Validators.min(1),
-      termMaxByAmountValidator(this.amountControl)
-    ]);
-    this.termControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-    const term = this.termControl.value;
-    if (amt != null && term != null && !isNaN(term)) {
-      this.computedRate = computeInterestRate(amt, term);
-      this.rateControl.setValue(this.computedRate, { emitEvent: false });
-        console.log(this.loanForm.value.interestRate.value);
-    }
-  });
-
-  // 3. Khi termMonths blur → tính lãi suất
-  this.termControl.valueChanges.subscribe((term) => {
-    const amt = this.amountControl.value;
-    if (amt != null && term != null && !isNaN(amt)) {
-      this.computedRate = computeInterestRate(amt, term);
-      this.rateControl.setValue(this.computedRate, { emitEvent: false });
-        console.log(this.loanForm.value);
-    }
-  });
-}
+  
+  }
 
   loadAccounts(): void {
     this.accountService.getAccounts().subscribe({
@@ -179,18 +195,19 @@ export class ApplyNewLoanComponent implements OnInit {
       error: (err) => {
         console.error('Không tải được danh sách tài khoản:', err);
         this.toastr.error('Lỗi khi tải danh sách tài khoản.', 'Lỗi');
+      },
+      complete: () => {
+        this.loading = false;
       }
     });
   }
 
   onSubmit(): void {
+    this.loading =true;
     if (this.loanForm.invalid) {
       this.loanForm.markAllAsTouched();
       return;
     }
-  
-    
-    this.loading = true;
     const loan: Loan = {
       accountNumber: this.loanForm.value.accountNumber,
       amount: this.loanForm.value.amount,
@@ -214,7 +231,7 @@ export class ApplyNewLoanComponent implements OnInit {
       next: (response: ApiResponseWrapper<Loan>) => {
         this.loading = false;
         this.toastr.success(response.message || 'Đăng ký khoản vay thành công!', 'Thành công');
-        setTimeout(() => this.router.navigate(['loan/overview']), 2000);
+        this.onLoanCreated();
       },
       error: (httpError: HttpErrorResponse) => {
         console.log(httpError);
@@ -224,7 +241,10 @@ export class ApplyNewLoanComponent implements OnInit {
     });
   }
 
-  cancel(): void {
-    this.router.navigate(['']);
+  onLoanCreated() {
+    
+    setTimeout(() => {
+      this.router.navigate(['/loans/overview']);
+    }, 2000);
   }
 }

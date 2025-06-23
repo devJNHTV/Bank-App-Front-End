@@ -1,60 +1,124 @@
+$primary-gradient:linear-gradient(135deg, rgba(72, 187, 120, 0.263) 0%, rgba(56, 178, 172, 0.249) 100%);
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-border: rgba(255, 255, 255, 0.2);
+$text-primary: #004a15;
+$text-secondary: rgba(0, 61, 15, 0.8);
+$shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+$shadow-heavy: 0 20px 40px rgba(0, 0, 0, 0.15);
+@mixin glassmorphism {
+  background: $glass-bg;
+  backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  box-shadow: $shadow-light;
+}
 
+@mixin smooth-transition {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.dashboard-header {
+  text-align: center;
+  padding: 0 10rem;
+  animation: fadeInDown 0.8s ease-out;
+  
+  .dashboard-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #26984e 0%, #27e268 50%, #26e268 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    letter-spacing: -2px;
+  }
+  
+  .dashboard-subtitle {
+    color: $text-secondary;
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+}
+// Button styles
+::ng-deep .modern-button {
+  @include smooth-transition;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border: none;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+
+  &.primary-btn {
+    background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+  }
+  
+  &.secondary-btn {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+  }
+  
+  &.tertiary-btn {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+  }
+  
+  &.quaternary-btn {
+    background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+  }
+}
 .apply-loan-wrapper {
   max-width: 900px;
   margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 1rem;
+  @include glassmorphism;
+  border-radius: 24px;
 }
 
 .apply-loan-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  @include glassmorphism;
+  border-radius: 20px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+  @include smooth-transition;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-heavy;
+  }
 
-.apply-loan-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  ::ng-deep .p-card-body {
+    padding: 0;
+    background: transparent;
+  }
 }
 
 .card-header {
-  background: linear-gradient(135deg, #1e88e5, #42a5f5);
-  color: white;
+  background: $primary-gradient;
   padding: 1.5rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  text-align: center;
 
-.card-header h2 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.cancel-button {
-  font-size: 1.2rem;
-  color: white;
-}
-
-.income-note {
-  padding: 1rem 2rem;
-  background: #e3f2fd;
-  font-size: 0.95rem;
-  color: #1e88e5;
-  border-bottom: 1px solid #bbdefb;
+  .section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    background-clip: text;
+    color: transparent;
+    margin: 0;
+  }
 }
 
 .loan-conditions {
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 2rem;
+  background: transparent;
 
-  h3 {
-    margin: 0 0 1rem;
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: #333;
+  .section-subtitle {
+    @extend .section-title;
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    color:$text-secondary;
   }
 
   .table-wrapper {
@@ -64,50 +128,54 @@
   .condition-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 700px;
+    min-width: 600px;
     font-size: 0.95rem;
-
+    border: 1px solid rgba(255, 255, 255, 0.2);
     thead {
-      background: #1e88e5;
+      background: linear-gradient(135deg, #48bb78 0%, #38b2ac 100%);
       color: white;
     }
 
-    th,
-    td {
+    th, td {
       padding: 0.75rem 1rem;
       text-align: center;
-      border: 1px solid #e0e0e0;
+      border: 1px solid rgb(0, 107, 23);
     }
 
     tbody tr:nth-of-type(odd) {
-      background: #f9fafb;
+      background: rgba(255,255,255,0.05);
     }
     tbody tr:hover {
-      background: rgba(30, 136, 229, 0.08);
-    }
-
-    th {
-      font-weight: 500;
-    }
-    td {
-      color: #555;
+      background: rgba(255,255,255,0.1);
     }
   }
 
   .footnote {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    color: #555;
+    margin-top: 1rem;
     text-align: right;
+
+    small {
+      color: $text-secondary;
+    }
   }
 }
 
 .apply-loan-form {
   padding: 2rem;
+  background: rgba(255,255,255,0.1);
+  @include glassmorphism;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  background: #fafafa;
+  gap: 2rem;
+}
+
+.income-note {
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(72, 187, 120, 0.263) 0%, rgba(56, 178, 172, 0.249) 100%);
+  color: $text-primary;
+  font-weight: 600;
 }
 
 .form-grid {
@@ -119,90 +187,177 @@
 .form-field {
   display: flex;
   flex-direction: column;
-}
 
-.form-field label {
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
+  label {
+    font-weight: 600;
+    color: $text-secondary;
+    margin-bottom: 0.5rem;
+  }
 
-.p-dropdown,
-.p-inputnumber {
-  transition: border-color 0.3s ease;
-  border-radius: 6px;
-  border: 1px solid #cfd8dc;
-  background: white;
-}
+  ::ng-deep .p-dropdown,
+  ::ng-deep .p-inputnumber {
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.15);
+    @include smooth-transition;
 
-.p-dropdown:hover,
-.p-inputnumber:hover {
-  border-color: #1e88e5;
-}
+    &:hover {
+      border-color: rgba(255,255,255,0.3);
+    }
+  }
 
-.invalid .p-dropdown,
-.invalid .p-inputnumber {
-  border-color: #e53935 !important;
-}
+  &.invalid ::ng-deep .p-dropdown,
+  &.invalid ::ng-deep .p-inputnumber {
+    border-color: #e53935 !important;
+  }
 
-.p-error {
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
-  color: #e53935 !important;
-}
+  .p-error {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    color: #e53935 !important;
+  }
 
-.note-rate {
-  font-size: 0.85rem;
-  color: #777;
-  margin-top: 0.25rem;
-  font-style: italic;
+  .note-rate {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: $text-secondary;
+    margin-top: 0.25rem;
+  }
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-}
 
-.modern-button {
-  border-radius: 8px;
-  padding: 0.75rem 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.p-button:not([disabled]):hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-}
-
-.p-button[disabled] {
-  opacity: 0.5 !important;
-  cursor: not-allowed !important;
+  p-button {
+    @extend .modern-button;
+    &.primary-btn {
+      @extend .primary-btn;
+    }
+  }
 }
 
 @media (max-width: 768px) {
   .form-grid {
     grid-template-columns: 1fr;
   }
-
   .form-actions {
     flex-direction: column;
-    align-items: stretch;
-  }
-
-  .modern-button {
-    width: 100%;
-    text-align: center;
+    gap: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .apply-loan-wrapper {
     margin: 1rem;
-    padding: 0 0.5rem;
+    padding: 0.5rem;
   }
-
-  .card-header h2 {
+  .card-header .section-title {
     font-size: 1.5rem;
   }
 }
+
+/* From Uiverse.io by Nawsome */ 
+.socket {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  left: 50%;
+  margin-left: -100px;
+  top: 50%;
+  margin-top: -100px;
+}
+
+.hex-brick {
+  background: #128500;
+  width: 30px;
+  height: 17px;
+  position: absolute;
+  top: 5px;
+  animation-name: fade00;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: fade00;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+}
+
+.h2 {
+  transform: rotate(60deg);
+  -webkit-transform: rotate(60deg);
+}
+
+.h3 {
+  transform: rotate(-60deg);
+  -webkit-transform: rotate(-60deg);
+}
+
+.gel {
+  height: 30px;
+  width: 30px;
+  transition: all .3s;
+  -webkit-transition: all .3s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.center-gel {
+  margin-left: -15px;
+  margin-top: -15px;
+  animation-name: pulse00;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: pulse00;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+}
+
+.c1 { margin-left: -47px; margin-top: -15px; }
+.c2 { margin-left: -31px; margin-top: -43px; }
+.c3 { margin-left: 1px; margin-top: -43px; }
+.c4 { margin-left: 17px; margin-top: -15px; }
+.c5 { margin-left: -31px; margin-top: 13px; }
+.c6 { margin-left: 1px; margin-top: 13px; }
+.c7 { margin-left: -63px; margin-top: -43px; }
+.c8 { margin-left: 33px; margin-top: -43px; }
+.c9 { margin-left: -15px; margin-top: 41px; }
+.c10 { margin-left: -63px; margin-top: 13px; }
+.c11 { margin-left: 33px; margin-top: 13px; }
+.c12 { margin-left: -15px; margin-top: -71px; }
+.c13 { margin-left: -47px; margin-top: -71px; }
+.c14 { margin-left: 17px; margin-top: -71px; }
+.c15 { margin-left: -47px; margin-top: 41px; }
+.c16 { margin-left: 17px; margin-top: 41px; }
+.c17 { margin-left: -79px; margin-top: -15px; }
+.c18 { margin-left: 49px; margin-top: -15px; }
+.c19 { margin-left: -63px; margin-top: -99px; }
+.c20 { margin-left: 33px; margin-top: -99px; }
+.c21 { margin-left: 1px; margin-top: -99px; }
+.c22 { margin-left: -31px; margin-top: -99px; }
+.c23 { margin-left: -63px; margin-top: 69px; }
+.c24 { margin-left: 33px; margin-top: 69px; }
+.c25 { margin-left: 1px; margin-top: 69px; }
+.c26 { margin-left: -31px; margin-top: 69px; }
+.c27 { margin-left: -79px; margin-top: -15px; }
+.c28 { margin-left: -95px; margin-top: -43px; }
+.c29 { margin-left: -95px; margin-top: 13px; }
+.c30 { margin-left: 49px; margin-top: 41px; }
+.c31 { margin-left: -79px; margin-top: -71px; }
+.c32 { margin-left: -111px; margin-top: -15px; }
+.c33 { margin-left: 65px; margin-top: -43px; }
+.c34 { margin-left: 65px; margin-top: 13px; }
+.c35 { margin-left: -79px; margin-top: 41px; }
+.c36 { margin-left: 49px; margin-top: -71px; }
+.c37 { margin-left: 81px; margin-top: -15px; }
+
+.r1 { animation-name: pulse00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .2s; -webkit-animation-name: pulse00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .2s; }
+.r2 { animation-name: pulse00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .4s; -webkit-animation-name: pulse00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .4s; }
+.r3 { animation-name: pulse00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .6s; -webkit-animation-name: pulse00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .6s; }
+
+.r1 > .hex-brick { animation-name: fade00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .2s; -webkit-animation-name: fade00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .2s; }
+.r2 > .hex-brick { animation-name: fade00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .4s; -webkit-animation-name: fade00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .4s; }
+.r3 > .hex-brick { animation-name: fade00; animation-duration: 2s; animation-iteration-count: infinite; animation-delay: .6s; -webkit-animation-name: fade00; -webkit-animation-duration: 2s; -webkit-animation-iteration-count: infinite; -webkit-animation-delay: .6s; }
+
+@keyframes pulse00 { 0% { -webkit-transform: scale(1); transform: scale(1); } 50% { -webkit-transform: scale(0.01); transform: scale(0.01); } 100% { -webkit-transform: scale(1); transform: scale(1); } }
+@keyframes fade00 { 0% { background: #0c5200; } 50% { background: #009c1d; } 100% { background: #80ffa2; } }

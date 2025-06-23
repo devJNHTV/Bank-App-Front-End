@@ -35,6 +35,7 @@ export class PendingLoanListComponent implements OnInit {
       next: (response) => {
         // Filter only pending loans
         this.pendingLoans = response.data.filter(loan => loan.status === LoanStatus.PENDING);
+        console.log(this.pendingLoans);
         this.loading = false;
       },
       error: (error) => {
