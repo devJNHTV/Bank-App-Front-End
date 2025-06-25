@@ -134,7 +134,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'success',
             summary: 'Thành công',
-            detail: 'Mã OTP đã được gửi đến số điện thoại của bạn'
+            detail: 'Mã OTP đã được gửi đến email của bạn'
           });
         },
         error: (error) => {
@@ -286,5 +286,19 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
   goToDetail(accountNumber: string): void {
     this.router.navigate(['/account/payment/detail', accountNumber]);
+  }
+  formathideEMail(email : string ): string
+  {
+
+    const [username, domain] = email.split('@');
+
+      if (username.length <= 3) {
+        return '*'.repeat(username.length) + '@' + domain;
+      }
+
+      const visiblePart = username.slice(0, 3);
+      const hiddenPart = '*'.repeat(username.length - 3);
+
+      return `${visiblePart}${hiddenPart}@${domain}`;
   }
 }

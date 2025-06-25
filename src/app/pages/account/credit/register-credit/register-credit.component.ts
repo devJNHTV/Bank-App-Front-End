@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { GalleriaModule } from 'primeng/galleria';
 import { MenuItem } from 'primeng/api';
-import { creditCards } from '../../../../interfaces/account.interface';
+import { CreditAccount, creditCards } from '../../../../interfaces/account.interface';
 import { AccountService } from '../../../../services/account/account.service';
 import { Router } from '@angular/router';
 
@@ -28,39 +28,29 @@ import { Router } from '@angular/router';
   encapsulation: ViewEncapsulation.None
 })
 export class RegisterCreditComponent implements OnInit {
-  creditCards: creditCards[] = [];  
+  creditCards: creditCards[] = []; 
+  creditAccounts: CreditAccount[] = []; 
   constructor(private accountService: AccountService, private router: Router) { }
   ngOnInit(): void {
     this.loadCreditCards();
   }
   loadCreditCards(): void {
-    this.accountService.getCreditCards().subscribe((res :any) => {
-      console.log('Credit cards response:', res);
-      this.creditCards = res.data;
-      console.log('Credit cards loaded:', this.creditCards);
-    }, error => {
-      console.error('Error loading credit cards:', error);
-      // Fallback data for testing
-      this.creditCards = [
-        {
-          cardID: '1',
-          typeName: 'Thẻ Tín Dụng Platinum',
-          defaultCreditLimit: 50000000,
-          interestRate: 1.5,
-          annualFee: 500000,
-          minimumIncome: 15000000,
-          imgURL: 'credit-card-1.jpg'
-        },
-        {
-          cardID: '2',
-          typeName: 'Thẻ Tín Dụng Gold',
-          defaultCreditLimit: 20000000,
-          interestRate: 1.8,
-          annualFee: 300000,
-          minimumIncome: 8000000,
-          imgURL: 'credit-card-2.jpg'
-        }
-      ];
+    this.accountService.getAllCreditCards().subscribe({
+      next: (res: any) => {
+        this.creditAccounts = res.data || [];
+        this.accountService.getAllCreditCards().subscribe((res :any) => {
+          this.creditCards = res.data;  
+          console.log(this.creditAccounts);
+          console.log(this.creditCards);
+          this.creditCards = this.creditCards.filter(card =>
+            !this.creditAccounts.some(account => account.cardID === card.cardID)
+          );
+          console.log(this.creditCards);
+        });
+      },
+      error: (error) => {
+        console.error('Lỗi khi tải danh sách tài khoản:', error);
+      }
     });
   }
 

@@ -13,7 +13,7 @@ import { Account, AccountSavings } from '../../../interfaces/account.interface';
     CardModule
   ],
   template: `
-    <p-card header="Xác nhận thông tin rút tiền">
+    <p-card>
       <div class="confirmation-content">
         
         <!-- Thông tin tài khoản tiết kiệm -->
@@ -146,36 +146,75 @@ import { Account, AccountSavings } from '../../../interfaces/account.interface';
   `,
   styles: [`
     .confirmation-content {
-      padding: 1rem 0;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .info-section {
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .info-section:last-child {
+      margin-bottom: 1.5rem;
     }
 
     .section-title {
-      color: #333;
-      font-size: 1.2rem;
+      color: #2c3e50;
+      font-size: 1.3rem;
       font-weight: 600;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid #007bff;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 3px solid #007bff;
+      display: block;
+      position: relative;
+    }
+
+    .section-title::before {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: #28a745;
+      border-radius: 2px;
     }
 
     .info-card {
-      background: #f8f9fa;
+      background: linear-gradient(145deg, #f8f9fa, #e9ecef);
       border: 1px solid #dee2e6;
-      border-radius: 8px;
-      padding: 1.5rem;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 1.2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .info-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
+      margin-bottom: 1.2rem;
+      padding: 0.8rem 0;
       border-bottom: 1px solid #e9ecef;
+      transition: background-color 0.2s ease;
+    }
+
+    .info-row:hover {
+      background-color: rgba(0, 123, 255, 0.02);
+      border-radius: 6px;
+      margin: 0 -0.5rem 1.2rem -0.5rem;
+      padding: 0.8rem 0.5rem;
     }
 
     .info-row:last-child {
@@ -185,37 +224,52 @@ import { Account, AccountSavings } from '../../../interfaces/account.interface';
 
     .info-row .label {
       font-weight: 500;
-      color: #666;
-      flex: 1;
+      color: #495057;
+      flex: 1.2;
+      text-align: left;
+      font-size: 0.95rem;
     }
 
     .info-row .value {
       font-weight: 600;
-      color: #333;
+      color: #212529;
       text-align: right;
       flex: 1;
+      font-size: 1rem;
     }
 
     .info-row .value.balance {
       color: #28a745;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
+      font-weight: 700;
     }
 
     .info-row .value.reduced-rate {
       color: #dc3545;
+      
       small {
         font-size: 0.8rem;
         margin-left: 0.5rem;
+        font-weight: normal;
+        color: #6c757d;
       }
     }
 
     .info-row.total {
-      margin-top: 1rem;
-      border-top: 2px solid #007bff;
-      padding-top: 1rem;
+      margin-top: 1.5rem;
+      border-top: 3px solid #007bff;
+      border-bottom: none;
+      padding-top: 1.5rem;
+      padding-bottom: 0;
+      background: rgba(0, 123, 255, 0.05);
+      border-radius: 8px;
+      margin-left: -1rem;
+      margin-right: -1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
       
       .label, .value {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         font-weight: 700;
       }
       
@@ -225,43 +279,144 @@ import { Account, AccountSavings } from '../../../interfaces/account.interface';
     }
 
     .warning-section {
-      margin: 1rem 0;
+      margin: 2rem 0;
     }
 
     .warning-card {
-      background: #fff3cd;
+      background: linear-gradient(145deg, #fff3cd, #ffeaa7);
       border: 1px solid #ffeaa7;
-      border-radius: 8px;
-      padding: 1rem;
+      border-radius: 12px;
+      padding: 1.5rem;
       display: flex;
       align-items: flex-start;
-      gap: 1rem;
+      gap: 1.2rem;
+      box-shadow: 0 2px 4px rgba(255, 193, 7, 0.2);
     }
 
     .warning-card i {
       color: #856404;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       margin-top: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    .warning-content {
+      flex: 1;
     }
 
     .warning-content h4 {
       color: #856404;
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 0.8rem 0;
       font-size: 1.1rem;
+      font-weight: 600;
     }
 
     .warning-content p {
       color: #856404;
       margin: 0;
-      line-height: 1.5;
+      line-height: 1.6;
+      font-size: 0.95rem;
     }
 
     .form-actions {
       display: flex;
       justify-content: space-between;
-      margin-top: 2rem;
-      padding-top: 1rem;
-      border-top: 1px solid #dee2e6;
+      gap: 1.5rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid #dee2e6;
+    }
+
+    .form-actions button {
+      flex: 1;
+      max-width: 220px;
+      height: 48px;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .form-actions button:first-child {
+      margin-right: auto;
+    }
+
+    .form-actions button:last-child {
+      margin-left: auto;
+    }
+
+    .form-actions button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .confirmation-content {
+        padding: 1.5rem;
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+      }
+      
+      .info-card {
+        padding: 1.5rem;
+      }
+      
+      .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 1rem 0;
+      }
+      
+      .info-row .label,
+      .info-row .value {
+        text-align: left;
+        flex: none;
+        width: 100%;
+      }
+      
+      .info-row .label {
+        font-size: 0.9rem;
+        color: #6c757d;
+      }
+      
+      .info-row .value {
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+      
+      .form-actions {
+        flex-direction: column;
+        gap: 1rem;
+        padding-top: 1.5rem;
+      }
+      
+      .form-actions button {
+        max-width: none;
+        margin: 0;
+        height: 44px;
+      }
+      
+      .section-title {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .confirmation-content {
+        padding: 1rem;
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+      }
+      
+      .info-card {
+        padding: 1rem;
+      }
+      
+      .section-title {
+        font-size: 1.1rem;
+      }
     }
   `]
 })

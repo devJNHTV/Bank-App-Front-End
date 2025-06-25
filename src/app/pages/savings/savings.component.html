@@ -86,6 +86,14 @@
                   <span class="label">Rút tiền:</span>
                   <span class="value">{{ accountSavings.interestPaymentType === 'MONTHLY' ? 'Không thể rút tiền trước hạn' : 'Có thể rút tiền trước hạn' }}</span>
                 </div>
+                <div class="info-row">
+                  <span class="label">Ngày mở:</span>
+                  <span class="value">{{ accountSavings.openedDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="info-row" >
+                  <span class="label">Ngày đáo hạn:</span>
+                  <span class="value">{{ accountSavings.maturityDate | date:'dd/MM/yyyy' }}</span>
+                </div>
               </div>
 
               <!-- <div class="account-actions">
