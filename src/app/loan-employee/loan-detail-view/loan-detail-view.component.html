@@ -307,29 +307,23 @@
             <div class="customer-details">
               <!-- Row 1 -->
               <div class="customer-meta row1">
-                <div><b>Mã KH:</b> {{ customerInfo?.cifCode }}</div>
-                <div><b>Ngày sinh:</b> {{ formatDate(customerInfo?.dateOfBirth) }}</div>
-                <div><b>Địa chỉ:</b> {{ customerInfo?.address }}</div>
+                <div><b>Mã KH:</b> {{ customerDetail?.cifCode }}</div>
+                <div><b>Ngày sinh:</b> {{ customerDetail?.dateOfBirth }}</div>
+                <div><b>Địa chỉ:</b> {{ customerDetail?.address }}</div>
               </div>
               <!-- Row 2 -->
               <div class="customer-meta row2">
                 <div>
                   <b>Trạng thái:</b>
-                  <span class="status-badge" [ngClass]="customerInfo?.status?.toLowerCase()">
-                    {{ customerInfo?.status }}
-                  </span>
-                </div>
-                <div>
-                  <b>KYC:</b>
-                  <span class="status-badge" [ngClass]="customerInfo?.kycStatus?.toLowerCase()">
-                    {{ customerInfo?.kycStatus }}
+                  <span class="status-badge" [ngClass]="customerDetail?.status?.toLowerCase()">
+                    {{ customerDetail?.status }}
                   </span>
                 </div>
               </div>
               <!-- Row 3 -->
               <div class="customer-meta row3">
-                <div><b>SĐT:</b> {{ customerInfo?.phoneNumber }}</div>
-                <div><b>Email:</b> {{ customerInfo?.email }}</div>
+                <div><b>SĐT:</b> {{ customerDetail?.phoneNumber }}</div>
+                <div><b>Email:</b> {{ customerDetail?.email }}</div>
               </div>
              
             </div>

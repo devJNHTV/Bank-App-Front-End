@@ -229,6 +229,10 @@
           * Lãi suất chính xác sẽ được tính tự động dựa vào số tiền và thời hạn vay.
         </small>
       </p>
+      <div class="income-note">
+        <p><strong>Lưu ý:</strong> Đối với các trường hợp trễ thanh toán, tổng số tiền phải trả của kỳ hạn bị trễ sẽ cộng dồn vào kỳ hạn tiếp theo và kỳ hạn tiếp theo bị phạt + 1.5% số tiền lãi kỳ bị trẽ.</p>
+        <p><strong>Trong trường hợp kỳ vay cuối cùng bị trễ, khách hàng sẽ được tạo lại kỳ vay cuối cùng với số tiền lãi phạt tương tự.</strong></p>
+      </div>
     </div>
 
     <form [formGroup]="loanForm" (ngSubmit)="onSubmit()" class="apply-loan-form">

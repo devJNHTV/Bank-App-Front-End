@@ -1,4 +1,4 @@
-<!-- Component Template -->
+
 <p-toast></p-toast>
 
 <div *ngIf="loading">
@@ -192,14 +192,12 @@
 </div>
 
 <div *ngIf="!loading" class="master-container">
-  <!-- Repayment Card -->
   <div class="card repayment">
     <div class="card-header">
       <h2 class="title">Thanh toán khoản vay</h2>
       <p class="subtitle">Vui lòng chọn tài khoản và nhập số tiền thanh toán</p>
     </div>
 
-    <!-- Content -->
     <div class="content">
       <div class="summary">
         <div class="summary-item">
@@ -268,7 +266,6 @@
     </div>
   </div>
 
-  <!-- OTP Dialog -->
   <p-dialog
     [(visible)]="showOtpDialog"
     [modal]="true"

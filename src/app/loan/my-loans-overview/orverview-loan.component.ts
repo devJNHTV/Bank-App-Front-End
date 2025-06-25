@@ -37,7 +37,7 @@
               this.loans = response.data;
               console.log(this.loans);
               
-              this.approvedLoans = this.loans.filter(l => l.status === LoanStatus.APPROVED);
+              this.approvedLoans = this.loans.filter(l => l.status === LoanStatus.APPROVED || l.status === LoanStatus.CLOSED);
               this.pendingLoans = this.loans.filter(l => l.status === LoanStatus.PENDING);
               this.rejectedLoans = this.loans.filter(l => l.status === LoanStatus.REJECTED);
               this.loading = false;

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Loan} from '../models/loan.model';
 import { ApiResponseWrapper} from '../models/api-response-wrapper.model';
 import { LoanRejectionReason } from '../models/LoanRejectionReason.model';
+import { CustomerResponse } from '../interfaces/customerResponse';
 @Injectable({
   providedIn: 'root'
 })
@@ -80,5 +81,8 @@ export class LoanService {
 
   getCustomerId(): Observable<ApiResponseWrapper<number>> {
     return this.http.get<ApiResponseWrapper<number>>(`${this.baseUrl}/getCustomerId`,{ headers: this.getAuthHeaders() });
+  }
+  getCustomerDetail(userId: string): Observable<ApiResponseWrapper<CustomerResponse>> {
+    return this.http.get<ApiResponseWrapper<CustomerResponse>>(`${this.baseUrl}/getUserId/${userId}`,{ headers: this.getAuthHeaders() });
   }
 }

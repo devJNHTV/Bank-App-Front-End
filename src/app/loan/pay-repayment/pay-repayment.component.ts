@@ -13,10 +13,10 @@ import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-pay-repayment',
@@ -33,7 +33,7 @@ import { InputTextModule } from 'primeng/inputtext';
     DialogModule,
     InputTextModule
   ],
-  providers: [MessageService],
+  
   templateUrl: './pay-repayment.component.html',
   styleUrls: ['./pay-repayment.component.scss']
 })
@@ -48,8 +48,7 @@ export class PayRepaymentComponent implements OnInit {
   };
   
   accounts: Account[] = [];
-  loading = false;
-  checkLoading : boolean = false;
+  loading = true;
   error: string | null = null;
   showOtpDialog = false;
   referenceCode: string | null = null;
@@ -63,7 +62,7 @@ export class PayRepaymentComponent implements OnInit {
     private router: Router,
     private repaymentService: RepaymentService,
     private accountService: AccountService,
-    private messageService: MessageService
+    private toastr: ToastrService
   ) {
     this.paymentForm = this.fb.group({
       accountNumber: ['', Validators.required],
@@ -85,7 +84,7 @@ export class PayRepaymentComponent implements OnInit {
 
   loadRepayment(repaymentId: number): void {
     this.error = null;
-    this.checkLoading = false;
+    this.loading = true;
     this.repaymentService.getRepaymentById(repaymentId).subscribe({
       next: (response: ApiResponseWrapper<Repayment>) => {
         if (response.status === 200) {
@@ -100,21 +99,18 @@ export class PayRepaymentComponent implements OnInit {
           this.paymentForm.get('amount')?.updateValueAndValidity();
         } else {
           this.error = response.message || 'Failed to load repayment details';
-          this.showNotification('error', 'Error', this.error);
+          this.toastr.error(this.error, 'Thất bại');
         }
       },
       error: (err) => {
         this.error = 'Error loading repayment details';
-        this.showNotification('error', 'Error', this.error);
-      },
-      complete: () => {
-        this.checkLoading = true;
+        this.toastr.error(this.error, 'Thất bại');
       }
     });
   }
 
   loadAccounts(): void {
-    this.checkLoading = false;
+    this.loading = true;
     this.accountService.getAccounts().subscribe({
         next: (res: any) => {
             this.accounts = res.data;
@@ -122,45 +118,33 @@ export class PayRepaymentComponent implements OnInit {
             
           },
       error: (err) => {
-        this.showNotification('error', 'Error', 'Error loading accounts');
+        this.toastr.error('Error loading accounts', 'Thất bại');
       },
       complete: () => {
-        this.checkLoading = true;
+        this.loading = false;
       }
     });
   }
-  checkLoad():void{
-    if(this.checkLoading == true){
-      this.loading = true;
-    }
-  }
-
 
   onSubmit(): void {
-    if (this.paymentForm.invalid) {
-      this.paymentForm.markAllAsTouched();
-      return;
-    }
+
+    this.loading = true;
 
     const repaymentId = this.route.snapshot.paramMap.get('id');
     if (!repaymentId || !this.repayment) return;
-    console.log(typeof  this.paymentForm.value.accountNumber.accountNumber);
     
-    this.loading = true;
     this.repaymentService.makeRepayment(+repaymentId, this.paymentForm.value.amount, this.paymentForm.value.accountNumber.accountNumber).subscribe({
       next: (response: any) => {
         if (response.status === 200) {
+          this.toastr.success('OTP has been sent to your email', 'Thành công');
           this.referenceCode = response.data;
-          console.log(this.referenceCode);
-          
           this.showOtpDialog = true;
-          this.showNotification('success', 'Success', 'OTP has been sent to your email');
         } else {
-          this.showNotification('error', 'Error', response.message || 'Failed to process payment');
+          this.toastr.error(response.message || 'Failed to process payment', 'Thất bại');
         }
       },
       error: (err) => {
-        this.showNotification('error', 'Error', 'Error processing payment');
+        this.toastr.error('Error processing payment', 'Thất bại');
       },
       complete: () => {
         this.loading = false;
@@ -169,11 +153,6 @@ export class PayRepaymentComponent implements OnInit {
   }
 
   confirmPayment(): void {
-    if (this.otpForm.invalid) {
-      this.otpForm.markAllAsTouched();
-      return;
-    }
-
     const repaymentId = this.route.snapshot.paramMap.get('id');
     if (!repaymentId || !this.repayment || !this.referenceCode) return;
 
@@ -186,16 +165,16 @@ export class PayRepaymentComponent implements OnInit {
     ).subscribe({
       next: (response: ApiResponseWrapper<Repayment>) => {
         if (response.status === 200) {
-          this.showNotification('success', 'Success', 'Payment confirmed successfully');
+          this.toastr.success('Payment confirmed successfully', 'Thành công');
           this.router.navigate(['/loans/current']);
         } else {
-          this.showNotification('error', 'Error', response.message || 'Failed to confirm payment');
+          this.toastr.error(response.message || 'Failed to confirm payment', 'Thất bại');
         }
       },
       error: (err) => {
         console.log(err);
         
-        this.showNotification('error', 'Error', 'Error confirming payment');
+        this.toastr.error('Error confirming payment', 'Thất bại');
       },
       complete: () => {
         this.loading = false;
@@ -214,16 +193,8 @@ export class PayRepaymentComponent implements OnInit {
     return this.calculateTotalAmount() - this.repayment.paidAmount;
   }
 
-  private showNotification(severity: string, summary: string, detail: string): void {
-    this.messageService.add({
-      severity,
-      summary,
-      detail
-    });
-  }
-
   onPaymentSuccess() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payment successful' });
+    this.toastr.success('Payment successful', 'Thành công');
     setTimeout(() => {
       this.router.navigate(['/loans/current']);
     }, 2000);

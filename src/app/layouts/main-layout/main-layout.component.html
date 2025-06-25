@@ -70,7 +70,7 @@
         <span matListItemTitle>Giao dịch</span>
       </a>
 
-      <a
+      <a *ngIf="!isAdmin()" 
       mat-list-item
       routerLink="/loans"
       routerLinkActive="active-link"
@@ -81,7 +81,7 @@
       <span matListItemTitle>Khoản Vay</span>
     </a>
   
-    <a
+    <a *ngIf="isAdmin()" 
       mat-list-item
       routerLink="/employee/loans"
       routerLinkActive="active-link"

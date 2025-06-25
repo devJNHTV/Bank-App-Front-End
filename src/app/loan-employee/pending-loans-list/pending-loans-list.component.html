@@ -219,11 +219,9 @@
     <p-table 
       *ngIf="!loading && pendingLoans.length > 0"
       [value]="pendingLoans"
-      [paginator]="true"
+      [paginator]="false"
       [rows]="10"
       [showCurrentPageReport]="true"
-      currentPageReportTemplate="Hiển thị {first} đến {last} trong tổng số {totalRecords} mục"
-      [rowsPerPageOptions]="[10,25,50]"
       styleClass="p-datatable-gridlines"
       [tableStyle]="{'min-width': '50rem'}"
       [globalFilterFields]="['loanId','accountNumber','amount','interestRate','termMonths','createdAt']">

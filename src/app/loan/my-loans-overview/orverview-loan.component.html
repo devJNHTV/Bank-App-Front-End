@@ -224,7 +224,7 @@
         <td>{{ loan.interestRate }}%</td>
         <td>{{ loan.termMonths }}</td>
         <td>{{ loan.declaredIncome | number:'1.0-0' }} VND</td>
-        <td><span class="status-badge approved">APPROVED</span></td>
+        <td><span class="status-badge approved">{{ loan.status }}</span></td>
         <td>{{ loan.createdAt | date:'dd/MM/yyyy' }}</td>
         <td>{{ loan.approvedAt || '—' }}</td>
         <td><p-button (click)="goToLoanDetail(loan.loanId)" icon="pi pi-file-import"></p-button></td>

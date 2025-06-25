@@ -13,6 +13,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { LoanService } from '../../services/loan.service';
 import { Loan } from '../../models/loan.model';
 import { LoanStatus } from '../../models/loanStatus .model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-detail-loan-reject',
@@ -62,7 +63,8 @@ export class DetailLoanRejectComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private loanService: LoanService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -136,26 +138,20 @@ export class DetailLoanRejectComponent implements OnInit {
       status: LoanStatus.PENDING,
       repayments: this.loanDetail.repayments ?? []
     };
+    console.log(updatedLoan);
+    
 
     this.processingAction = true;
     this.loanService.updateLoan(updatedLoan).subscribe({
       next: () => {
         this.processingAction = false;
-        this.messageService.add({ 
-          severity: 'success', 
-          summary: 'Success', 
-          detail: 'Loan updated and resubmitted successfully' 
-        });
-        this.router.navigate(['/customer/loans']);
+        this.toastr.success('Cập nhật và gửi lại khoản vay thành công!', 'Thành công');
+        this.router.navigate(['/loans/overview']);
       },
       error: () => {
         this.processingAction = false;
         this.error = 'Failed to update and resubmit loan';
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'Error', 
-          detail: this.error 
-        });
+        this.toastr.error(this.error, 'Thất bại');
       }
     });
   }
