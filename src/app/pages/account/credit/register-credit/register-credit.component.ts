@@ -38,7 +38,7 @@ export class RegisterCreditComponent implements OnInit {
     this.accountService.getAllCreditCards().subscribe({
       next: (res: any) => {
         this.creditAccounts = res.data || [];
-        this.accountService.getAllCreditCards().subscribe((res :any) => {
+        this.accountService.getCreditCards().subscribe((res :any) => {
           this.creditCards = res.data;  
           console.log(this.creditAccounts);
           console.log(this.creditCards);

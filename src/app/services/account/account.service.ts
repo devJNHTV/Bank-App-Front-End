@@ -129,7 +129,6 @@ export class AccountService {
   }
   getAllCreditCards(): Observable<creditCards[]> {  
     return this.http.get<creditCards[]>(`${this.apiUrl}/getAllCreditAccount-anyway`, {
-      
     });
   }
 }
