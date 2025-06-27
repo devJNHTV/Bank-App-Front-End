@@ -41,7 +41,7 @@ export class UserService {
     }
   }
 
-  getCustomerDetail(userId: string): Observable<any> {
+  getCustomerDetail(): Observable<any> {
     return this.http.get(this.apiEndpointsService.getCustomerDetailEndpoint()).pipe(
       tap((res) => console.log('Customer Detail:', res)),
       catchError((error) =>

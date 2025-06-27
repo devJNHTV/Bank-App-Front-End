@@ -26,7 +26,6 @@ export const appConfig: ApplicationConfig = {
     ),
     MessageService,
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
     provideToastr({                    
       positionClass: 'toast-bottom-right',

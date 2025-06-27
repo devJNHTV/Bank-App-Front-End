@@ -34,17 +34,39 @@ export class AuthService {
     console.log('Keycloak URL:', this.apiEndpointsService.getKeycloakUrl());
   }
 
-  initializeAuthState(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const hasValidToken = this.hasTokenSync();
-      console.log('Initialize auth state:', hasValidToken);
-      this.isAuthenticatedSubject.next(hasValidToken);
+  async initializeAuthState(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const token = this.getToken();
+    if (!token) {
+      console.log('[Auth Init] Không có token');
+      this.isAuthenticatedSubject.next(false);
+      return;
+    }
+
+    const isExpired = this.isTokenExpired(token);
+    const isExpiringSoon = this.isTokenExpiringSoon(token, 20);
+
+    if (isExpired || isExpiringSoon) {
+      console.log('[Auth Init] Token hết hạn hoặc sắp hết hạn, đang làm mới...');
+      try {
+        const refreshed = await firstValueFrom(this.refreshToken());
+        this.saveToken(refreshed.access_token);
+        this.saveRefreshToken(refreshed.refresh_token);
+        this.isAuthenticatedSubject.next(true);
+        console.log('[Auth Init] Refresh thành công, đã đăng nhập');
+      } catch (err) {
+        console.error('[Auth Init] Refresh thất bại', err);
+        this.handleSessionExpired('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+      }
+    } else {
+      console.log('[Auth Init] Token hợp lệ, đăng nhập');
+      this.isAuthenticatedSubject.next(true);
     }
   }
 
   login(username: string, password: string): Observable<any> {
     console.log('Attempting login for user:', username);
-    console.log('Attempting login for password:', password);
     const body = new HttpParams()
       .set('grant_type', 'password')
       .set('client_id', environment.keycloak.clientId)
@@ -163,6 +185,7 @@ export class AuthService {
           console.log('Refresh token thành công');
           this.storageService.setItem(this.tokenKey, res.access_token);
           this.storageService.setItem(this.refreshTokenKey, res.refresh_token);
+          this.isAuthenticatedSubject.next(true);
         }),
         catchError((error) => {
           console.error('Lỗi refresh token:', error);
@@ -222,7 +245,7 @@ export class AuthService {
     }
   }
 
-  isTokenExpiringSoon(token: string, seconds: number = 30): boolean {
+  isTokenExpiringSoon(token: string, seconds: number = 120): boolean {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const exp = payload.exp;

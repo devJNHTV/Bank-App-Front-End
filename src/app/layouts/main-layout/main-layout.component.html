@@ -17,7 +17,7 @@
     <!-- Navigation Menu -->
     <mat-nav-list class="nav-menu">
       <a
-      *ngIf="!isAdmin()" 
+        *ngIf="!isAdmin()" 
         mat-list-item
         routerLink="/customer-dashboard"
         routerLinkActive="active-link"
@@ -71,6 +71,7 @@
       </a>
 
       <a
+      *ngIf="!isAdmin()" 
       mat-list-item
       routerLink="/loans"
       routerLinkActive="active-link"
@@ -82,6 +83,7 @@
     </a>
   
     <a
+      *ngIf="isAdmin()" 
       mat-list-item
       routerLink="/employee/loans"
       routerLinkActive="active-link"
@@ -130,13 +132,13 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <div class="sidenav-close">
+    <!-- <div class="sidenav-close">
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>
           {{ sidenav.opened ? 'chevron_left' : 'chevron_right' }}
         </mat-icon>
       </button>
-    </div>
+    </div> -->
     
     <!-- Header Toolbar -->
     <mat-toolbar class="header-toolbar">

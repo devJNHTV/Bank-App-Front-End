@@ -32,34 +32,5 @@
     <mat-card-content *ngIf="isLoading">
       <mat-spinner></mat-spinner>
     </mat-card-content>
-
-    <!-- <div class="accounts-section animate__animated animate__fadeInUp">
-      <mat-card-title class="title-with-icon">
-        💳 Thông tin tài khoản ngân hàng
-      </mat-card-title>
-
-      <ng-container *ngIf="customerAccounts.length > 0; else noAccounts">
-        <mat-list>
-          <div *ngFor="let account of customerAccounts" class="account-item mat-elevation-z2 animate__animated animate__zoomIn">
-            <mat-icon class="account-icon">account_balance</mat-icon>
-            <div class="account-content">
-              <div class="account-number">{{ account.accountNumber }}</div>
-              <div class="account-detail">💰 {{ account.balance | currency:'VND':'symbol':'1.0-0' }}</div>
-              <div class="account-detail">🏦 {{ account.accountType }}</div>
-            </div>
-          </div>
-        </mat-list>
-      </ng-container>
-
-      <ng-template #noAccounts>
-        <p class="no-account-text animate__animated animate__zoomIn">😢 Không có tài khoản nào.</p>
-      </ng-template>
-    </div>
-
-    <div class="add-account-button animate__animated animate__pulse animate__delay-2s">
-      <button mat-raised-button color="primary" class="glow-button">
-        ➕ Add New Account
-      </button>
-    </div> -->
   </mat-card>
 </div>
