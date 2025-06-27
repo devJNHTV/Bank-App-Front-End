@@ -28,6 +28,7 @@
         <span matListItemTitle>Trang chủ</span>
       </a>
       <a
+      *ngIf="!isAdmin()"
       mat-list-item
       routerLink="/account/payment"
       routerLinkActive="active-link"
@@ -38,6 +39,7 @@
       <span matListItemTitle>Tài khoản thanh toán</span>
     </a>
       <a
+      *ngIf="!isAdmin()"
       mat-list-item
       routerLink="/account/saving"
       routerLinkActive="active-link"
@@ -48,6 +50,7 @@
       <span matListItemTitle>Tài khoản tiết kiệm</span>
     </a>
     <a
+    *ngIf="!isAdmin()"
     mat-list-item
     routerLink="/account/credit"
     routerLinkActive="active-link"
@@ -58,39 +61,7 @@
     <span matListItemTitle>Tài khoản tín dụng</span>
   </a>
 
-      <a
-      *ngIf="!isAdmin()"
-        mat-list-item
-        routerLink="/transactions"
-        routerLinkActive="active-link"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="nav-item"
-      >
-        <mat-icon matListItemIcon>payments</mat-icon>
-        <span matListItemTitle>Giao dịch</span>
-      </a>
-
-      <a
-      mat-list-item
-      routerLink="/loans"
-      routerLinkActive="active-link"
-      [routerLinkActiveOptions]="{ exact: true }"
-      class="nav-item"
-    >
-      <mat-icon matListItemIcon>money_bag</mat-icon>
-      <span matListItemTitle>Khoản Vay</span>
-    </a>
-  
-    <a
-      mat-list-item
-      routerLink="/employee/loans"
-      routerLinkActive="active-link"
-      [routerLinkActiveOptions]="{ exact: true }"
-      class="nav-item"
-    >
-      <mat-icon matListItemIcon>folder_open</mat-icon>
-      <span matListItemTitle>Quản Lý Khoản Vay</span>
-    </a>
+      
       
       <!-- <a
         mat-list-item
@@ -126,6 +97,42 @@
         </mat-icon>
         <span matListItemTitle>Danh sách giao dịch</span>
       </a>
+
+      <a
+      *ngIf="!isAdmin()"
+        mat-list-item
+        routerLink="/transactions"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>payments</mat-icon>
+        <span matListItemTitle>Giao dịch</span>
+      </a>
+
+      <a
+      *ngIf="!isAdmin()"
+      mat-list-item
+      routerLink="/loans"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-item"
+    >
+      <mat-icon matListItemIcon>money_bag</mat-icon>
+      <span matListItemTitle>Khoản Vay</span>
+    </a>
+  
+    <a
+    *ngIf="isAdmin()"
+      mat-list-item
+      routerLink="/employee/loans"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-item"
+    >
+      <mat-icon matListItemIcon>folder_open</mat-icon>
+      <span matListItemTitle>Quản Lý Khoản Vay</span>
+    </a>
     </mat-nav-list>
   </mat-sidenav>
 
