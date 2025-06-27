@@ -29,7 +29,8 @@ import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
 import { CustomerListComponent } from './admin/customer-list/customer-list.component';
 import { CustomerDetailAdminComponent } from './admin/customer-detail/customer-detail-admin.component';
 import { ChangePasswordComponent } from './auth/change-password/change-password.component';
-import { TransactionListComponent } from './admin/transaction/transaction-list/transaction-list.component';
+import { AdminTransactionListComponent } from './admin/transaction/transaction-list/transaction-list.component';
+
 import { ForbiddenComponent } from './pages/forbidden/forbidden.component';
 import { ExternalTransferComponent } from './transactions/external-transfer/external-transfer.component';
 import { OrverviewLoanComponent } from './loan/my-loans-overview/orverview-loan.component';
@@ -53,6 +54,7 @@ import { ApplyCreditComponent } from './pages/account/credit/apply-credit/apply-
 import { CreditDetailComponent } from './pages/account/credit/detail/credit-detail.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { KycComponent } from './customer/kyc/kyc.component';
+import { AdminTransactionDetailComponent } from './admin/transaction/transaction-detail/transaction-detail.component';
 export const routes: Routes = [
 
   {
@@ -67,7 +69,8 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent, canActivate: [KycGuard] },
       { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
       { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
-      { path: 'admin/transactions', component: TransactionListComponent, canActivate: [KycGuard] },
+      { path: 'admin/transactions', component: AdminTransactionListComponent, canActivate: [KycGuard] },
+      { path: 'admin/transactions/detail/:referenceCode', component: AdminTransactionDetailComponent, canActivate: [KycGuard] },
 
 
       { 
@@ -132,6 +135,6 @@ export const routes: Routes = [
   { path: 'forbidden', component: ForbiddenComponent },
   
 
-  // Not Found
+  // Not Found  
   { path: '**', component: NotFoundComponent }
 ];

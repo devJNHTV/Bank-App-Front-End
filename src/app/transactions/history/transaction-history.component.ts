@@ -79,6 +79,7 @@ export class TransactionHistoryComponent implements OnInit {
   transactions: any[] = [];
   loading: boolean = false;
   accountNumber: string = '';
+  
   constructor(
     private transactionService: TransactionService,
     private messageService: MessageService,
@@ -86,7 +87,12 @@ export class TransactionHistoryComponent implements OnInit {
      private router: Router,
     private route: ActivatedRoute
   ) {}
-
+  private formatLocalISOString(date?: Date): string | undefined {
+    if (!date) return undefined;
+  
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}.${date.getMilliseconds().toString().padStart(3, '0')}`;
+  }
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.accountNumber = params['accountNumber'];
@@ -160,12 +166,12 @@ export class TransactionHistoryComponent implements OnInit {
     this.loading = true;
     const page = event ? (event.first / event.rows) + 1 : 1; 
     const size = event ? event.rows : 5; 
-
+    
     // Construct filter parameters
     const filterData  = {
       accountNumber: this.selectedAccount,
-      fromDate: this.dateRange?.[0]?.toISOString(),
-      toDate: this.dateRange?.[1]?.toISOString(),
+      startDate: this.formatLocalISOString(this.dateRange?.[0]),
+      endDate: this.formatLocalISOString(this.dateRange?.[1]),
       type: this.selectedTransactionType,
       currency: this.selectedCurrency,
       status: this.selectedStatus,  
@@ -233,4 +239,5 @@ export class TransactionHistoryComponent implements OnInit {
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D');
   }
+  
 }
