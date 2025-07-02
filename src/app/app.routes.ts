@@ -53,7 +53,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { KycComponent } from './customer/kyc/kyc.component';
 import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.component';
 import { AdminGuard } from './core/guards/admin.guard';
-import { DashboardCustomerComponent } from './admin/admin-dashboard/dashboard--customer.component';
+import { DashboardCustomerComponent } from './admin/admin-dashboard/dashboard-customer.component';
 export const routes: Routes = [
   // Authentication routes (no sidebar)
   {

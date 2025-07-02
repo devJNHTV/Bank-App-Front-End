@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DashboardCustomerComponent } from './dashboard--customer.component';
+import { DashboardCustomerComponent } from './dashboard-customer.component';
 
 describe('AdminDashboardComponent', () => {
   let component: DashboardCustomerComponent;

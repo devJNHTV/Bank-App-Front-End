@@ -4,16 +4,15 @@
       <h2 class="logo">KienlongBank</h2>
     </div>
     <div class="sidebar-content">
-      <div class="menu-section">
+      <!-- <div class="menu-section">
         <ul class="menu-list">
           <li class="menu-item" [class.active]="isActive('/admin')">
             <i class="pi pi-home"></i>
             <span (click)="navigateTo('/admin')">Dashboard</span>
           </li>
         </ul>
-      </div>
+      </div> -->
       <div class="menu-section">
-        <h4>QUẢN LÝ</h4>
         <ul class="menu-list">
           <li class="menu-item" (click)="toggleDropdown()">
             <i class="pi pi-chart-bar"></i>
@@ -21,15 +20,15 @@
             <i class="pi" [ngClass]="isDropdownOpen ? 'pi-angle-up' : 'pi-angle-down'" style="margin-left: auto;"></i>
           </li>
           <ul class="dropdown-list" *ngIf="isDropdownOpen">
-            <li class="dropdown-item" [class.active]="isActive('/customers-dashboard')" (click)="navigateTo('/customers')">
+            <li class="dropdown-item" [class.active]="isActive('/dashboard/customer')" (click)="navigateTo('/dashboard/customer')">
               <i class="pi pi-users"></i>
               <span>Customer Dashboard</span>
             </li>
-            <li class="dropdown-item" [class.active]="isActive('/customers-dashboard')" (click)="navigateTo('/accounts')">
+            <li class="dropdown-item" [class.active]="isActive('/dashboard/account')" (click)="navigateTo('/dashboard/customer')">
               <i class="pi pi-credit-card"></i>
               <span>Account Dashboard</span>
             </li>
-            <li class="dropdown-item" [class.active]="isActive('/customers-dashboard')" (click)="navigateTo('/kyc')">
+            <li class="dropdown-item" [class.active]="isActive('/dashboard/transactin')" (click)="navigateTo('/dashboard/customer')">
               <i class="pi pi-verified"></i>
               <span>Transaction Dashboard</span>
             </li>
@@ -56,10 +55,17 @@
       <div class="menu-section">
         <h4>TIỆN ÍCH</h4>
         <ul class="menu-list">
-          <li class="menu-item" [class.active]="isActive('/settings')">
+          <li class="menu-item" (click)="toggleDropdownSetting()">
             <i class="pi pi-cog"></i>
-            <span (click)="navigateTo('/settings')">Cài đặt</span>
+            <span>Cài đặt</span>
+            <i class="pi" [ngClass]="isDropdownSetting ? 'pi-angle-up' : 'pi-angle-down'" style="margin-left: auto;"></i>
           </li>
+          <ul class="dropdown-list" *ngIf="isDropdownSetting">
+            <li class="dropdown-item"  (click)="logout()">
+              <i class="pi pi-sign-out"></i>
+              <span>Đăng xuất</span>
+            </li>
+          </ul>
         </ul>
       </div>
     </div>
