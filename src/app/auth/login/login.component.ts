@@ -74,7 +74,8 @@ export class LoginComponent implements OnInit {
 
   // Tạo captcha ngẫu nhiên
   generateCaptcha(): void {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    // const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const chars = 'a';
     this.captchaText = '';
     
     // Tạo chuỗi captcha 5 ký tự

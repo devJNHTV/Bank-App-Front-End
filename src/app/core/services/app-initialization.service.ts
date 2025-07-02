@@ -28,39 +28,15 @@ export class AppInitializationService {
     console.log('Bắt đầu khởi tạo ứng dụng');
     
     try {
-      const token = this.authService.getToken();
-
-      if (token && (this.authService.isTokenExpiringSoon(token, 30) || this.authService.isTokenExpired(token))) {
-        console.log('Token cần refresh, đang thực hiện...');
-        
-        // Thêm timeout để tránh hang
-        const tokenResponse = await firstValueFrom(
-          this.authService.refreshToken().pipe(
-            timeout(10000), // 10s timeout
-            catchError(error => {
-              console.error('Refresh token timeout hoặc lỗi:', error);
-              throw error;
-            })
-          )
-        );
-        
-        console.log('Token refresh thành công');
-        this.authService.saveToken(tokenResponse.access_token);
-        this.authService.saveRefreshToken(tokenResponse.refresh_token);
-        
-      } else if (token && !this.authService.isTokenExpired(token)) {
-        console.log('Token hợp lệ, khởi tạo auth state');
-        this.authService.initializeAuthState();
-      } else {
-        console.log('Không có token hợp lệ');
-      }
+      // Gọi initializeAuthState
+      await this.authService.initializeAuthState();
       
       this.initializationCompleteSubject.next(true);
       console.log('Khởi tạo ứng dụng thành công');
       
     } catch (error) {
       console.error('Khởi tạo ứng dụng thất bại:', error);
-      // Không logout ngay, để user có cơ hội retry
+      // Vẫn cho phép app khởi động để user có thể login
       this.initializationCompleteSubject.next(true);
     }
   }

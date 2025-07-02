@@ -53,6 +53,7 @@ import { ApplyCreditComponent } from './pages/account/credit/apply-credit/apply-
 import { CreditDetailComponent } from './pages/account/credit/detail/credit-detail.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { KycComponent } from './customer/kyc/kyc.component';
+import { DashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 export const routes: Routes = [
 
   {
@@ -127,11 +128,13 @@ export const routes: Routes = [
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'reset-password', component: ResetPasswordComponent },
       { path: 'confirm-otp', component: VerifyOtpComponent },
+      { path: 'admin', component: DashboardComponent }
     ]
   },
   { path: 'forbidden', component: ForbiddenComponent },
   
 
   // Not Found
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundComponent },
+  
 ];

@@ -49,7 +49,7 @@ export const authInterceptor: HttpInterceptorFn = (
       console.log('Trạng thái xác thực:', isAuthenticated);
 
       // Nếu đã xác thực và token còn hợp lệ, sử dụng token hiện tại
-      if (isAuthenticated && !authService.isTokenExpired(token) && !authService.isTokenExpiringSoon(token, 20)) {
+      if (isAuthenticated && !authService.isTokenExpired(token) && !authService.isTokenExpiringSoon(token, 120)) {
         console.log('Token hợp lệ và trạng thái xác thực là true, tiếp tục với token hiện tại');
         const authReq = addAuthHeader(req, token);
         return next(authReq);

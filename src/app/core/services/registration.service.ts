@@ -68,27 +68,11 @@ export class RegistrationService {
     console.log('Verifying OTP for:', email);
     const params = new HttpParams().set('email', email).set('otp', otp);
 
-    const headers = new HttpHeaders({
-      'X-API-Key': environment.apiKey
-    });
-
     return this.http
       .post<any>(this.apiEndpointsService.getConfirmRegisterEndpoint(), null, {
-        params,
-        headers
+        params
       })
       .pipe(
-        tap((response) => {
-          console.log('OTP Verification Success:', response.data.cifCode);
-        }),
-        switchMap((response) => {
-          const cifCode = response.data.cifCode;
-          return this.http.post(
-            `http://localhost:8888/account/api/v1/create-initial-payment-account`,
-            { cifCode },
-            { headers }
-          );
-        }),
         tap(() => {
           if (isPlatformBrowser(this.platformId)) {
             this.storageService.removeItem('registerEmail');

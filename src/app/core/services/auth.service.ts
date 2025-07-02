@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError, from, firstValueFrom } from 'rxjs';
-import { tap, finalize, catchError } from 'rxjs/operators';
+import { tap, finalize, catchError, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { TokenResponse } from '../models/TokenResponse'; 
 import { StorageService } from './storage.service';
@@ -35,33 +35,51 @@ export class AuthService {
   }
 
   async initializeAuthState(): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)) return;
 
-    const token = this.getToken();
-    if (!token) {
-      console.log('[Auth Init] Không có token');
-      this.isAuthenticatedSubject.next(false);
+    if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
-    const isExpired = this.isTokenExpired(token);
-    const isExpiringSoon = this.isTokenExpiringSoon(token, 20);
+    console.log('[Auth Init] Bắt đầu khởi tạo auth state');
 
-    if (isExpired || isExpiringSoon) {
-      console.log('[Auth Init] Token hết hạn hoặc sắp hết hạn, đang làm mới...');
-      try {
-        const refreshed = await firstValueFrom(this.refreshToken());
-        this.saveToken(refreshed.access_token);
-        this.saveRefreshToken(refreshed.refresh_token);
-        this.isAuthenticatedSubject.next(true);
-        console.log('[Auth Init] Refresh thành công, đã đăng nhập');
-      } catch (err) {
-        console.error('[Auth Init] Refresh thất bại', err);
-        this.handleSessionExpired('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+    try {
+      const token = this.getToken();
+      
+      if (!token) {
+        console.log('[Auth Init] Không có token');
+        this.isAuthenticatedSubject.next(false);
+        return;
       }
-    } else {
-      console.log('[Auth Init] Token hợp lệ, đăng nhập');
-      this.isAuthenticatedSubject.next(true);
+
+      const isExpired = this.isTokenExpired(token);
+      const isExpiringSoon = this.isTokenExpiringSoon(token, 120);
+
+      if (isExpired || isExpiringSoon) {
+        console.log('[Auth Init] Token cần refresh, đang thực hiện...');
+        
+        const refreshResponse = await firstValueFrom(
+          this.refreshToken().pipe(
+            timeout(10000),
+            catchError(error => {
+              console.error('[Auth Init] Refresh token timeout hoặc lỗi:', error);
+              throw error;
+            })
+          )
+        );
+        
+        console.log('[Auth Init] Refresh thành công');
+        this.isAuthenticatedSubject.next(true);
+        
+      } else {
+        console.log('[Auth Init] Token hợp lệ, đăng nhập');
+        this.isAuthenticatedSubject.next(true);
+      }
+
+      console.log('[Auth Init] Hoàn thành khởi tạo auth state');
+
+    } catch (error) {
+      console.error('[Auth Init] Lỗi khởi tạo:', error);
+      this.handleSessionExpired('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
     }
   }
 
@@ -134,11 +152,9 @@ export class AuthService {
     console.log('Executing logout');
     this.storageService.clear();
     this.isAuthenticatedSubject.next(false);
-    this.notificationService.showSuccess('Hẹn gặp lại bạn!', 'Đăng xuất thành công').then(() => {
-      this.router.navigate(['/login']).then(() => {
-        location.reload();
-      });
-    });
+    // this.notificationService.showSuccess('Hẹn gặp lại bạn!', 'Cảm ơn bạn đã đồng hành cùng chúng tôi').then(() => {
+      this.router.navigate(['/login'])
+    // });
   }
 
   handleSessionExpired(message: string): void {
