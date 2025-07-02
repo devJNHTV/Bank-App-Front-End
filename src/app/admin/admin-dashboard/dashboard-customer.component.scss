@@ -1,0 +1,179 @@
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.stat-card.total-kyc::before { background: linear-gradient(135deg, #ff9500, #ff6b35); }
+.stat-card.successful-kyc::before { background: linear-gradient(135deg, #2ed573, #1dd1a1); }
+.stat-card.failed-kyc::before { background: linear-gradient(135deg, #ff4757, #ff3838); }
+.stat-card.pending-kyc::before { background: linear-gradient(135deg, #5352ed, #3742fa); }
+
+.stat-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.stat-label {
+  color: #7f8c8d;
+  margin-top: 5px;
+}
+
+.stat-icon {
+  font-size: 2rem;
+  opacity: 0.1;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.charts-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.chart-header h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.chart-change {
+  display: flex;
+  align-items: center;
+  color: #e74c3c;
+}
+
+.chart-change.positive {
+  color: #27ae60;
+}
+
+.chart-change i {
+  margin-right: 5px;
+}
+
+.chart-content {
+  padding: 0 20px 20px 20px;
+  min-height: 300px;
+  position: relative;
+}
+
+.chart-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.chart-stat {
+  text-align: center;
+}
+
+.chart-stat .value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.chart-stat .label {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.platform-stats {
+  margin-top: 20px;
+}
+
+.platform-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.platform-change.positive {
+  color: #27ae60;
+}
+
+.platform-change.negative {
+  color: #e74c3c;
+}
+
+.platform-change.neutral {
+  color: #5352ed;
+}
+
+.traffic-stats {
+  padding: 20px;
+}
+
+.traffic-item {
+  margin-bottom: 15px;
+}
+
+.traffic-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.traffic-name {
+  color: #2c3e50;
+}
+
+.traffic-percentage {
+  font-weight: bold;
+  color: #5352ed;
+}
+
+@media (max-width: 1200px) {
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

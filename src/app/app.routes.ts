@@ -20,7 +20,6 @@ import { HomeComponent } from './pages/home/home.component';
 import { CustomerDashboardComponent } from './customer/customer-dashboard/customer-dashboard.component';
 import { CustomerAccountsComponent } from './customer/customer-accounts/customer-accounts.component';
 import { SavingsComponent } from './pages/savings/savings.component';
-
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
@@ -42,7 +41,6 @@ import { PendingLoanListComponent } from './loan-employee/pending-loans-list/pen
 import { LoanDetailViewComponent } from './loan-employee/loan-detail-view/loan-detail-view.component';
 import { WarningApplyLoanComponent } from './loan/warning-apply-loan/warning-apply-loan.component';
 import { AboutComponent } from './pages/about/about.component';
-
 import { KycOtpComponent } from './auth/kyc-otp/kyc-otp.component';
 import { CreditComponent } from './pages/account/credit/credit.component';
 import { AccountComponent } from './pages/account/account.component';
@@ -53,88 +51,95 @@ import { ApplyCreditComponent } from './pages/account/credit/apply-credit/apply-
 import { CreditDetailComponent } from './pages/account/credit/detail/credit-detail.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { KycComponent } from './customer/kyc/kyc.component';
-import { DashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
+import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.component';
+import { AdminGuard } from './core/guards/admin.guard';
+import { DashboardCustomerComponent } from './admin/admin-dashboard/dashboard--customer.component';
 export const routes: Routes = [
-
-  {
-    path: '',
-    component: MainLayoutComponent,
-    canActivate: [AuthGuard],
-    children: [
-      { path: '', redirectTo: 'customer-dashboard', pathMatch: 'full' },
-      { path: 'customer-dashboard', component: CustomerDashboardComponent, canActivate: [KycGuard] },
-      { path: 'detail', component: CustomerDetailComponent, canActivate: [KycGuard]  },
-      { path: 'customers/accounts', component: CustomerAccountsComponent, canActivate: [KycGuard] },
-      { path: 'home', component: HomeComponent, canActivate: [KycGuard] },
-      { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
-      { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
-      { path: 'admin/transactions', component: TransactionListComponent, canActivate: [KycGuard] },
-
-
-      { 
-        path: 'account', 
-        component: AccountComponent,
-        children: [
-            { path: '', redirectTo: 'payment', pathMatch: 'full' }, // Redirect account to account/profile
-            { path: 'payment', component: PaymentComponent }, // Tạm dùng SavingsComponent, có thể tạo ProfileComponent riêng
-            { path: 'saving', component: SavingsComponent }, // Có thể tạo TransactionsComponent
-            { path: 'payment/detail/:accountNumber', component: DetailComponent },
-            { path: 'credit', component: CreditComponent },
-            { path: 'credit/detail/:cardAccountNumber', component: CreditDetailComponent },
-            { path: 'credit/register', component: RegisterCreditComponent },
-            { path: 'credit/register/apply-credit/:cardID', component: ApplyCreditComponent },  
-        ]
-        },  
-      { path: 'customers', component: CustomerListComponent, canActivate: [KycGuard] },
-      { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent, canActivate: [KycGuard] },
-      { path: 'transactions', component: TransactionHomeComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/transfer', component: TransferComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/external-transfer', component: ExternalTransferComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/deposit', component: DepositComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/withdraw', component: WithdrawComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/transaction-result', component: TransactionResultComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/history', component: TransactionHistoryComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/detail/:referenceCode', component: TransactionDetailComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/payment', component: PaymentSelectionComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/payment/:type', component: BillLookupComponent, canActivate: [KycGuard]   },
-      { path: 'transactions/pay-bill', component: PayBillComponent, canActivate: [KycGuard]   },
-      { path: 'loans', component: DashboardLoanComponent },
-      { path: 'loans/create', component: ApplyNewLoanComponent },
-      { path: 'loans/overview', component: OrverviewLoanComponent },
-      { path: 'loans/history', component: LoanHistoryComponent },
-      { path: 'loans/current', component: CurrentRepaymentScheduleComponent },
-      { path: 'loans/pay/:id', component: PayRepaymentComponent },
-      { path: 'loans/detail/:id', component: DetailLoanComponent },
-      { path: 'loans/reject/:id', component: DetailLoanRejectComponent },
-      { path: 'employee/loans', component: PendingLoanListComponent },
-      { path: 'employee/loans/pending', component: PendingLoanListComponent },
-      { path: 'employee/loans/:id', component: LoanDetailViewComponent },
-      { path: 'loan/current-repayments', redirectTo: '' },
-      { path: 'loan/warning-apply-loan', component: WarningApplyLoanComponent },
-    ]
-  },
-  { path: 'change-password', component: ChangePasswordComponent, canActivate: [AuthGuard, KycGuard] },
-
-  { path: 'kyc', component: KycComponent, canActivate: [AuthGuard] },
-  
+  // Authentication routes (no sidebar)
   {
     path: '',
     component: AuthLayoutComponent,
     children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'kyc-otp', component: KycOtpComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'reset-password', component: ResetPasswordComponent },
       { path: 'confirm-otp', component: VerifyOtpComponent },
-      { path: 'admin', component: DashboardComponent }
+      { path: '', redirectTo: 'login', pathMatch: 'full' }
     ]
   },
+  // Admin routes (with sidebar)
+  {
+    path: '',
+    component: AdminLayoutComponent,
+    canActivate: [AuthGuard, AdminGuard],
+    children: [
+      { path: 'dashboard/customer', component: DashboardCustomerComponent },
+      { path: 'customers', component: CustomerListComponent },
+      { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent },
+      { path: 'accounts', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
+      { path: 'kyc', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
+      { path: 'settings', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
+      { path: 'admin/transactions', component: TransactionListComponent },
+      { path: 'employee/loans', component: PendingLoanListComponent },
+      { path: 'employee/loans/pending', component: PendingLoanListComponent },
+      { path: 'employee/loans/:id', component: LoanDetailViewComponent }
+    ]
+  },
+  // Customer routes (with MainLayoutComponent)
+  {
+    path: '',
+    component: MainLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'customer-dashboard', component: CustomerDashboardComponent, canActivate: [KycGuard] },
+      { path: 'detail', component: CustomerDetailComponent, canActivate: [KycGuard] },
+      { path: 'customers/accounts', component: CustomerAccountsComponent, canActivate: [KycGuard] },
+      { path: 'home', component: HomeComponent, canActivate: [KycGuard] },
+      { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
+      { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
+      { path: 'kyc', component: KycComponent },
+      { path: 'change-password', component: ChangePasswordComponent, canActivate: [KycGuard] },
+      {
+        path: 'account',
+        component: AccountComponent,
+        canActivate: [KycGuard],
+        children: [
+          { path: '', redirectTo: 'payment', pathMatch: 'full' },
+          { path: 'payment', component: PaymentComponent },
+          { path: 'saving', component: SavingsComponent },
+          { path: 'payment/detail/:accountNumber', component: DetailComponent },
+          { path: 'credit', component: CreditComponent },
+          { path: 'credit/detail/:cardAccountNumber', component: CreditDetailComponent },
+          { path: 'credit/register', component: RegisterCreditComponent },
+          { path: 'credit/register/apply-credit/:cardID', component: ApplyCreditComponent }
+        ]
+      },
+      { path: 'transactions', component: TransactionHomeComponent, canActivate: [KycGuard] },
+      { path: 'transactions/transfer', component: TransferComponent, canActivate: [KycGuard] },
+      { path: 'transactions/external-transfer', component: ExternalTransferComponent, canActivate: [KycGuard] },
+      { path: 'transactions/deposit', component: DepositComponent, canActivate: [KycGuard] },
+      { path: 'transactions/withdraw', component: WithdrawComponent, canActivate: [KycGuard] },
+      { path: 'transactions/transaction-result', component: TransactionResultComponent, canActivate: [KycGuard] },
+      { path: 'transactions/history', component: TransactionHistoryComponent, canActivate: [KycGuard] },
+      { path: 'transactions/detail/:referenceCode', component: TransactionDetailComponent, canActivate: [KycGuard] },
+      { path: 'transactions/payment', component: PaymentSelectionComponent, canActivate: [KycGuard] },
+      { path: 'transactions/payment/:type', component: BillLookupComponent, canActivate: [KycGuard] },
+      { path: 'transactions/pay-bill', component: PayBillComponent, canActivate: [KycGuard] },
+      { path: 'loans', component: DashboardLoanComponent, canActivate: [KycGuard] },
+      { path: 'loans/create', component: ApplyNewLoanComponent, canActivate: [KycGuard] },
+      { path: 'loans/overview', component: OrverviewLoanComponent, canActivate: [KycGuard] },
+      { path: 'loans/history', component: LoanHistoryComponent, canActivate: [KycGuard] },
+      { path: 'loans/current', component: CurrentRepaymentScheduleComponent, canActivate: [KycGuard] },
+      { path: 'loans/pay/:id', component: PayRepaymentComponent, canActivate: [KycGuard] },
+      { path: 'loans/detail/:id', component: DetailLoanComponent, canActivate: [KycGuard] },
+      { path: 'loans/reject/:id', component: DetailLoanRejectComponent, canActivate: [KycGuard] },
+      { path: 'loan/warning-apply-loan', component: WarningApplyLoanComponent, canActivate: [KycGuard] },
+      { path: '', redirectTo: 'customer-dashboard', pathMatch: 'full' }
+    ]
+  },
+  // Error pages
   { path: 'forbidden', component: ForbiddenComponent },
-  
-
-  // Not Found
-  { path: '**', component: NotFoundComponent },
-  
+  { path: '**', component: NotFoundComponent }
 ];
