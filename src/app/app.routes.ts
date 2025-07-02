@@ -54,6 +54,7 @@ import { KycComponent } from './customer/kyc/kyc.component';
 import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.component';
 import { AdminGuard } from './core/guards/admin.guard';
 import { DashboardCustomerComponent } from './admin/admin-dashboard/dashboard-customer.component';
+import { KycManagerComponent } from './admin/kyc-manager/kyc-manager.component';
 export const routes: Routes = [
   // Authentication routes (no sidebar)
   {
@@ -79,7 +80,7 @@ export const routes: Routes = [
       { path: 'customers', component: CustomerListComponent },
       { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent },
       { path: 'accounts', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
-      { path: 'kyc', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
+      { path: 'kyc-management', component: KycManagerComponent }, // Placeholder, thay bằng component thực tế
       { path: 'settings', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
       { path: 'admin/transactions', component: TransactionListComponent },
       { path: 'employee/loans', component: PendingLoanListComponent },
@@ -99,7 +100,6 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent, canActivate: [KycGuard] },
       { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
       { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
-      { path: 'kyc', component: KycComponent },
       { path: 'change-password', component: ChangePasswordComponent, canActivate: [KycGuard] },
       {
         path: 'account',
@@ -139,6 +139,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'customer-dashboard', pathMatch: 'full' }
     ]
   },
+  { path: 'kyc', component: KycComponent, canActivate: [AuthGuard] },
   // Error pages
   { path: 'forbidden', component: ForbiddenComponent },
   { path: '**', component: NotFoundComponent }

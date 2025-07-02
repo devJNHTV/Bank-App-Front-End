@@ -51,18 +51,4 @@ export class KycService {
   getKycVerifiedValue(): boolean {
     return this.isKycVerifiedSubject.getValue();
   }
-
-  getKycStatistics(startDate?: string, endDate?: string): Observable<ApiResponse<KycStatisticsResponse>> {
-    let params = new HttpParams();
-    if (startDate) params = params.set('startDate', startDate);
-    if (endDate) params = params.set('endDate', endDate);
-    return this.http.get<ApiResponse<KycStatisticsResponse>>(this.apiEndpointsService.getKycStatistics(), { params })
-  }
-
-  getCustomerGrowth(startDate?: string, endDate?: string): Observable<ApiResponse<CustomerGrowthResponse>> {
-    let params = new HttpParams();
-    if (startDate) params = params.set('startDate', startDate);
-    if (endDate) params = params.set('endDate', endDate);
-    return this.http.get<ApiResponse<CustomerGrowthResponse>>(this.apiEndpointsService.getGrowth(), { params });
-  }
 }

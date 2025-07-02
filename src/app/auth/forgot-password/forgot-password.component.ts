@@ -7,12 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
 import { CommonModule, NgIf } from '@angular/common';
 import Swal from 'sweetalert2';
-import { Password } from 'primeng/password';
 import { PasswordService } from '../../core/services/password.service';
-import { RegistrationService } from '../../core/services/registration.service';
 
 @Component({
   selector: 'app-forgot-password',

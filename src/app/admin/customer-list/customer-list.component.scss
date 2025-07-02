@@ -1,8 +1,14 @@
+.main-content {
+  padding: 0 8px;
+  background: #f6f8fa;
+  overflow: unset;
+}
+
 .customerlist-header-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
   background: white;
   padding: 15px 20px;
   border-radius: 10px;
@@ -49,28 +55,95 @@
 }
 
 .customerlist-table-card {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  background: #fff;
+  padding: 16px 8px;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(44, 62, 80, 0.08);
+  overflow-x: auto;
+  overflow-y: visible;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .customerlist-table {
   width: 100%;
+  font-size: 1.05rem;
+  table-layout: fixed;
+}
+
+.customerlist-table th,
+.customerlist-table td {
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 12px 6px;
+  height: 48px;
+}
+
+.customerlist-table th {
+  font-weight: 600;
+}
+
+.customerlist-table th:nth-child(3),
+.customerlist-table td:nth-child(3) {
+  width: 160px;
+}
+
+.customerlist-table td:last-child {
+  white-space: nowrap !important;
+}
+
+.p-datatable-tbody > tr {
+  transition: background 0.2s;
+}
+
+.p-datatable-tbody > tr:hover {
+  background: #f1f6fb;
+}
+
+.p-chip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-width: 110px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-radius: 16px !important;
+  height: 36px;
 }
 
 .chip-active {
-  background-color: #27ae60;
-  color: white;
+  background-color: #27ae60 !important;
+  color: #fff !important;
 }
 
 .chip-inactive {
-  background-color: #e74c3c;
-  color: white;
+  background-color: #e74c3c !important;
+  color: #fff !important;
+}
+
+.p-button-rounded {
+  width: 38px !important;
+  height: 38px !important;
+  margin-right: 6px;
+  font-size: 1.2rem !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s;
+}
+
+.p-button-rounded:hover {
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
 }
 
 .no-data-row {
   text-align: center;
-  padding: 20px;
-  color: #7f8c8d;
+  padding: 32px 0;
+  color: #b2bec3;
+  font-size: 1.1rem;
+  font-style: italic;
 }

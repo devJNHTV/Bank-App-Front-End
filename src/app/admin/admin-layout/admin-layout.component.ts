@@ -14,8 +14,8 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrls: ['./admin-layout.component.scss'],
 })
 export class AdminLayoutComponent {
-  isDropdownOpen = false; // Biến để kiểm soát trạng thái menu xổ xuống
-  isDropdownSetting = false; // Biến để kiểm soát trạng thái menu xổ xuống
+  isDropdownOpen = false;
+  isDropdownSetting = false;
 
   constructor(
     private router: Router,
@@ -32,11 +32,11 @@ export class AdminLayoutComponent {
   }
 
   toggleDropdown(): void {
-    this.isDropdownOpen = !this.isDropdownOpen; // Chuyển đổi trạng thái mở/đóng
+    this.isDropdownOpen = !this.isDropdownOpen;
   }
 
   toggleDropdownSetting(): void {
-    this.isDropdownSetting = !this.isDropdownSetting; // Chuyển đổi trạng thái mở/đóng
+    this.isDropdownSetting = !this.isDropdownSetting;
   }
 
   logout(): void {

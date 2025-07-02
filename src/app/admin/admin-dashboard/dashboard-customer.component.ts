@@ -12,6 +12,7 @@ import { KycStatisticsResponse } from '../../core/models/KycStatisticsResponse';
 import { CustomerGrowthResponse } from '../../core/models/CustomerGrowthResponse';
 import { KycService } from '../../core/services/kyc.service';
 import { ApiResponse } from '../../core/models/ApiResponse';
+import { AdminService } from '../../core/services/admin.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -82,7 +83,7 @@ export class DashboardCustomerComponent implements OnInit {
   };
 
   constructor(
-    private kycService: KycService,
+    private adminService: AdminService,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -100,7 +101,7 @@ export class DashboardCustomerComponent implements OnInit {
       this.messageService.add({ severity: 'warn', summary: 'Cảnh báo', detail: 'Vui lòng chọn cả Từ ngày và Đến ngày' });
       return;
     }
-    this.kycService.getKycStatistics(this.startDate, this.endDate).subscribe({
+    this.adminService.getKycStatistics(this.startDate, this.endDate).subscribe({
       next: (res: ApiResponse<KycStatisticsResponse>) => {
         this.kycStats = res.data;
         this.doughnutChartData = {
@@ -129,7 +130,7 @@ export class DashboardCustomerComponent implements OnInit {
       this.messageService.add({ severity: 'warn', summary: 'Cảnh báo', detail: 'Vui lòng chọn cả Từ ngày và Đến ngày' });
       return;
     }
-    this.kycService.getCustomerGrowth(this.startDate, this.endDate).subscribe({
+    this.adminService.getCustomerGrowth(this.startDate, this.endDate).subscribe({
       next: (growth: ApiResponse<CustomerGrowthResponse>) => {
         if (!growth.data || (growth.data.totalNewCustomers === 0 && growth.data.previousPeriodCustomers === 0)) {
           this.customerGrowth = null;
