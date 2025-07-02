@@ -21,17 +21,6 @@ import { UserService } from '../../core/services/user.service';
 import { AdminService } from '../../core/services/admin.service';
 import { CustomerUpdateDialogComponent } from '../../customer/customer-update/customer-update.component';
 
-// interface Customer {
-//   fullName: string;
-//   email: string;
-//   phoneNumber: string;
-//   identityNumber: string;
-//   dateOfBirth: Date | null;
-//   gender: 'male' | 'female';
-//   address: string;
-//   status: string;
-// }
-
 @Component({
   selector: 'app-customer-detail',
   standalone: true,
@@ -58,7 +47,6 @@ import { CustomerUpdateDialogComponent } from '../../customer/customer-update/cu
 })
 export class CustomerDetailAdminComponent implements OnInit {
   cifCode: string | null = null;
-  // customer: Customer | null = null;
   customer: any;
   isLoading = false;
 
@@ -116,7 +104,7 @@ export class CustomerDetailAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result && this.cifCode) {
         this.customer = result;
-        this.loadCustomerDetail(this.cifCode);
+        window.location.reload();
       }
     });
   }

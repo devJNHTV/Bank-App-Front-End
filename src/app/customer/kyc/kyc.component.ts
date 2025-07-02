@@ -403,8 +403,8 @@ export class KycComponent implements OnInit {
         this.isLoading = false;
         Swal.fire({
           icon: 'success',
-          title: 'Thành công',
-          text: 'Xác minh KYC thành công!',
+          title: 'Yêu cầu KYC đã được gửi!',
+          text: 'Vui lòng đợi chúng tôi xác nhận danh tính của bạn. Xin cảm ơn!',
           timer: 3000,
         }).then(() => {
           this.router.navigate(['/customer-dashboard']);

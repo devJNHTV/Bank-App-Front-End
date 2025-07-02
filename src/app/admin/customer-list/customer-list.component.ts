@@ -122,9 +122,9 @@ export class CustomerListComponent implements OnInit {
       title: 'Cập nhật trạng thái khách hàng',
       input: 'select',
       inputOptions: {
-        ACTIVE: 'Hoạt động',
-        SUSPENDED: 'Không hoạt động',
-        CLOSED: 'Bị khóa'
+        ACTIVE: 'Kích hoạt',
+        SUSPENDED: 'Tạm khóa',
+        CLOSED: 'Khóa'
       },
       inputValue: currentStatus,
       showCancelButton: true,
@@ -159,6 +159,6 @@ export class CustomerListComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/customer-dashboard']);
   }
 }

@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { ApiEndpointsService } from './api-endpoints.service';
+import { KycStatisticsResponse } from '../models/KycStatisticsResponse';
+import { CustomerGrowthResponse } from '../models/CustomerGrowthResponse';
+import { ApiResponse } from '../models/ApiResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -47,5 +50,19 @@ export class KycService {
 
   getKycVerifiedValue(): boolean {
     return this.isKycVerifiedSubject.getValue();
+  }
+
+  getKycStatistics(startDate?: string, endDate?: string): Observable<ApiResponse<KycStatisticsResponse>> {
+    let params = new HttpParams();
+    if (startDate) params = params.set('startDate', startDate);
+    if (endDate) params = params.set('endDate', endDate);
+    return this.http.get<ApiResponse<KycStatisticsResponse>>(this.apiEndpointsService.getKycStatistics(), { params })
+  }
+
+  getCustomerGrowth(startDate?: string, endDate?: string): Observable<ApiResponse<CustomerGrowthResponse>> {
+    let params = new HttpParams();
+    if (startDate) params = params.set('startDate', startDate);
+    if (endDate) params = params.set('endDate', endDate);
+    return this.http.get<ApiResponse<CustomerGrowthResponse>>(this.apiEndpointsService.getGrowth(), { params });
   }
 }

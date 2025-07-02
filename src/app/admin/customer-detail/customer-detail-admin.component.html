@@ -20,7 +20,12 @@
         <div class="info-item"><strong>🎂 Date of Birth:</strong> {{ customer.dateOfBirth | date:'dd/MM/yyyy' }}</div>
         <div class="info-item"><strong>⚥ Gender:</strong> {{ customer.gender === 'male' ? 'Nam' : 'Nữ' }}</div>
         <div class="info-item"><strong>🏡 Address:</strong> {{ customer.address }}</div>
-        <div class="info-item"><strong>📶 Status:</strong> {{ customer.status }}</div>
+        <div class="info-item">
+          <strong>📶 Trạng thái:</strong>
+          {{ customer.status === 'ACTIVE' ? 'Đang hoạt động' :
+            customer.status === 'SUSPENDED' ? 'Đang chờ xác minh' :
+            customer.status === 'CLOSED' ? 'Khóa' : 'Không xác định' }}
+        </div>
       </div>
       <div class="add-account-button animate__animated animate__pulse animate__delay-2s">
         <button mat-raised-button color="accent" class="glow-button" (click)="openUpdateDialog()">

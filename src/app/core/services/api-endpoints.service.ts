@@ -71,4 +71,12 @@ export class ApiEndpointsService {
   getKeycloakUrl(): string {
     return this.keycloakUrl;
   }
+
+  getKycStatistics(): string {
+    return `${this.apiUrl}/kyc/statistics`
+  }
+
+  getGrowth(): string {
+    return `${this.apiUrl}/growth`
+  }
 }
