@@ -49,13 +49,14 @@
             <p-button 
               label="Chuyển tiền" 
               icon="pi pi-send"
-              styleClass="p-button-success p-button-sm">
+              styleClass="p-button-success p-button-sm"
+              (click)="transfer()">
             </p-button>
             <p-button 
               label="Rút tiền" 
               icon="pi pi-minus"
               styleClass="p-button-outlined p-button-sm"
-              >
+              (click)="withdraw()">
             </p-button>
             <p-button 
               label="Chi tiết" 

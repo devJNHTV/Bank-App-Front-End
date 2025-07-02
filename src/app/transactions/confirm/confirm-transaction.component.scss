@@ -1,0 +1,92 @@
+:host {
+  display: block;
+  max-width: 600px;
+  margin: 1rem auto; /* căn giữa card */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  }
+
+:host ::ng-deep .p-card {
+  border-radius: 18px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+:host ::ng-deep .p-card > .p-card-header {
+  background: linear-gradient(135deg, #006341, #006341);
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 1.3rem;
+  padding: 1rem 1.5rem;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.p-fluid {
+  padding: 1rem 1.5rem;
+}
+
+.p-field {
+  margin-bottom: 1.25rem;
+}
+
+.p-field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #333;
+}
+
+.p-field p {
+  margin: 0;
+  font-size: 1rem;
+  color: #555;
+  word-break: break-word; /* tránh dài quá tràn */
+}
+
+input[pInputText] {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+input[pInputText]:focus {
+  outline: none;
+  border-color: #007ad9;
+  box-shadow: 0 0 5px rgba(0, 122, 217, 0.5);
+}
+
+.p-d-flex {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+button.p-button-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  transition: background-color 0.3s ease;
+}
+
+button.p-button-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+button.p-button-success {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button.p-button-success:disabled {
+  background-color: #94d3a2;
+  cursor: not-allowed;
+}
+
+button.p-button-success:hover:not(:disabled) {
+  background-color: #218838;
+}

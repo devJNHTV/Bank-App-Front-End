@@ -1,5 +1,6 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #sidenav mode="side" opened class="sidenav" fixedInViewport>
+  
     <!-- Logo Header -->
     <div class="logo-container">
       <div class="logo">
@@ -16,6 +17,7 @@
     <!-- Navigation Menu -->
     <mat-nav-list class="nav-menu">
       <a
+      *ngIf="!isAdmin()" 
         mat-list-item
         routerLink="/customer-dashboard"
         routerLinkActive="active-link"
@@ -56,6 +58,40 @@
     <span matListItemTitle>Tài khoản tín dụng</span>
   </a>
 
+      <a
+      *ngIf="!isAdmin()"
+        mat-list-item
+        routerLink="/transactions"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>payments</mat-icon>
+        <span matListItemTitle>Giao dịch</span>
+      </a>
+
+      <a
+      mat-list-item
+      routerLink="/loans"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-item"
+    >
+      <mat-icon matListItemIcon>money_bag</mat-icon>
+      <span matListItemTitle>Khoản Vay</span>
+    </a>
+  
+    <a
+      mat-list-item
+      routerLink="/employee/loans"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-item"
+    >
+      <mat-icon matListItemIcon>folder_open</mat-icon>
+      <span matListItemTitle>Quản Lý Khoản Vay</span>
+    </a>
+      
       <!-- <a
         mat-list-item
         routerLink="/customers/accounts"
@@ -78,10 +114,30 @@
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Danh sách người dùng</span>
       </a>
+      <a
+        *ngIf="isAdmin()"
+        mat-list-item
+        routerLink="/admin/transactions"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>receipt_long
+        </mat-icon>
+        <span matListItemTitle>Danh sách giao dịch</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content>
+    <div class="sidenav-close">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>
+          {{ sidenav.opened ? 'chevron_left' : 'chevron_right' }}
+        </mat-icon>
+      </button>
+    </div>
+    
     <!-- Header Toolbar -->
     <mat-toolbar class="header-toolbar">
       <button
@@ -139,6 +195,7 @@
       </div>
     </mat-toolbar>
 
+    
     <router-outlet></router-outlet>
     
   </mat-sidenav-content>

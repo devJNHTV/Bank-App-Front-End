@@ -1,0 +1,33 @@
+.forbidden-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.forbidden-header {
+  padding: 2rem;
+  background-color: #f8d7da;
+  color: #721c24;
+  border-bottom: 1px solid #f5c6cb;
+}
+
+.forbidden-icon {
+  font-size: 4rem;
+}
+
+.forbidden-title {
+  margin: 0;
+  font-size: 5rem;
+  font-weight: bold;
+}
+
+h2 {
+  color: #721c24;
+  margin-top: 1.5rem;
+}
+
+p {
+  margin-bottom: 1.5rem;
+}

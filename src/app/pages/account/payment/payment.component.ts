@@ -103,7 +103,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   getAccountStatus(status: string): 'success' | 'warn' | 'danger' {
     if (status === 'ACTIVE') return 'success';
-    if (status === 'CLOSED') return 'warn';
+    if (status === 'CLOSED') return 'warn'; 
     return 'danger';
   }
 
@@ -300,5 +300,11 @@ export class PaymentComponent implements OnInit, OnDestroy {
       const hiddenPart = '*'.repeat(username.length - 3);
 
       return `${visiblePart}${hiddenPart}@${domain}`;
+  }
+  transfer(): void {
+    this.router.navigate(['/transactions/transfer']);
+  }
+  withdraw(): void {
+    this.router.navigate(['/transactions/withdraw']);
   }
 }

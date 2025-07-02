@@ -1,0 +1,249 @@
+<div class="card history-container">
+  <h2 class="header-title p-mb-3 text-center">
+    <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+      <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
+    </button>Lịch sử giao dịch</h2>
+
+  <div class="p-fluid p-formgrid p-grid">
+    <!-- Account Selection -->
+    <div class="p-field p-col-12 p-md-6">
+      <label for="accountNumber"><i class="pi pi-user mr-2 ml-2"></i> Tài khoản:     
+        <small *ngIf="customerName" style="font-size: 14px;">
+          <strong>{{ customerName }}</strong>
+        </small>
+      </label>
+      <div class="flex gap-5">
+        <p-dropdown
+          [(ngModel)]="selectedAccount"
+          [options]="accountOptions"
+          optionLabel="accountDescription"
+          optionValue="accountNumber"
+          [showClear]="false"
+          class="w-full md:w-56"
+          (onChange)="onAccountChange($event)"
+          placeholder="Chọn tài khoản"
+        ></p-dropdown>
+        <button pButton type="button" class="p-button" (click)="filterTransactions(null)">
+            <i class="pi pi-filter mr-2"></i> Lọc
+        </button>
+      </div>
+      <div *ngIf="selectedBalance !== null" class="p-mt-2">
+        <p>
+          <i class="pi pi-money-bill mr-2"></i> Số dư:
+          {{ selectedBalance | number : "1.0-0" }} VNĐ
+        </p>
+      </div>
+    </div>
+
+    <div class="formgrid grid justify-content-between">
+        <div class="field col-12 md:col-6 lg:col-3">
+            <label><i class="pi pi-filter mr-2 ml-2"></i> Tìm kiếm theo nội dung:</label>
+            <input type="text" [(ngModel)]="keyword" pInputText placeholder="Nhập nội dung giao dịch"
+              class="w-full"
+            >
+          </div>
+        
+        
+        <!-- Transaction Type Filter -->
+        <div class="field col-12 md:col-6 lg:col-3">
+          <label><i class="pi pi-filter mr-2 ml-2"></i> Loại giao dịch:</label>
+          
+          <p-dropdown
+              [(ngModel)]="selectedTransactionType"
+              [options]="transactionTypes"
+              optionLabel="label"
+              optionValue="value"
+              [showClear]="false"
+              class="w-full md:w-56"
+              placeholder="Chọn loại giao dịch"
+            ></p-dropdown>
+        </div>
+        <div class="field col-12 md:col-6 lg:col-3">
+          <label><i class="pi pi-info-circle mr-2 ml-2"></i> Trạng thái:</label>
+          
+          <p-dropdown
+              [(ngModel)]="selectedStatus"
+              [options]="statusOptions"
+              optionLabel="label"
+              optionValue="value"
+              [showClear]="false"
+              class="w-full md:w-56"
+              placeholder="Chọn trạng thái"
+            ></p-dropdown>
+        </div>
+        <div class="field col-12 md:col-6 lg:col-3">
+            <label><i class="pi pi-calendar mr-2 ml-2"></i> Khoảng thời gian:</label>
+            <p-calendar 
+              [(ngModel)]="dateRange" 
+              selectionMode="range" 
+              [showButtonBar]="true"
+              [readonlyInput]="true"
+              placeholder="Chọn khoảng thời gian"
+              [maxDate]="today"
+              class="w-full"
+            ></p-calendar>
+          </div>
+       
+    </div>
+
+    <div class="formgrid grid justify-content-between">
+        
+        
+        <!-- Transaction Type Filter -->
+    
+        <div class="field col-12 md:col-6 lg:col-2">
+            <label><i class="pi pi-money-bill mr-2 ml-2"></i> Loại tiền:</label>
+            
+            <p-dropdown
+                [(ngModel)]="selectedCurrency"
+                [options]="currencyOptions"
+                optionLabel="label"
+                optionValue="value"
+                [showClear]="false"
+                class="w-full md:w-56"
+                placeholder="Chọn loại tiền"
+              ></p-dropdown>
+          </div>
+
+          
+            
+            <div class="field col-12 md:col-6 lg:col-3">
+              <label><i class="pi pi-arrow-down mr-2 ml-2"></i> Từ số tiền:</label>
+              <p-inputNumber 
+                  [(ngModel)]="fromAmount" 
+                  mode="currency"
+                  currency="VND"
+                  locale="vi-VN"
+                  class="w-full">
+              </p-inputNumber>
+          </div>
+      
+          
+      
+          <div class="field col-12 md:col-6 lg:col-3">
+              <label><i class="pi pi-arrow-up mr-2 ml-2"></i> Đến số tiền:</label>
+              <p-inputNumber 
+                  [(ngModel)]="toAmount" 
+                  mode="currency"
+                  currency="VND"
+                  locale="vi-VN"
+                  class="w-full">
+              </p-inputNumber>
+          </div>
+
+          <div class="field col-12 md:col-6 lg:col-2">
+            <label><i class="pi pi-sort-amount-up mr-2 ml-2"></i> Sắp xếp theo:</label>
+            
+            <p-dropdown
+                [(ngModel)]="selectedSort"
+                [options]="sortOptions"
+                optionLabel="sortName"
+                optionValue="sortValue"
+                [showClear]="false"
+                class="w-full md:w-56"
+                placeholder="Chọn trường sắp xếp"
+              ></p-dropdown>
+          </div>
+
+          <div class="field col-12 md:col-6 lg:col-2">
+            <label><i class="pi pi-sort mr-2 ml-2"></i> Thứ tự sắp xếp:</label>
+            
+            <p-dropdown
+                [(ngModel)]="selectedSortDirection"
+                [options]="sortDirectionOptions"
+                optionLabel="sortDirectionName"
+                optionValue="sortDirectionValue"
+                [showClear]="false"
+                class="w-full md:w-56"
+                placeholder="Chọn thứ tự sắp xếp"
+              ></p-dropdown>
+          </div>
+    </div>
+
+    
+    <!-- Date Range Selection -->
+
+    <!-- Transaction Table -->
+    <div class="p-field p-col-12">
+      <p-table 
+        #dt [value]="transactions" 
+        [paginator]="true"  
+        [lazy]="true"
+        [totalRecords]="totalRecords"
+        [rows]="5"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Hiển thị {first} đến {last} của {totalRecords} giao dịch"
+        [rowsPerPageOptions]="[5,10,20,50]"
+        [loading]="loading"
+        (onPage)="filterTransactions($event)"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header" >
+          <tr class="text-center">
+            <th class="text-center">STT</th>
+            <th class="text-center">Thời gian</th>
+            <th class="text-center">Loại giao dịch</th>
+            <th class="text-center">Số tiền</th>
+            <th class="text-center">Nội dung</th>
+            <th class="text-center">Trạng thái</th>
+            <th class="text-center">Hành động</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-transaction let-i="rowIndex">
+          <tr >
+            <td class="text-center">{{ dt.first + i + 1 }}</td>     
+            <td class="text-center">{{transaction.timestamp | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+            <td class="text-center">
+              <span >
+                {{transaction.type==='TRANSFER' ? 'Chuyển tiền' : 
+                transaction.type==='DEPOSIT' ? 'Nạp tiền' :
+                transaction.type==='WITHDRAW' ? 'Rút tiền' :
+                transaction.type==='PAY_BILL' ? 'Thanh toán hóa đơn' :
+                transaction.type==='EXTERNAL_TRANSFER' ? 'Chuyển khoản liên ngân hàng' : 'Không xác định'
+              }}
+              </span>
+            </td>
+            <td class="text-center" [ngClass]="{'credit': transaction.type === 'CREDIT', 'debit': transaction.type === 'DEBIT'}">
+              {{transaction.amount | number:'1.0-0'}} {{transaction.currency}}
+            </td>
+            <td >{{transaction.description}}</td>
+            <td class="text-center">
+              <span [class]="'status-badge ' + transaction.status.toLowerCase()">
+                {{transaction.status==='COMPLETED' ? 'Thành công' :
+                transaction.status==='PENDING' ? 'Đang xử lý' :
+                transaction.status==='FAILED' ? 'Thất bại' : 'Không xác định'
+              }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button pButton type="button" class="p-button-rounded p-button-text" (click)="viewTransaction(transaction.referenceCode)">
+                <i class="pi pi-eye"></i>Chi tiết
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="7" class="text-center">Không có giao dịch nào được tìm thấy</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="p-d-flex p-jc-between p-mt-4">
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Quay về"
+      icon="pi pi-arrow-left"
+      class="p-button-secondary mr-2"
+      (click)="goBack()"
+    ></button>
+    
+  </div>
+</div>
+
+<p-toast></p-toast>

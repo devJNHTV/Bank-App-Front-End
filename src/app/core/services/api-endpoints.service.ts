@@ -16,12 +16,16 @@ export class ApiEndpointsService {
     return `${this.apiUrl}/register/kyc-and-otp`;
   }
 
+  reSentOtpEndpoint(): string {
+    return `${this.apiUrl}/register/send-otp`;
+  }
+
   getConfirmRegisterEndpoint(): string {
     return `${this.apiUrl}/register/confirm`;
   }
 
   getKycStatusEndpoint(): string {
-    return `${this.apiUrl}/status`;
+    return `http://localhost:8888/api/customers/status`;
   }
 
   getKycVerifyEndpoint(): string {

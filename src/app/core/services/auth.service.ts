@@ -10,6 +10,7 @@ import { StorageService } from './storage.service';
 import { NotificationService } from './notification.service';
 import { ApiEndpointsService } from './api-endpoints.service';
 import { KycService } from './kyc.service';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +42,7 @@ export class AuthService {
 
   login(username: string, password: string): Observable<any> {
     console.log('Attempting login for user:', username);
+    console.log('Attempting login for password:', password);
     const body = new HttpParams()
       .set('grant_type', 'password')
       .set('client_id', environment.keycloak.clientId)
@@ -59,21 +61,39 @@ export class AuthService {
         }
         this.isAuthenticatedSubject.next(true);
 
-        // Gọi check KYC
         this.kycService.checkKycStatus().subscribe({
           next: ({ verified }) => {
             console.log('KYC Check after login:', verified);
             this.isKycVerifiedSubject.next(verified);
-            this.router.navigate([verified ? '/customer-dashboard' : '/kyc'], {
-              queryParams: !verified ? { message: 'Vui lòng xác minh danh tính' } : {},
+
+            this.router.navigate(['/customer-dashboard']).then(() => {
+              if (!verified) {
+                Swal.fire({
+                  title: 'Xác minh danh tính',
+                  text: 'Tài khoản của bạn chưa được xác minh KYC. Bạn có muốn xác minh ngay không?',
+                  icon: 'info',
+                  showCancelButton: true,
+                  confirmButtonText: 'Xác minh ngay',
+                  cancelButtonText: 'Để sau'
+                }).then(result => {
+                  if (result.isConfirmed) {
+                    this.router.navigate(['/kyc']);
+                  }
+                });
+              }
             });
           },
           error: (error) => {
             console.error('KYC Check Error after login:', error);
-            this.router.navigate(['/kyc'], {
-              queryParams: { message: 'Vui lòng xác minh danh tính' },
+            this.router.navigate(['/customer-dashboard']).then(() => {
+              Swal.fire({
+                title: 'Không thể kiểm tra KYC',
+                text: 'Đã xảy ra lỗi khi kiểm tra trạng thái xác minh. Vui lòng kiểm tra lại sau.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              });
             });
-          },
+          }
         });
       }),
 

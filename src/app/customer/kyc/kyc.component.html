@@ -15,6 +15,42 @@
       </mat-card-header>
 
       <mat-card-content>
+        <!-- Image Upload Section -->
+        <div class="upload-section">
+          <h3>Tải ảnh CCCD</h3>
+          <p class="upload-description">Chụp hoặc tải ảnh mặt trước CCCD có chứa mã QR để tự động điền thông tin</p>
+          
+          <div class="upload-area" [class.has-image]="uploadedImage">
+            <div *ngIf="!uploadedImage" class="upload-placeholder" (click)="openFileDialog()">
+              <mat-icon class="upload-icon">cloud_upload</mat-icon>
+              <p>Nhấn để chọn ảnh CCCD</p>
+              <small>Hỗ trợ: JPG, PNG, PDF</small>
+            </div>
+            
+            <div *ngIf="uploadedImage" class="uploaded-image-container">
+              <img [src]="uploadedImage" alt="CCCD được tải lên" class="uploaded-image">
+              <div class="image-actions">
+                <button mat-icon-button color="primary" (click)="openFileDialog()" matTooltip="Thay đổi ảnh">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="clearImage()" matTooltip="Xóa ảnh">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <input #fileInput type="file" accept="image/*,.pdf" (change)="onFileSelected($event)" style="display: none;">
+          
+          <div *ngIf="isProcessingImage" class="processing-indicator">
+            <mat-spinner diameter="24"></mat-spinner>
+            <span>Đang xử lý ảnh...</span>
+          </div>
+        </div>
+
+        <!-- <mat-divider></mat-divider> -->
+
+        <!-- Form Section -->
         <form [formGroup]="kycForm" (ngSubmit)="onSubmit()" class="form">
           <div class="form-row">
             <mat-form-field appearance="outline" class="full-width">
@@ -76,14 +112,14 @@
           <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
 
           <div class="form-actions">
-            <button mat-stroked-button color="primary" type="button" routerLink="/login">
+            <button mat-stroked-button color="primary" type="button" routerLink="/customer-dashboard">
               Quay lại
             </button>
             <button
               mat-raised-button
               color="primary"
               type="submit"
-              [disabled]="kycForm.invalid || isLoading || !email"
+              [disabled]="kycForm.invalid || isLoading"
             >
               <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
               <span *ngIf="!isLoading">Gửi KYC</span>
@@ -99,4 +135,7 @@
       <a href="#" class="info-link">Biểu phí dịch vụ</a>
     </div>
   </div>
+
+  <!-- Hidden canvas for image processing -->
+  <canvas #canvas style="display: none;"></canvas>
 </div>

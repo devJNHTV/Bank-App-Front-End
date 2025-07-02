@@ -1,0 +1,222 @@
+<div class="card transfer-container" *ngIf="!showConfirmForm"> 
+  <h2 class="header-title p-mb-3 text-center">
+    <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+      <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
+    </button>Chuyển khoản nội bộ</h2>
+  <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+    <div class="p-fluid p-formgrid p-grid">
+      
+      <div class="p-field p-col-12 p-md-6">
+        <label for="fromAccountNumber"><i class="pi pi-user mr-2 ml-2"></i> Tài khoản nguồn:     
+          <small *ngIf="fromCustomerName" style="font-size: 14px;">
+            <strong>{{ fromCustomerName }}</strong>
+         </small>
+        </label>
+        <div class="flex ">
+          
+          <p-dropdown
+            formControlName="fromAccountNumber"
+            [options]="fromAccountOptions"
+            optionLabel="accountDescription"
+            optionValue="accountNumber"
+            [showClear]="false"
+            class="w-full md:w-56"
+            (onChange)="onFromAccountChange($event)"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                submitted && transferForm.controls['fromAccountNumber'].errors
+            }"
+            aria-describedby="fromAccountNumber-help"
+          />
+          <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+            <img src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon.png" width="24" height="24" alt="icon" />
+          </button>
+        </div>
+        <div *ngIf="selectedBalance !== null" class="p-mt-2">
+          <p>
+            <i class="pi pi-money-bill mr-2"></i> Số dư:
+            {{ selectedBalance | number : "1.0-0" }} VNĐ
+          </p>
+        </div>
+        <small
+          id="fromAccountNumber-help"
+          *ngIf="
+          submitted &&
+          transferForm.controls['fromAccountNumber'].errors?.['required']
+          "
+          class="p-error"
+        >
+          Số tài khoản nguồn không được để trống.
+        </small>
+      </div>
+
+      <div class="p-field p-col-12 p-md-6">
+        <label for="toAccountNumber">Chuyển đến:</label>
+        <div class="flex ">
+
+          <input
+            type="text"
+            pInputText
+            id="toAccountNumber"
+            formControlName="toAccountNumber"
+            placeholder="Số tài khoản"
+            pattern="[0-9]*"
+            (keypress)="onlyNumbers($event)"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                submitted && transferForm.controls['toAccountNumber'].errors
+            }"
+            aria-describedby="toAccountNumber-help"
+          />
+          <ng-container
+            id="toAccountNumber-help"
+            *ngIf="submitted && transferForm.controls['toAccountNumber'].errors"
+          >
+            <small
+              *ngIf="transferForm.controls['toAccountNumber'].errors?.['required']"
+              class="p-error"
+            >
+              Số tài khoản đích không được để trống.
+            </small>
+            <small
+              *ngIf="transferForm.controls['toAccountNumber'].errors?.['pattern']"
+              class="p-error"
+            >
+              Số tài khoản chỉ được chứa số.
+            </small>
+          </ng-container>
+          <button
+            pButton
+            type="button"
+            class="p-button p-button-icon-only p-button-text ml-2"
+            (click)="openToAccountNumberLatest()"
+          >
+          <i class="pi pi-address-book" style="font-size: 1.5rem;"></i>
+          </button>
+          <!-- Hiện danh sách tài khoản đã chuyển gần nhất -->
+          <p-dialog header="Danh sách tài khoản đã giao dịch gần đây" [(visible)]="showRecentAccounts" [modal]="true" [style]="{width: '480px'}" [closable]="true" (onHide)="showRecentAccounts = false">
+            <ul>
+              <li *ngFor="let account of listInforToAccountNumberTransactionLatest" (click)="selectRecentAccount(account)" style="cursor: pointer; padding: 0.5rem; border-bottom: 1px solid #ccc;">
+                <i class="pi pi-user mr-3 ml-2"></i>{{ account.customerName }} - {{ account.accountNumber }}
+              </li>
+            </ul>
+          </p-dialog>
+        </div>
+        <small *ngIf="toCustomerName" class="customer-name">
+           <strong><i class="pi pi-user mr-2 ml-2"></i>{{ toCustomerName }}</strong>
+        </small>
+  
+        
+      </div>
+
+      <div class="formgrid grid">
+        <div class="p-field p-col-12 md:col-6">
+          <label for="amount">Số tiền giao dịch:</label>
+          <span
+            [ngClass]="{
+              'ng-invalid ng-dirty-wrapper':
+                submitted && transferForm.controls['amount'].errors
+            }"
+          >
+            <p-inputNumber
+              id="amount"
+              formControlName="amount"
+              mode="currency"
+              currency="VND"
+              locale="vi-VN"
+              placeholder="Nhập số tiền"
+              aria-describedby="amount-errors"
+            >
+            </p-inputNumber>
+          </span>
+          <ng-container
+            id="amount-errors"
+            *ngIf="submitted && transferForm.controls['amount'].errors"
+          >
+            <small
+              *ngIf="transferForm.controls['amount'].errors?.['required']"
+              class="p-error"
+              >Số tiền không được để trống.</small
+            >
+            <small
+              *ngIf="transferForm.controls['amount'].errors?.['min']"
+              class="p-error"
+            >
+              Số tiền phải lớn hơn hoặc bằng
+              {{ transferForm.controls["amount"].errors["min"].min }}.
+            </small>
+          </ng-container>
+        </div>
+        <div class="p-field p-col-12 md:col-6">
+          <label for="currency">Loại tiền</label>
+          <p-dropdown
+            id="currency"
+            formControlName="currency"
+            [options]="currencyOptions"
+            optionLabel="currencyName"
+            optionValue="currencyCode"
+            [showClear]="false"
+            class="w-full md:w-56"
+            [ngClass]="{
+              'ng-invalid ng-dirty':
+                submitted && transferForm.controls['currency'].errors
+            }"
+            aria-describedby="currency-errors"
+          ></p-dropdown>
+        
+          <ng-container
+            id="currency-errors"
+            *ngIf="submitted && transferForm.controls['currency'].errors"
+          >
+            <small *ngIf="transferForm.controls['currency'].errors?.['required']" class="p-error">
+              Vui lòng chọn loại tiền.
+            </small>
+          </ng-container>
+        </div>
+        
+      </div>
+      
+      
+
+      <div class="p-field p-col-12">
+        <label for="description">Nội dung chuyển khoản:</label>
+        <textarea
+          pTextarea
+          id="description"
+          formControlName="description"
+          rows="5"
+          cols="30"
+          placeholder="Nhập nội dung "
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="p-d-flex p-jc-between p-mt-4" >
+      <button
+        pButton
+        pRipple
+        type="button"
+        label="Quay về"
+        icon="pi pi-arrow-left"
+        class="p-button-secondary mr-2"
+        (click)="goBack()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="submit"
+        label="Tiếp tục"
+        icon="pi pi-check"
+        class="p-button-primary "
+        
+      ></button>
+    </div>
+  </form>
+  
+</div>
+<app-confirm-transaction
+  *ngIf="showConfirmForm && someTransferData"
+  [transactionData]="someTransferData"
+  (cancel)="onCancelConfirm()"
+></app-confirm-transaction>
+<p-toast></p-toast>

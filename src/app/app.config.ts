@@ -6,27 +6,35 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';  
 import { provideClientHydration } from '@angular/platform-browser';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MessageService } from 'primeng/api';
+import { provideToastr } from 'ngx-toastr';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideClientHydration(),
+    provideClientHydration(), 
     provideHttpClient(
       withFetch(),
       withInterceptorsFromDi(),
       withInterceptors([authInterceptor])
     ),
     MessageService,
+    provideAnimationsAsync(),
+    provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
-    provideStore(),
-    provideEffects(),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
+    provideToastr({                    
+      positionClass: 'toast-bottom-right',
+      timeOut: 3000,
+      closeButton: true,
+      progressBar: true,
+      preventDuplicates: true
+    }),
     providePrimeNG({
       theme: {
         preset: Aura,
@@ -35,8 +43,13 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: '.app-dark',
           cssLayer: false
         }
-      }
+      },
     }),
-    provideAnimationsAsync()
-  ]
+    provideStore(),
+    provideEffects(),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode(),
+    }),
+  ],
 };

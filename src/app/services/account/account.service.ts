@@ -13,6 +13,8 @@ export class AccountService {
   token = localStorage.getItem('access-token');
 
   getAccounts(): Observable<Account[]>  {
+      console.log(this.token);
+
     return this.http.get<Account[]>(`${this.apiUrl}/getAllPaymentAccount`, {
     });
   } 

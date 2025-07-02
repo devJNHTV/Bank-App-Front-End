@@ -1,11 +1,15 @@
 .sidenav-container {
   height: 100%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  position: fixed;
+  width: 100%;
 }
 
 .sidenav {
   width: 280px;
   background-color: white;
   border-right: 1px solid #e0e0e0;
+
 }
 
 .logo-container {
@@ -24,6 +28,16 @@
 .logo-image {
   height: 32px;
   margin-right: 8px;
+}  .sidenav-close {
+  position: absolute;
+  top: 0;
+  right: 30px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem;
+  // nếu muốn nền glass
+  // background: rgba(255, 255, 255, 0.1);
+  // backdrop-filter: blur(10px);
 }
 
 .logo-text {

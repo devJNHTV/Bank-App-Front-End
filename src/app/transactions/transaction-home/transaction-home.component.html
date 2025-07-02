@@ -1,0 +1,113 @@
+<div class="transaction-home-container">
+    <h2 class="page-title">Giao dịch</h2>
+
+    <div class="transaction-grid">
+        <p-card
+            class="transaction-card transfer"
+            (click)="navigateTo('transfer')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Chuyển khoản"
+        >
+        
+        <ng-template pTemplate="header" class="flex">
+            
+            <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                <img src="https://kienlongbank.com/Data/Sites/1/media/bancangi/need_icon_13.png" width="50" height="50" alt="icon" />
+              </button>
+          </ng-template>
+          <div class="card-title">Chuyển khoản nội bộ</div>
+            
+        </p-card>
+
+        <p-card
+            class="transaction-card transfer"
+            (click)="navigateTo('external-transfer')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Chuyển khoản"
+        >
+        
+        <ng-template pTemplate="header" class="flex">
+        
+            <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                <img src="https://png.pngtree.com/png-clipart/20230805/original/pngtree-bank-transfer-icon-icon-chat-circle-vector-picture-image_9731495.png" width="50" height="50" alt="icon" />
+              </button>
+          </ng-template>
+          <div class="card-title">Chuyển khoản liên ngân hàng</div>
+            
+        </p-card>
+
+        <p-card
+            class="transaction-card withdraw"
+            (click)="navigateTo('withdraw')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Rút tiền"
+        >
+            <ng-template pTemplate="header">
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="https://png.pngtree.com/png-clipart/20250109/original/pngtree-help-cash-out-debt-finance-loan-flat-color-icon-vector-png-image_4564606.png" width="50" height="50" alt="icon" />
+                  </button>
+            </ng-template>
+            <div class="card-title">Rút tiền</div>
+        </p-card>
+
+        <p-card
+            class="transaction-card deposit"
+            (click)="navigateTo('deposit')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Nạp tiền"
+        >
+            <ng-template pTemplate="header">
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="https://png.pngtree.com/png-clipart/20230815/original/pngtree-business-acounting-money-logo-vector-cash-logo-background-vector-picture-image_10709611.png" width="50" height="50" alt="icon" />
+                  </button>
+            </ng-template>
+            <div class="card-title">Nạp tiền</div>
+        </p-card>
+
+        <p-card
+            class="transaction-card paybill"
+            (click)="navigateTo('payment')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Thanh toán hóa đơn"
+        >
+            <ng-template pTemplate="header">
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="https://banner2.cleanpng.com/20200101/xvk/transparent-bill-icon-bill-and-payment-icon-pay-icon-5e0cb2821673a7.370299011577890434092.jpg" width="50" height="50" alt="icon" />
+                  </button>
+            </ng-template>
+            <div class="card-title">Thanh toán hóa đơn</div>
+        </p-card>
+
+        <p-card
+            class="transaction-card history"
+            (click)="navigateTo('history')"
+            styleClass="clickable-card"
+            headerStyleClass="card-header"
+            tabindex="0"
+            role="button"
+            aria-label="Lịch sử giao dịch"
+        >
+            <ng-template pTemplate="header">
+                <button pButton type="button" class="p-button-rounded p-button-text" style="pointer-events: none;">
+                    <img src="https://png.pngtree.com/png-vector/20220724/ourmid/pngtree-transaction-history-icon-banking-vector-icon-vector-png-image_38117652.png" width="50" height="50" alt="icon" />
+                  </button>
+            </ng-template>
+            <div class="card-title">Lịch sử giao dịch</div>
+        </p-card>
+    </div>
+</div>
