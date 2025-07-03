@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { TabViewModule } from 'primeng/tabview';
@@ -18,6 +18,8 @@ import { WithdrawStep2Component } from './steps/withdraw-step2.component';
 import { WithdrawStep3Component } from './steps/withdraw-step3.component';
 import { MessageService } from 'primeng/api';
 import { Customer } from '../../interfaces/customer.inteface';
+import { DialogModule } from 'primeng/dialog';
+import { KycService } from '../../services/kyc/kyc.service';
 
 @Component({
   selector: 'app-about',
@@ -36,12 +38,13 @@ import { Customer } from '../../interfaces/customer.inteface';
     Step3OtpComponent,
     WithdrawStep1Component,
     WithdrawStep2Component,
-    WithdrawStep3Component
+    WithdrawStep3Component,
+    DialogModule
   ],
   templateUrl:  './savings.component.html',
   styleUrl: './savings.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  encapsulation: ViewEncapsulation.None
+
 
 })
 export class SavingsComponent {
@@ -50,6 +53,9 @@ export class SavingsComponent {
   
   // Navigation
   currentView: string = 'main';
+  showKycDialog: boolean = false;
+  showPendingDialog: boolean = false;
+  pendingAction: string = ''; // Store which action needs KYC verification
   
   // Create account flow
   currentStep: number = 1;
@@ -79,7 +85,9 @@ export class SavingsComponent {
   constructor(
     private accountService: AccountService,
     private route: ActivatedRoute,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router,
+    private kycService: KycService
   ) {}
 
   ngOnInit(): void {
@@ -105,10 +113,47 @@ export class SavingsComponent {
 
   // Navigation methods
   setCurrentView(view: string): void {
+    // Check KYC for specific actions
+    if (view === 'open-account' || view === 'withdraw') {
+      this.checkKycForAction(view);
+      return;
+    }
+    
     this.currentView = view;
     if (view === 'main') {
       this.resetSteps();
     }
+  }
+
+  // Check KYC status before allowing certain actions
+  checkKycForAction(action: string): void {
+    this.pendingAction = action;
+    
+    this.kycService.getKycStatus().subscribe({
+      next: (res: any) => {
+        console.log('Trạng thái KYC:', res.status);
+        if(res.status === 'VERIFIED') {
+          // KYC verified, proceed with action
+          this.currentView = action;
+          if (action === 'main') {
+            this.resetSteps();
+          }
+        }
+        else if(res.status === 'PENDING') {
+          // Show pending dialog
+          this.showPendingDialog = true;
+        }
+        else {
+          // Show KYC verification dialog
+          this.showKycDialog = true;
+        }
+      },
+      error: (error) => {
+        console.error('Lỗi khi kiểm tra KYC:', error);
+        // On error, show KYC dialog
+        this.showKycDialog = true;
+      }
+    });
   }
 
   getViewTitle(view: string): string {
@@ -144,10 +189,34 @@ export class SavingsComponent {
 
   // Withdraw from account card button
   withdrawFromAccount(account: AccountSavings): void {
-    this.setCurrentView('withdraw');
-    this.withdrawFormData = {
-      selectedSavingsAccount: account.accountNumber
-    };
+    // Check KYC before allowing withdraw
+    this.pendingAction = 'withdraw';
+    
+    this.kycService.getKycStatus().subscribe({
+      next: (res: any) => {
+        console.log('Trạng thái KYC:', res.status);
+        if(res.status === 'VERIFIED') {
+          // KYC verified, proceed with withdraw
+          this.setCurrentView('withdraw');
+          this.withdrawFormData = {
+            selectedSavingsAccount: account.accountNumber
+          };
+        }
+        else if(res.status === 'PENDING') {
+          // Show pending dialog
+          this.showPendingDialog = true;
+        }
+        else {
+          // Show KYC verification dialog
+          this.showKycDialog = true;
+        }
+      },
+      error: (error) => {
+        console.error('Lỗi khi kiểm tra KYC:', error);
+        // On error, show KYC dialog
+        this.showKycDialog = true;
+      }
+    });
   }
 
   // Handle form submission from Step 1
@@ -324,6 +393,22 @@ export class SavingsComponent {
 
   getCurrentDate(): string {
     return new Date().toLocaleDateString('vi-VN');
+  }
+
+  // Dialog handling methods
+  onKycDialogConfirm(): void {
+    this.showKycDialog = false;
+    this.router.navigate(['/kyc']);
+  }
+
+  onKycDialogCancel(): void {
+    this.showKycDialog = false;
+    this.pendingAction = '';
+  }
+
+  onPendingDialogConfirm(): void {
+    this.showPendingDialog = false;
+    this.pendingAction = '';
   }
 }
 

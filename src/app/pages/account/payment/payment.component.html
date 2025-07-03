@@ -270,3 +270,68 @@
       </div>
     </div>
   </div>
+
+  <!-- Dialog xác minh danh tính -->
+  <p-dialog 
+    [(visible)]="showKycDialog" 
+    [modal]="true"
+    [closable]="false"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="kyc-verification-dialog"
+    [style]="{width: '450px'}">
+    
+    <ng-template pTemplate="content">
+      <div class="dialog-content">
+        <div class="dialog-icon">
+          <i class="pi pi-info-circle"></i>
+        </div>
+        <h3 class="dialog-title">Xác minh danh tính</h3>
+        <p class="dialog-message">
+          Tài khoản của bạn cần xác minh danh tính. Vui lòng chọn xác minh danh tính để tiếp tục.
+        </p>
+        <div class="dialog-actions">
+          <p-button 
+            label="Hủy" 
+            styleClass="p-button-outlined cancel-button"
+            (click)="onKycDialogCancel()">
+          </p-button>
+          <p-button 
+            label="Tiếp tục" 
+            styleClass="p-button-primary confirm-button"
+            (click)="onKycDialogConfirm()">
+          </p-button>
+        </div>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Dialog đang đợi duyệt KYC -->
+  <p-dialog 
+    [(visible)]="showPendingDialog" 
+    [modal]="true"
+    [closable]="false"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="kyc-pending-dialog"
+    [style]="{width: '450px'}">
+    
+    <ng-template pTemplate="content">
+      <div class="dialog-content">
+        <div class="dialog-icon">
+          <i class="pi pi-clock"></i>
+        </div>
+        <h3 class="dialog-title">Đang đợi xác thực</h3>
+        <p class="dialog-message">
+          Tài khoản của bạn đang đợi xác thực KYC. Vui lòng thử lại sau khi quá trình xác thực hoàn tất.
+        </p>
+        <div class="dialog-actions">
+          <p-button 
+            label="Đã hiểu" 
+            styleClass="p-button-primary confirm-button"
+            (click)="onPendingDialogConfirm()">
+          </p-button>
+        </div>
+      </div>
+    </ng-template>
+  </p-dialog>

@@ -70,7 +70,6 @@ export const routes: Routes = [
       { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
       { path: 'admin/transactions', component: TransactionListComponent, canActivate: [KycGuard] },
 
-
       { 
         path: 'account', 
         component: AccountComponent,

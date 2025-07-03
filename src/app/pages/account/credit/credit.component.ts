@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { Account } from '../../../interfaces/account.interface';
 import { AccountService } from '../../../services/account/account.service';
@@ -15,7 +16,7 @@ import { CreditAccount } from '../../../interfaces/account.interface';
 import { Customer } from '../../../interfaces/customer.inteface';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { Router } from '@angular/router';
-import { KycService } from '../../../core/services/kyc.service';
+import { KycService } from '../../../services/kyc/kyc.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -30,7 +31,8 @@ import { BehaviorSubject } from 'rxjs';
     InputTextModule,
     FormsModule,
     MessageModule,
-    ToastModule
+    ToastModule,
+    DialogModule
   ],
   templateUrl: './credit.component.html',
   styleUrl: './credit.component.scss',
@@ -40,6 +42,8 @@ export class CreditComponent implements OnInit, OnDestroy {
   creditAccounts: CreditAccount[] = [];
   loading: boolean = false;
   addCreditCard: boolean = false;
+  showKycDialog: boolean = false;
+  showPendingDialog: boolean = false;
   
   // Customer info và flow states
   currentStep: number = 1; // 1: Xác nhận thông tin, 2: OTP
@@ -120,7 +124,23 @@ export class CreditComponent implements OnInit, OnDestroy {
   }
 
   createCreditCard(): void {    
-    this.router.navigate(['/account/credit/register']);
+    // Kiểm tra trạng thái KYC của customer
+    this.kycService.getKycStatus().subscribe({
+      next: (res: any) => {
+        console.log('Trạng thái KYC:', res.status);
+        if(res.status === 'VERIFIED') {
+          this.router.navigate(['/account/credit/register']);
+        }
+        else if(res.status === 'PENDING') {
+          // Hiển thị dialog thông báo đang đợi duyệt KYC
+          this.showPendingDialog = true;
+        }
+        else {
+          // Hiển thị dialog xác minh danh tính
+          this.showKycDialog = true;
+        }
+      }
+    });
   }
 
   // Xác nhận thông tin customer và chuyển sang bước OTP
@@ -304,6 +324,22 @@ export class CreditComponent implements OnInit, OnDestroy {
       return;
     }
     this.router.navigate(['/account/credit/detail', cardNumber]);
+  }
+
+  // Đóng dialog và chuyển đến trang KYC
+  onKycDialogConfirm(): void {
+    this.showKycDialog = false;
+    this.router.navigate(['/kyc']);
+  }
+
+  // Đóng dialog không làm gì
+  onKycDialogCancel(): void {
+    this.showKycDialog = false;
+  }
+
+  // Đóng dialog pending KYC
+  onPendingDialogConfirm(): void {
+    this.showPendingDialog = false;
   }
 
   ngOnDestroy(): void {

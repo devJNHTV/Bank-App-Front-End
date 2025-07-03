@@ -14,7 +14,8 @@ import { CustomerGrowthResponse } from '../../core/models/CustomerGrowthResponse
 import { KycService } from '../../core/services/kyc.service';
 import { ToastModule } from 'primeng/toast';
 import { ApiResponse } from '../../core/models/ApiResponse';
-
+import { AccountStatisticComponent } from '../account-statistic/account-statistic.component';
+  
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -28,7 +29,8 @@ import { ApiResponse } from '../../core/models/ApiResponse';
     ChartModule,
     ProgressBarModule,
     TagModule,
-    ToastModule
+    ToastModule,
+    AccountStatisticComponent
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss']

@@ -8,13 +8,14 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { Account } from '../../../interfaces/account.interface';
 import { AccountService } from '../../../services/account/account.service';
 import { Customer } from '../../../interfaces/customer.inteface';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { Router } from '@angular/router';
-import { KycService } from '../../../core/services/kyc.service';
+import { KycService } from '../../../services/kyc/kyc.service';
 import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-payment',
@@ -28,7 +29,8 @@ import { BehaviorSubject } from 'rxjs';
     InputTextModule,
     FormsModule,
     MessageModule,
-    ToastModule
+    ToastModule,
+    DialogModule
   ],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.scss',
@@ -38,6 +40,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
   accounts: Account[] = [];
   loading: boolean = false;
   addAccount: boolean = false;
+  showKycDialog: boolean = false;
+  showPendingDialog: boolean = false;
   
   // Customer info và flow states
   currentStep: number = 1; // 1: Xác nhận thông tin, 2: OTP
@@ -112,9 +116,24 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
 
   createAccount(): void {    
-    this.addAccount = true;
-    this.currentStep = 1;
-
+    // gọi 1 api dể check trạng thái KYC của customer
+    this.kycService.getKycStatus().subscribe({
+      next: (res: any) => {
+        console.log('Trạng thái KYC:',  res.status);
+        if(res.status === 'VERIFIED') {
+          this.addAccount = true;
+          this.currentStep = 1;
+        }
+        else if(res.status === 'PENDING') {
+          // Hiển thị dialog thông báo đang đợi duyệt KYC
+          this.showPendingDialog = true;
+        }
+        else {
+            // Hiển thị dialog xác minh danh tính
+            this.showKycDialog = true;
+        }
+      }
+    });
   }
 
   // Xác nhận thông tin customer và chuyển sang bước OTP
@@ -306,5 +325,21 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
   withdraw(): void {
     this.router.navigate(['/transactions/withdraw']);
+  }
+
+  // Đóng dialog và chuyển đến trang KYC
+  onKycDialogConfirm(): void {
+    this.showKycDialog = false;
+    this.router.navigate(['/kyc']);
+  }
+
+  // Đóng dialog không làm gì
+  onKycDialogCancel(): void {
+    this.showKycDialog = false;
+  }
+
+  // Đóng dialog pending KYC
+  onPendingDialogConfirm(): void {
+    this.showPendingDialog = false;
   }
 }

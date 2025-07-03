@@ -133,4 +133,8 @@ export class AccountService {
     return this.http.get<creditCards[]>(`${this.apiUrl}/getAllCreditAccount-anyway`, {
     });
   }
+  getAccountCreationStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/api/admin/statistic/accounts/growth`, {
+    });
+  }
 }
