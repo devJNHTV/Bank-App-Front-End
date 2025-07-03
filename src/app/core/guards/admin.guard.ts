@@ -18,6 +18,7 @@ export class AdminGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
     this.authService.initializeAuthState(); // Khởi tạo trạng thái xác thực
+    this.adminService.restoreAdminState(); 
     return combineLatest([
       this.authService.isAuthenticated(),
       this.adminService.isAdmin(),

@@ -2,9 +2,27 @@
   <p-toast position="top-right"></p-toast>
   <div class="date-filters" style="margin-bottom: 20px;">
     <label style="margin-right: 10px;">Từ ngày:</label>
-    <input type="date" [(ngModel)]="startDate" (ngModelChange)="onDateChange()">
+    <p-calendar 
+      [(ngModel)]="startDate" 
+      (onSelect)="onDateChange()" 
+      dateFormat="dd/mm/yy" 
+      showIcon="true" 
+      [showButtonBar]="true" 
+      placeholder="Từ ngày"
+      [maxDate]="endDate ? endDate : null"
+      inputStyleClass="custom-date-input"
+    ></p-calendar>
     <label style="margin-left: 20px; margin-right: 10px;">Đến ngày:</label>
-    <input type="date" [(ngModel)]="endDate" (ngModelChange)="onDateChange()">
+    <p-calendar 
+      [(ngModel)]="endDate" 
+      (onSelect)="onDateChange()" 
+      dateFormat="dd/mm/yy" 
+      showIcon="true" 
+      [showButtonBar]="true" 
+      placeholder="Đến ngày"
+      [minDate]="startDate ? startDate : null"
+      inputStyleClass="custom-date-input"
+    ></p-calendar>
   </div>
   <div class="stats-grid">
     <div class="stat-card total-kyc">

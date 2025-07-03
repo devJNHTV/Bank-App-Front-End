@@ -177,3 +177,25 @@
     grid-template-columns: 1fr;
   }
 }
+
+.custom-date-input {
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 15px;
+  border: 1px solid #d1d5db;
+  transition: border-color 0.2s;
+  min-width: 140px;
+  box-sizing: border-box;
+}
+.custom-date-input:focus {
+  border-color: #4f46e5;
+  outline: none;
+}
+
+::ng-deep .p-datepicker {
+  z-index: 9999 !important;
+}
+
+.date-filters, .main-content {
+  overflow: visible !important;
+}

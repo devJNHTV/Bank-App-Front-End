@@ -22,6 +22,7 @@
     >
       <ng-template pTemplate="header">
         <tr>
+          <th>STT</th>
           <th>Mã CIF</th>
           <th>Họ và tên</th>
           <th>Số CMND/CCCD</th>
@@ -30,8 +31,9 @@
           <th>Hành động</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-row>
+      <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
         <tr>
+          <td>{{ rowIndex + 1 }}</td>
           <td>{{ row.cifCode }}</td>
           <td>{{ row.fullName }}</td>
           <td>{{ row.identityNumber }}</td>

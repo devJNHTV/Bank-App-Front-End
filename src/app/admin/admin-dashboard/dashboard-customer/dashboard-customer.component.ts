@@ -8,11 +8,13 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { KycStatisticsResponse } from '../../core/models/KycStatisticsResponse';
-import { CustomerGrowthResponse } from '../../core/models/CustomerGrowthResponse';
-import { KycService } from '../../core/services/kyc.service';
-import { ApiResponse } from '../../core/models/ApiResponse';
-import { AdminService } from '../../core/services/admin.service';
+import { KycStatisticsResponse } from '../../../core/models/KycStatisticsResponse';
+import { CustomerGrowthResponse } from '../../../core/models/CustomerGrowthResponse';
+import { KycService } from '../../../core/services/kyc.service';
+import { ApiResponse } from '../../../core/models/ApiResponse';
+import { AdminService } from '../../../core/services/admin.service';
+import { format } from 'date-fns';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,7 +27,8 @@ import { AdminService } from '../../core/services/admin.service';
     ChartModule,
     ProgressBarModule,
     TagModule,
-    ToastModule
+    ToastModule,
+    CalendarModule
   ],
   templateUrl: './dashboard-customer.component.html',
   styleUrls: ['./dashboard-customer.component.scss']
@@ -33,8 +36,8 @@ import { AdminService } from '../../core/services/admin.service';
 export class DashboardCustomerComponent implements OnInit {
   kycStats: KycStatisticsResponse | null = null;
   customerGrowth: CustomerGrowthResponse | null = null;
-  startDate: string = '';
-  endDate: string = '';
+  startDate: Date | null = null;
+  endDate: Date | null = null;
 
   lineChartData: any = {
     labels: ['', ''],
@@ -90,8 +93,8 @@ export class DashboardCustomerComponent implements OnInit {
 
   ngOnInit() {
     const today = new Date();
-    this.endDate = today.toISOString().split('T')[0];
-    this.startDate = new Date(today.setDate(today.getDate() - 30)).toISOString().split('T')[0];
+    this.endDate = today;
+    this.startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
     this.loadKycStatistics();
     this.loadCustomerGrowth();
   }
@@ -101,7 +104,9 @@ export class DashboardCustomerComponent implements OnInit {
       this.messageService.add({ severity: 'warn', summary: 'Cảnh báo', detail: 'Vui lòng chọn cả Từ ngày và Đến ngày' });
       return;
     }
-    this.adminService.getKycStatistics(this.startDate, this.endDate).subscribe({
+    const start = this.startDate ? format(this.startDate, 'yyyy-MM-dd') : '';
+    const end = this.endDate ? format(this.endDate, 'yyyy-MM-dd') : '';
+    this.adminService.getKycStatistics(start, end).subscribe({
       next: (res: ApiResponse<KycStatisticsResponse>) => {
         this.kycStats = res.data;
         this.doughnutChartData = {
@@ -130,7 +135,9 @@ export class DashboardCustomerComponent implements OnInit {
       this.messageService.add({ severity: 'warn', summary: 'Cảnh báo', detail: 'Vui lòng chọn cả Từ ngày và Đến ngày' });
       return;
     }
-    this.adminService.getCustomerGrowth(this.startDate, this.endDate).subscribe({
+    const start = this.startDate ? format(this.startDate, 'yyyy-MM-dd') : '';
+    const end = this.endDate ? format(this.endDate, 'yyyy-MM-dd') : '';
+    this.adminService.getCustomerGrowth(start, end).subscribe({
       next: (growth: ApiResponse<CustomerGrowthResponse>) => {
         if (!growth.data || (growth.data.totalNewCustomers === 0 && growth.data.previousPeriodCustomers === 0)) {
           this.customerGrowth = null;
