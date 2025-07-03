@@ -57,7 +57,8 @@ import { AdminGuard } from './core/guards/admin.guard';
 import { DashboardCustomerComponent } from './admin/admin-dashboard/dashboard-customer.component';
 import { KycManagerComponent } from './admin/kyc-manager/kyc-manager.component';
 import { AdminTransactionDetailComponent } from './admin/transaction/transaction-detail/transaction-detail.component';
-export const routes: Routes = [
+import { DashboardTransactionComponent } from './admin/admin-dashboard/dashboard-transaction/dashboard-transaction.component';
+  export const routes: Routes = [
   // Authentication routes (no sidebar)
   {
     path: '',
@@ -78,16 +79,20 @@ export const routes: Routes = [
     component: AdminLayoutComponent,
     canActivate: [AuthGuard, AdminGuard],
     children: [
+      { path: 'dashboard/transaction', component: DashboardTransactionComponent },
       { path: 'dashboard/customer', component: DashboardCustomerComponent },
       { path: 'customers', component: CustomerListComponent },
       { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent },
       { path: 'accounts', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
       { path: 'kyc-management', component: KycManagerComponent }, // Placeholder, thay bằng component thực tế
       { path: 'settings', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
-      { path: 'admin/transactions', component: TransactionListComponent },
+      { path: 'admin/transactions', component: AdminTransactionListComponent },
       { path: 'employee/loans', component: PendingLoanListComponent },
       { path: 'employee/loans/pending', component: PendingLoanListComponent },
-      { path: 'employee/loans/:id', component: LoanDetailViewComponent }
+      { path: 'employee/loans/:id', component: LoanDetailViewComponent },
+      { path: 'admin/transactions', component: AdminTransactionListComponent, canActivate: [KycGuard] },
+      { path: 'admin/transactions/detail/:referenceCode', component: AdminTransactionDetailComponent, canActivate: [KycGuard] },
+      
     ]
   },
   // Customer routes (with MainLayoutComponent)
@@ -103,11 +108,7 @@ export const routes: Routes = [
       { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
       { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
       { path: 'change-password', component: ChangePasswordComponent, canActivate: [KycGuard] },
-      {
-        path: 'account',
-      { path: 'admin/transactions', component: AdminTransactionListComponent, canActivate: [KycGuard] },
-      { path: 'admin/transactions/detail/:referenceCode', component: AdminTransactionDetailComponent, canActivate: [KycGuard] },
-
+  
 
       { 
         path: 'account', 

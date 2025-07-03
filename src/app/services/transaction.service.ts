@@ -155,7 +155,13 @@ export class TransactionService {
       }
     );
   }
-
+// Get Stats
+getStats(params: any): Observable<any> {
+  return this.http.get(`${this.baseUrlTransaction}/admin/stats`, {
+    headers: this.getAuthHeaders(),
+    params: params,
+  });
+}
   // Get ALl Transaction
 
   getAllsTransaction(params: any): Observable<any> {
@@ -171,3 +177,4 @@ export class TransactionService {
     });
   }
 }
+
