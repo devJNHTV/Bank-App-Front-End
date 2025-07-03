@@ -55,6 +55,7 @@ import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.componen
 import { AdminGuard } from './core/guards/admin.guard';
 import { DashboardCustomerComponent } from './admin/admin-dashboard/dashboard-customer.component';
 import { KycManagerComponent } from './admin/kyc-manager/kyc-manager.component';
+import { DashboardLoanAdminComponent } from './loan/dashboard-loan-admin/dashboard-loan-admin.component';
 export const routes: Routes = [
   // Authentication routes (no sidebar)
   {
@@ -77,6 +78,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard],
     children: [
       { path: 'dashboard/customer', component: DashboardCustomerComponent },
+      { path: 'admin/loan-dashboard', component: DashboardLoanAdminComponent },
       { path: 'customers', component: CustomerListComponent },
       { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent },
       { path: 'accounts', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
@@ -101,8 +103,6 @@ export const routes: Routes = [
       { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
       { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
       { path: 'change-password', component: ChangePasswordComponent, canActivate: [KycGuard] },
-      {
-        path: 'account',
       { path: 'admin/transactions', component: TransactionListComponent, canActivate: [KycGuard] },
 
       { 

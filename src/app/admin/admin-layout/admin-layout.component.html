@@ -32,6 +32,10 @@
               <i class="pi pi-verified"></i>
               <span>Transaction Dashboard</span>
             </li>
+            <li class="dropdown-item" [class.active]="isActive('/admin/loan-dashboard')" (click)="navigateTo('/admin/loan-dashboard')">
+              <i class="pi pi-briefcase"></i>
+              <span>Dashboard khoản vay</span>
+            </li>
           </ul>
         </ul>
       </div>
@@ -50,6 +54,11 @@
             <i class="pi pi-verified"></i>
             <span (click)="navigateTo('kyc-management')">Duyệt KYC</span>
           </li>
+          <li class="menu-item" [class.active]="isActive('/employee/loans')">
+            <i class="pi pi-folder-open"></i>
+            <span (click)="navigateTo('/employee/loans')">Quản Lý Khoản Vay</span>
+          </li>
+          
         </ul>
       </div>
       <div class="menu-section">

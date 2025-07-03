@@ -97,4 +97,14 @@ export class LoanService {
   getInfoIncomesByLoanId(loanId: number): Observable<ApiResponseWrapper<any>> {
     return this.http.get<ApiResponseWrapper<any>>(`http://localhost:8888/api/info-income/loan/${loanId}`, { headers: this.getAuthHeaders() });
   }
+  // API thống kê cho dashboard admin
+  getTotalDisbursedSystem(): Observable<ApiResponseWrapper<number>> {
+    return this.http.get<ApiResponseWrapper<number>>(`${this.baseUrl}/admin/total-disbursed`, { headers: this.getAuthHeaders() });
+  }
+  getTotalCollectedSystem(): Observable<ApiResponseWrapper<number>> {
+    return this.http.get<ApiResponseWrapper<number>>(`${this.baseUrl}/admin/total-collected`, { headers: this.getAuthHeaders() });
+  }
+  getTotalProfitSystem(): Observable<ApiResponseWrapper<number>> {
+    return this.http.get<ApiResponseWrapper<number>>(`${this.baseUrl}/admin/total-profit`, { headers: this.getAuthHeaders() });
+  }
 } 
