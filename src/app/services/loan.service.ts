@@ -5,6 +5,7 @@ import { Loan} from '../models/loan.model';
 import { ApiResponseWrapper} from '../models/api-response-wrapper.model';
 import { LoanRejectionReason } from '../models/LoanRejectionReason.model';
 import { CustomerResponse } from '../interfaces/customerResponse';
+import { Account } from '../interfaces/account.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -17,9 +18,6 @@ export class LoanService {
   ) {}
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token') || '';
-    console.log("token");
-    
-    console.log(token);
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
@@ -78,11 +76,16 @@ export class LoanService {
   getTotalOutstanding(): Observable<ApiResponseWrapper<number>> {
     return this.http.get<ApiResponseWrapper<number>>(`${this.baseUrl}/total-outstanding`,{ headers: this.getAuthHeaders() });
   }
-
-  getCustomerId(): Observable<ApiResponseWrapper<number>> {
-    return this.http.get<ApiResponseWrapper<number>>(`${this.baseUrl}/getCustomerId`,{ headers: this.getAuthHeaders() });
-  }
   getCustomerDetail(userId: string): Observable<ApiResponseWrapper<CustomerResponse>> {
-    return this.http.get<ApiResponseWrapper<CustomerResponse>>(`${this.baseUrl}/getUserId/${userId}`,{ headers: this.getAuthHeaders() });
+    return this.http.get<ApiResponseWrapper<CustomerResponse>>(`${this.baseUrl}/getCustomerById/${userId}`,{ headers: this.getAuthHeaders() });
   }
-}
+  getAccountsByUserId(userId: string): Observable<ApiResponseWrapper<Account[]>> {
+    return this.http.get<ApiResponseWrapper<Account[]>>(`${this.baseUrl}/getAccountsByUserId/${userId}`,{ headers: this.getAuthHeaders() });
+  }
+  getAccountsByCurrentUser(): Observable<ApiResponseWrapper<Account[]>> {
+    return this.http.get<ApiResponseWrapper<Account[]>>(`${this.baseUrl}/getAccounts`,{ headers: this.getAuthHeaders() });
+  }
+  checkInfoIncome(infoIncome: any): Observable<ApiResponseWrapper<any>> {
+    return this.http.post<ApiResponseWrapper<any>>(`${this.baseUrl}/check-info-income`, infoIncome, { headers: this.getAuthHeaders() });
+  }
+} 

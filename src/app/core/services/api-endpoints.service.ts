@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { CustomerResponse } from '../models/customer-response.dto';
+import { ApiResponseWrapper } from '../models/api-response-wrapper.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -71,4 +73,6 @@ export class ApiEndpointsService {
   getKeycloakUrl(): string {
     return this.keycloakUrl;
   }
+
+
 }

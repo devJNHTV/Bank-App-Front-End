@@ -17,6 +17,7 @@ import { LoanService } from '../../services/loan.service';
 import { ApiResponseWrapper } from '../../models/api-response-wrapper.model';
 import { Loan } from '../../models/loan.model';
 import { Account } from '../../interfaces/account.interface';
+import { InfoIncome } from '../../models/infoIncome.model';
 
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -26,7 +27,6 @@ import { LoanStatus } from "../../models/loanStatus .model";
 import { ToastrService } from 'ngx-toastr';
 
 
-// 2. termMonths ≤ maxTerm(amount)
 function termMaxByAmountValidator(amountControl: AbstractControl): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const amount = amountControl.value;
@@ -48,7 +48,6 @@ function termMaxByAmountValidator(amountControl: AbstractControl): ValidatorFn {
   };
 }
 
-// 3. lãi suất tự tính: baseRate(term) + điều chỉnh theo amount
 function computeInterestRate(amount: number, term: number): number {
   let baseRate = 0;
   if (term <= 12) {
@@ -87,6 +86,13 @@ export class ApplyNewLoanComponent implements OnInit {
   accounts: Account[] = [];
   loading = true; 
   computedRate: number | null = null;
+  bankOptions = [
+    { bankName: 'Vietcombank', bankCode: '970436' },
+    { bankName: 'Techcombank', bankCode: '970437' },
+    { bankName: 'BIDV', bankCode: '970438' },
+    { bankName: 'VietinBank', bankCode: '970439' },
+    { bankName: 'ACB', bankCode: '970440' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -95,10 +101,11 @@ export class ApplyNewLoanComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService
   ) {
-    // Khởi tạo form với updateOn: 'blur' để validate khi blur khỏi ô
     this.loanForm = this.fb.group(
       {
         accountNumber: ['', Validators.required],
+        incomeAccountNumber: ['', Validators.required],
+        bankName: [null, Validators.required],
         declaredIncome: [
           null,
           [Validators.required, Validators.min( 5_000_000)]
@@ -115,8 +122,6 @@ export class ApplyNewLoanComponent implements OnInit {
       }
     );
   }
-
-  // Các getter để dễ truy xuất control
   get declaredIncomeControl() {
     return this.loanForm.get('declaredIncome')!;
   }
@@ -156,7 +161,6 @@ export class ApplyNewLoanComponent implements OnInit {
       this.amountControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
     });
 
-    // 2. Khi amount blur → gán validator cho termMonths & tính lãi suất
     this.amountControl.valueChanges.subscribe((amt) => {
       this.termControl.setValidators([
         Validators.required,
@@ -172,7 +176,6 @@ export class ApplyNewLoanComponent implements OnInit {
       }
     });
 
-    // 3. Khi termMonths blur → tính lãi suất
     this.termControl.valueChanges.subscribe((term) => {
       const amt = this.amountControl.value;
       if (amt != null && term != null && !isNaN(amt)) {
@@ -186,7 +189,7 @@ export class ApplyNewLoanComponent implements OnInit {
   }
 
   loadAccounts(): void {
-    this.accountService.getAccounts().subscribe({
+    this.loanService.getAccountsByCurrentUser().subscribe({
       next: (res: any) => {
         this.accounts = res.data;
         console.log(this.accounts);
@@ -208,12 +211,18 @@ export class ApplyNewLoanComponent implements OnInit {
       this.loanForm.markAllAsTouched();
       return;
     }
+    const infoIncome: InfoIncome = {
+      infoId: null,
+      accountNumber: this.loanForm.value.incomeAccountNumber,
+      bankName: this.loanForm.value.bankName,
+      declaredIncome: this.loanForm.value.declaredIncome
+    };
     const loan: Loan = {
       accountNumber: this.loanForm.value.accountNumber,
       amount: this.loanForm.value.amount,
       interestRate: this.loanForm.value.interestRate, 
       termMonths: this.loanForm.value.termMonths,
-      declaredIncome: this.loanForm.value.declaredIncome,
+      infoIncome: infoIncome,
       customerId: null,
       loanId: null,
       approvedAt: null,
@@ -235,7 +244,7 @@ export class ApplyNewLoanComponent implements OnInit {
       },
       error: (httpError: HttpErrorResponse) => {
         console.log(httpError);
-        
+        this.loading = false;
         this.toastr.error( `Lỗi: ${httpError.error.message}`,'Lỗi');
       }
     });

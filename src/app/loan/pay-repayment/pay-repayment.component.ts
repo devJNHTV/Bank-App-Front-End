@@ -17,7 +17,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastrService } from 'ngx-toastr';
-
+import { LoanService } from '../../services/loan.service';
 @Component({
   selector: 'app-pay-repayment',
   standalone: true,
@@ -62,7 +62,8 @@ export class PayRepaymentComponent implements OnInit {
     private router: Router,
     private repaymentService: RepaymentService,
     private accountService: AccountService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private loanService: LoanService
   ) {
     this.paymentForm = this.fb.group({
       accountNumber: ['', Validators.required],
@@ -111,7 +112,7 @@ export class PayRepaymentComponent implements OnInit {
 
   loadAccounts(): void {
     this.loading = true;
-    this.accountService.getAccounts().subscribe({
+    this.loanService.getAccountsByCurrentUser().subscribe({
         next: (res: any) => {
             this.accounts = res.data;
             console.log(this.accounts);

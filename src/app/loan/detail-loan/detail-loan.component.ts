@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoanService } from '../../services/loan.service';
 import { Loan } from '../../models/loan.model';
+import { InfoIncome } from '../../models/infoIncome.model';
 import { Repayment } from '../../models/repayment.model';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
@@ -23,7 +24,7 @@ export class DetailLoanComponent implements OnInit {
     createdAt: '',
     approvedAt: '',
     customerId: null,
-    declaredIncome: 0,
+    infoIncome: null,
     status: null,
     repayments: [],
     rejectionReasons: []

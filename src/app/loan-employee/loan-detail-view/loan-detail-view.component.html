@@ -240,13 +240,6 @@
               </div>
             </div>
             <div class="info-item">
-              <i class="pi pi-wallet"></i>
-              <div class="info-content">
-                <label>Thu nhập</label>
-                <span>{{ formatCurrency(loanDetail?.declaredIncome || 0) }}</span>
-              </div>
-            </div>
-            <div class="info-item">
               <i class="pi pi-calendar"></i>
               <div class="info-content">
                 <label>Ngày tạo</label>
@@ -260,6 +253,48 @@
                 <span>{{ formatDate(loanDetail?.approvedAt || null) }}</span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <!-- Transaction History -->
+      <div class="loan-info-row" >
+        <div class="info-card">
+          <div class="card-header">
+            <i class="pi pi-history"></i>
+            <h2>Lịch sử giao dịch thu nhập</h2>
+            <ng-container *ngIf="loanDetail?.infoIncome">
+              ({{ loanDetail?.infoIncome?.bankName }} - {{ loanDetail?.infoIncome?.accountNumber }} - 
+              {{ formatCurrency(loanDetail?.infoIncome?.declaredIncome || 0) }})
+            </ng-container>
+          </div>
+          <div *ngIf="loadingTransactions" class="loading-transactions">
+            <p-progressSpinner styleClass="custom-spinner"></p-progressSpinner>
+            <span>Đang tải lịch sử giao dịch...</span>
+          </div>
+          <div *ngIf="!loadingTransactions && transactionHistory.length === 0">
+            <span>Không có giao dịch thu nhập nào.</span>
+          </div>
+          <div *ngIf="!loadingTransactions && transactionHistory.length > 0">
+            <p-table [value]="transactionHistory" responsiveLayout="scroll" [tableStyle]="{'min-width': '40rem'}">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Mã GD</th>
+                  <th>Số tiền</th>
+                  <th>Thời gian</th>
+                  <th>Mô tả</th>
+                  <th>Loại</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-tx>
+                <tr>
+                  <td>{{ tx.id }}</td>
+                  <td>{{ formatCurrency(tx.amount) }}</td>
+                  <td>{{ formatDate(tx.timestamp) }}</td>
+                  <td>{{ tx.description }}</td>
+                  <td>{{ tx.type }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
           </div>
         </div>
       </div>
@@ -309,7 +344,8 @@
               <div class="customer-meta row1">
                 <div><b>Mã KH:</b> {{ customerDetail?.cifCode }}</div>
                 <div><b>Ngày sinh:</b> {{ customerDetail?.dateOfBirth }}</div>
-                <div><b>Địa chỉ:</b> {{ customerDetail?.address }}</div>
+                <div><b>Tên:</b> {{ customerDetail?.fullName }}</div>
+                <div><b>Số CMND:</b> {{ customerDetail?.identityNumber }}</div>
               </div>
               <!-- Row 2 -->
               <div class="customer-meta row2">
@@ -319,9 +355,11 @@
                     {{ customerDetail?.status }}
                   </span>
                 </div>
+                <div><b>Giới tính:</b> {{ customerDetail?.gender }}</div>
               </div>
               <!-- Row 3 -->
               <div class="customer-meta row3">
+                <div><b>Địa chỉ:</b> {{ customerDetail?.address }}</div>
                 <div><b>SĐT:</b> {{ customerDetail?.phoneNumber }}</div>
                 <div><b>Email:</b> {{ customerDetail?.email }}</div>
               </div>

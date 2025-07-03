@@ -240,7 +240,6 @@
         <p><strong>Lưu ý:</strong> Thu nhập tối thiểu để đăng ký là <strong>{{ 5_000_000 | number:'1.0-0' }} VND</strong></p>
       </div>
       <div class="form-grid">
-        <!-- Thu nhập -->
         <div class="form-field">
           <label for="declaredIncome">Tổng thu nhập cá nhân (VND/tháng)</label>
           <p-inputNumber
@@ -261,7 +260,6 @@
             Thu nhập tối thiểu là {{ 5_000_000 | number:'1.0-0' }} VND.
           </small>
         </div>
-        <!-- Số tiền vay -->
         <div class="form-field">
           <label for="amount">Số tiền vay (VND)</label>
           <p-inputNumber
@@ -282,7 +280,6 @@
             Số tiền tối thiểu là 1.000.000 VND.
           </small>
         </div>
-        <!-- Thời gian vay -->
         <div class="form-field">
           <label for="termMonths">Thời gian vay (tháng)</label>
           <p-inputNumber
@@ -307,7 +304,6 @@
             </strong>.
           </small>
         </div>
-        <!-- Lãi suất -->
         <div class="form-field">
           <label for="interestRate">Lãi suất tự tính (%/năm)</label>
           <p-inputNumber
@@ -324,22 +320,51 @@
             <i>(Lãi suất sẽ được tính tự động)</i>
           </small>
         </div>
-      </div>
-      <!-- Tài khoản -->
-      <div class="form-field">
-        <label for="accountNumber">Tài khoản giải ngân</label>
-        <p-dropdown
-          id="accountNumber"
-          formControlName="accountNumber"
-          [options]="accounts"
-          optionLabel="accountNumber"
-          optionValue="accountNumber"
-          placeholder="Chọn tài khoản"
-          [class.invalid]="loanForm.get('accountNumber')?.touched && loanForm.get('accountNumber')?.invalid">
-        </p-dropdown>
-        <small class="p-error" *ngIf="loanForm.get('accountNumber')?.touched && loanForm.get('accountNumber')?.hasError('required')">
-          Vui lòng chọn tài khoản.
-        </small>
+        <div class="form-field">
+          <label for="bankName">Ngân hàng chứng minh thu nhập</label>
+          <p-dropdown
+            id="bankName"
+            formControlName="bankName"
+            [options]="bankOptions"
+            optionLabel="bankName"
+            optionValue="bankName"
+            placeholder="Chọn ngân hàng"
+            [class.invalid]="loanForm.get('bankName')?.touched && loanForm.get('bankName')?.invalid">
+          </p-dropdown>
+          <small class="p-error" *ngIf="loanForm.get('bankName')?.touched && loanForm.get('bankName')?.hasError('required')">
+            Vui lòng chọn ngân hàng.
+          </small>
+        </div>
+        <div class="form-field">
+          <label for="incomeAccountNumber">Số tài khoản ngân hàng chứng minh thu nhập</label>
+          <p-inputNumber
+            id="incomeAccountNumber"
+            type="text"
+            formControlName="incomeAccountNumber"
+            placeholder="Nhập số tài khoản ngân hàng chứng minh thu nhập"
+            [class.invalid]="loanForm.get('incomeAccountNumber')?.touched && loanForm.get('incomeAccountNumber')?.invalid"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }">
+          </p-inputNumber>
+          <small class="p-error" *ngIf="loanForm.get('incomeAccountNumber')?.touched && loanForm.get('incomeAccountNumber')?.hasError('required')">
+            Vui lòng nhập số tài khoản ngân hàng chứng minh thu nhập.
+          </small>
+        </div>
+        <div class="form-field">
+          <label for="accountNumber">Tài khoản giải ngân</label>
+          <p-dropdown
+            id="accountNumber"
+            formControlName="accountNumber"
+            [options]="accounts"
+            optionLabel="accountNumber"
+            optionValue="accountNumber"
+            placeholder="Chọn tài khoản"
+            [class.invalid]="loanForm.get('accountNumber')?.touched && loanForm.get('accountNumber')?.invalid">
+          </p-dropdown>
+          <small class="p-error" *ngIf="loanForm.get('accountNumber')?.touched && loanForm.get('accountNumber')?.hasError('required')">
+            Vui lòng chọn tài khoản.
+          </small>
+        </div>
       </div>
       <!-- Nút submit -->
       <div class="form-actions">

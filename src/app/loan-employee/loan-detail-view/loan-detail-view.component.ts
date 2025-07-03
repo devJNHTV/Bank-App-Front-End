@@ -27,6 +27,14 @@ import { CustomerResponse } from '../../interfaces/customerResponse';
 
 type Severity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast';
 
+interface TransactionDto {
+  id: string;
+  amount: number;
+  timestamp: string;
+  description: string;
+  type: string;
+}
+
 @Component({
   selector: 'app-loan-detail-view',
   standalone: true,
@@ -63,12 +71,13 @@ export class LoanDetailViewComponent implements OnInit {
   processingAction = false;
   rejectionReasonControl = new FormControl('');
   customerDetail: CustomerResponse | null = null;
+  transactionHistory: TransactionDto[] = [];
+  loadingTransactions = false;
 
   loanForm = new FormGroup({
     amount: new FormControl<number | null>(null, [Validators.required, Validators.min(1000000)]),
     interestRate: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
     termMonths: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
-    declaredIncome: new FormControl<number | null>(null, [Validators.required, Validators.min(0)])
   });
 
   constructor(
@@ -100,11 +109,12 @@ export class LoanDetailViewComponent implements OnInit {
             amount: data.amount,
             interestRate: data.interestRate,
             termMonths: data.termMonths,
-            declaredIncome: data.declaredIncome
+            // Không còn dùng declaredIncome trực tiếp
           });
         }
-
-        // Sau khi load loan xong, gọi loadCustomerDetail
+        if (this.loanDetail?.infoIncome && this.loanDetail.infoIncome.accountNumber && this.loanDetail.infoIncome.bankName) {
+          this.fetchTransactionHistory(this.loanDetail.infoIncome);
+        }
         this.loadCustomerDetail();
       },
       error: () => {
@@ -117,29 +127,23 @@ export class LoanDetailViewComponent implements OnInit {
 
   loadCustomerDetail() {
     const customerId = this.loanDetail?.customerId?.toString() ?? '';
-    if (!customerId) {
-      this.loading = false;
-      return;
-    }
-
     this.loanService.getCustomerDetail(customerId).subscribe({
       next: (customerDetail) => {
         this.customerDetail = customerDetail.data;
-        this.userId = this.customerDetail.userId;
+        this.userId = this.customerDetail?.userId ?? '';
         console.log("customer detail: ", this.customerDetail);
-
-        // Sau khi có customer detail, gọi loadAccounts
         this.loadAccounts();
       },
-      error: () => {
-        this.toastr.error('Lỗi khi tải thông tin khách hàng.', 'Lỗi');
+      error: (err) => {
+        console.error('Không tải được danh sách tài khoản:', err);
+        this.toastr.error('Lỗi khi tải danh sách tài khoản.', 'Lỗi');
         this.loading = false;
       }
     });
   }
 
   loadAccounts(): void {
-    this.accountService.getAccountsByUserId(this.userId).subscribe({
+    this.loanService.getAccountsByUserId(this.userId).subscribe({
       next: (res: any) => {
         this.accounts = res.data;
         console.log(this.accounts);
@@ -242,8 +246,22 @@ export class LoanDetailViewComponent implements OnInit {
         amount: this.loanDetail.amount,
         interestRate: this.loanDetail.interestRate,
         termMonths: this.loanDetail.termMonths,
-        declaredIncome: this.loanDetail.declaredIncome
       });
     }
+  }
+
+  fetchTransactionHistory(infoIncome: any) {
+    this.loadingTransactions = true;
+    this.loanService.checkInfoIncome(infoIncome).subscribe({
+      next: (res: any) => {
+        this.transactionHistory = res.data || [];
+        this.loadingTransactions = false;
+      },
+      error: (err: any) => {
+        this.transactionHistory = [];
+        this.loadingTransactions = false;
+        this.toastr.error('Không lấy được lịch sử giao dịch thu nhập', 'Lỗi');
+      }
+    });
   }
 }

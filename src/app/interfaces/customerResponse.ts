@@ -9,5 +9,6 @@ export interface CustomerResponse {
     phoneNumber: string;
     status: string;
     identityNumber: string;
+    gender: string;
   }
   
