@@ -116,7 +116,7 @@ export class CustomerDetailAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result && this.cifCode) {
         this.customer = result;
-        this.loadCustomerDetail(this.cifCode);
+        window.location.reload();
       }
     });
   }

@@ -75,8 +75,8 @@
             <td mat-cell *matCellDef="let row">
               <mat-chip [ngClass]="row.status === 'ACTIVE' ? 'chip-active' : 'chip-inactive'" selected>
                 {{
-                  row.status === 'ACTIVE' ? 'Hoạt động' :
-                  row.status === 'SUSPENDED' ? 'Không hoạt động' : 'Bị khóa'
+                  row.status === 'ACTIVE' ? 'Kích hoạt' :
+                  row.status === 'SUSPENDED' ? 'Tạm khóa' : 'Khóa'
                 }}
               </mat-chip>
             </td>

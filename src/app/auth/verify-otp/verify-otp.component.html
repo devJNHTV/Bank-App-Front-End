@@ -53,16 +53,23 @@
             </button>
           </div>
 
-          <div class="resend-otp">
+          <div class="resend-container">
             <button
               mat-button
               color="primary"
               type="button"
               (click)="resendOtp()"
-              [disabled]="isResending || !email"
+              [disabled]="isResending || !email || isCountdownActive"
             >
+              <mat-icon>refresh</mat-icon>
               {{ isResending ? 'Đang gửi lại...' : 'Gửi lại mã OTP' }}
             </button>
+          </div>
+
+          <!-- Thêm phần hiển thị đếm ngược -->
+          <div class="countdown-info" *ngIf="isCountdownActive">
+            <mat-icon>timer</mat-icon>
+            Vui lòng chờ <strong>{{ formatCountdown() }}</strong> để gửi lại mã OTP
           </div>
         </form>
       </mat-card-content>
