@@ -28,4 +28,12 @@ export class PasswordService {
       )
     );
   }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(this.apiEndpointsService.getForgotPasswordEndpoint(), { email }).pipe(
+      catchError((error) =>
+        throwError(() => new Error(error?.error?.message || 'Đã xảy ra lỗi khi gửi yêu cầu quên mật khẩu.'))
+      )
+    );
+  }
 }

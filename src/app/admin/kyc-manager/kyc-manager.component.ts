@@ -12,10 +12,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { AdminService } from '../../core/services/admin.service';
-import { CustomerResponse } from '../../core/models/customer-response.dto';
+import { KycRequest } from '../../core/models/KycRequest';
 
 @Component({
-  selector: 'app-customer-list',
+  selector: 'app-kyc-manager',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,15 +28,15 @@ import { CustomerResponse } from '../../core/models/customer-response.dto';
     InputTextModule,
     FormsModule
   ],
-  templateUrl: './customer-list.component.html',
-  styleUrls: ['./customer-list.component.scss']
+  templateUrl: './kyc-manager.component.html',
+  styleUrl: './kyc-manager.component.scss'
 })
-export class CustomerListComponent implements OnInit {
+export class KycManagerComponent implements OnInit {
   totalElements = 0;
   pageSize = 10;
   pageIndex = 0;
   keyword: string = '';
-  customers: CustomerResponse[] = [];
+  kycRequests: KycRequest[] = [];
   isLoading = false;
 
   constructor(
@@ -46,20 +46,31 @@ export class CustomerListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadCustomers();
+    this.loadKycRequests();
   }
 
-  loadCustomers(event?: any): void {
+  loadKycRequests(event?: any): void {
     this.isLoading = true;
     let page = this.pageIndex;
     let size = this.pageSize;
+    let keyword = this.keyword
     if (event) {
       page = Math.floor(event.first / event.rows);
       size = event.rows;
     }
-    this.adminService.getCustomerList(page, size, this.keyword).subscribe({
+    this.adminService.getPendingKycRequests(page, size, keyword).subscribe({
       next: (response) => {
-        this.customers = response.data.customers;
+        this.kycRequests = response.data.kycRequests.map((kyc: any) => {
+          // Parse chuỗi JSON trong details
+          const details = JSON.parse(kyc.details);
+          return {
+            cifCode: details.cifCode,
+            fullName: details.fullName,
+            identityNumber: details.identityNumber,
+            submittedAt: details.submitted_at,
+            status: kyc.status
+          };
+        });
         this.totalElements = response.data.totalElements;
         this.pageSize = response.data.pageSize || this.pageSize;
         this.pageIndex = response.data.currentPage;
@@ -68,9 +79,8 @@ export class CustomerListComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Lỗi',
-          detail: error.message || 'Không thể tải danh sách khách hàng'
+          detail: error.message || 'Không thể tải danh sách yêu cầu KYC'
         });
-        this.router.navigate(['/dashboard']);
       },
       complete: () => {
         this.isLoading = false;
@@ -81,53 +91,66 @@ export class CustomerListComponent implements OnInit {
   onPageChange(event: any) {
     this.pageIndex = Math.floor(event.first / event.rows);
     this.pageSize = event.rows;
-    this.loadCustomers(event);
+    this.loadKycRequests(event);
   }
 
   onSearch(): void {
     this.pageIndex = 0;
-    this.loadCustomers();
+    this.loadKycRequests();
   }
 
-  viewCustomerDetail(cifCode: string): void {
-    this.router.navigate(['customers/detail', cifCode]);
-  }
-
-  async updateCustomerStatus(cifCode: string, currentStatus: string): Promise<void> {
-    const { value: newStatus } = await Swal.fire({
-      title: 'Cập nhật trạng thái khách hàng',
-      input: 'select',
-      inputOptions: {
-        ACTIVE: 'Kích hoạt',
-        SUSPENDED: 'Tạm khóa',
-        CLOSED: 'Khóa'
+  approveKyc(cifCode: string, status: string): void {
+    this.adminService.approveKyc(cifCode, status, null).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Thành công',
+          detail: response.message || 'Duyệt KYC thành công',
+          life: 1500
+        });
+        this.loadKycRequests();
       },
-      inputValue: currentStatus,
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Lỗi',
+          detail: error.message || 'Không thể duyệt KYC'
+        });
+      }
+    });
+  }
+
+  async rejectKyc(cifCode: string): Promise<void> {
+    const { value: reason } = await Swal.fire({
+      title: 'Từ chối KYC',
+      input: 'textarea',
+      inputLabel: 'Lý do từ chối',
+      inputPlaceholder: 'Nhập lý do từ chối...',
       showCancelButton: true,
       inputValidator: (value) => {
         if (!value) {
-          return 'Vui lòng chọn trạng thái';
+          return 'Vui lòng nhập lý do từ chối';
         }
         return null;
       }
     });
 
-    if (newStatus) {
-      this.adminService.updateCustomerStatus(cifCode, newStatus).subscribe({
-        next: () => {
+    if (reason) {
+      this.adminService.approveKyc(cifCode, 'REJECTED', reason).subscribe({
+        next: (response) => {
           this.messageService.add({
             severity: 'success',
             summary: 'Thành công',
-            detail: 'Cập nhật trạng thái khách hàng thành công',
+            detail: response.message || 'Từ chối KYC thành công',
             life: 1500
           });
-          this.loadCustomers();
+          this.loadKycRequests();
         },
         error: (error) => {
           this.messageService.add({
             severity: 'error',
             summary: 'Lỗi',
-            detail: error.message || 'Không thể cập nhật trạng thái khách hàng'
+            detail: error.message || 'Không thể từ chối KYC'
           });
         }
       });

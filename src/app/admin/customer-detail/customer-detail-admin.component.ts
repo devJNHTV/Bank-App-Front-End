@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,21 +16,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
 import Swal from 'sweetalert2';
-import { AuthService } from '../../core/services/auth.service';
 import { UserService } from '../../core/services/user.service';
 import { AdminService } from '../../core/services/admin.service';
 import { CustomerUpdateDialogComponent } from '../../customer/customer-update/customer-update.component';
-
-// interface Customer {
-//   fullName: string;
-//   email: string;
-//   phoneNumber: string;
-//   identityNumber: string;
-//   dateOfBirth: Date | null;
-//   gender: 'male' | 'female';
-//   address: string;
-//   status: string;
-// }
 
 @Component({
   selector: 'app-customer-detail',
@@ -58,12 +46,10 @@ import { CustomerUpdateDialogComponent } from '../../customer/customer-update/cu
 })
 export class CustomerDetailAdminComponent implements OnInit {
   cifCode: string | null = null;
-  // customer: Customer | null = null;
   customer: any;
   isLoading = false;
 
   constructor(
-    private userService: UserService,
     private adminService: AdminService,
     private route: ActivatedRoute,
     private router: Router,
@@ -116,7 +102,7 @@ export class CustomerDetailAdminComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result && this.cifCode) {
         this.customer = result;
-        this.loadCustomerDetail(this.cifCode);
+        window.location.reload();
       }
     });
   }

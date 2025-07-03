@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError, from, firstValueFrom } from 'rxjs';
-import { tap, finalize, catchError } from 'rxjs/operators';
+import { tap, finalize, catchError, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { TokenResponse } from '../models/TokenResponse'; 
 import { StorageService } from './storage.service';
@@ -11,6 +11,7 @@ import { NotificationService } from './notification.service';
 import { ApiEndpointsService } from './api-endpoints.service';
 import { KycService } from './kyc.service';
 import Swal from 'sweetalert2';
+import { AdminService } from './admin.service';
 
 @Injectable({
   providedIn: 'root',
@@ -35,34 +36,74 @@ export class AuthService {
   }
 
   async initializeAuthState(): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)) return;
 
-    const token = this.getToken();
-    if (!token) {
-      console.log('[Auth Init] Không có token');
-      this.isAuthenticatedSubject.next(false);
+    if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
-    const isExpired = this.isTokenExpired(token);
-    const isExpiringSoon = this.isTokenExpiringSoon(token, 200);
+    console.log('[Auth Init] Bắt đầu khởi tạo auth state');
 
-    if (isExpired || isExpiringSoon) {
-      console.log('[Auth Init] Token hết hạn hoặc sắp hết hạn, đang làm mới...');
-      try {
-        const refreshed = await firstValueFrom(this.refreshToken());
-        this.saveToken(refreshed.access_token);
-        this.saveRefreshToken(refreshed.refresh_token);
-        this.isAuthenticatedSubject.next(true);
-        console.log('[Auth Init] Refresh thành công, đã đăng nhập');
-      } catch (err) {
-        console.error('[Auth Init] Refresh thất bại', err);
-        this.handleSessionExpired('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+    try {
+      const token = this.getToken();
+      
+      if (!token) {
+        console.log('[Auth Init] Không có token');
+        this.isAuthenticatedSubject.next(false);
+        return;
       }
-    } else {
-      console.log('[Auth Init] Token hợp lệ, đăng nhập');
-      this.isAuthenticatedSubject.next(true);
+
+      const isExpired = this.isTokenExpired(token);
+      const isExpiringSoon = this.isTokenExpiringSoon(token, 120);
+
+      if (isExpired || isExpiringSoon) {
+        console.log('[Auth Init] Token cần refresh, đang thực hiện...');
+        
+        const refreshResponse = await firstValueFrom(
+          this.refreshToken().pipe(
+            timeout(10000),
+            catchError(error => {
+              console.error('[Auth Init] Refresh token timeout hoặc lỗi:', error);
+              throw error;
+            })
+          )
+        );
+        
+        console.log('[Auth Init] Refresh thành công');
+        this.isAuthenticatedSubject.next(true);
+        
+      } else {
+        console.log('[Auth Init] Token hợp lệ, đăng nhập');
+        this.isAuthenticatedSubject.next(true);
+      }
+
+      console.log('[Auth Init] Hoàn thành khởi tạo auth state');
+
+    } catch (error) {
+      console.error('[Auth Init] Lỗi khởi tạo:', error);
+      this.handleSessionExpired('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
     }
+  }
+
+  getUserInfo(): any {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch {
+      return null;
+    }
+  }
+
+  checkAdminAccess(): boolean {
+    const userInfo = this.getUserInfo();
+    return (
+      userInfo &&
+      userInfo.realm_access &&
+      userInfo.realm_access.roles &&
+      (userInfo.realm_access.roles.includes('ADMIN') ||
+        userInfo.realm_access.roles.includes('ROLE_ADMIN'))
+    );
   }
 
   login(username: string, password: string): Observable<any> {
@@ -85,13 +126,17 @@ export class AuthService {
         }
         this.isAuthenticatedSubject.next(true);
 
+        // Kiểm tra vai trò admin
+        const isAdmin = this.checkAdminAccess();
+        const redirectUrl = isAdmin ? '/dashboard/customer' : '/customer-dashboard';
+
         this.kycService.checkKycStatus().subscribe({
           next: ({ verified }) => {
             console.log('KYC Check after login:', verified);
             this.isKycVerifiedSubject.next(verified);
 
-            this.router.navigate(['/customer-dashboard']).then(() => {
-              if (!verified) {
+            this.router.navigate([redirectUrl]).then(() => {
+              if (!verified && !isAdmin) { // Chỉ hiển thị thông báo KYC cho non-admin
                 Swal.fire({
                   title: 'Xác minh danh tính',
                   text: 'Tài khoản của bạn chưa được xác minh KYC. Bạn có muốn xác minh ngay không?',
@@ -109,7 +154,7 @@ export class AuthService {
           },
           error: (error) => {
             console.error('KYC Check Error after login:', error);
-            this.router.navigate(['/customer-dashboard']).then(() => {
+            this.router.navigate([redirectUrl]).then(() => {
               Swal.fire({
                 title: 'Không thể kiểm tra KYC',
                 text: 'Đã xảy ra lỗi khi kiểm tra trạng thái xác minh. Vui lòng kiểm tra lại sau.',
@@ -120,7 +165,6 @@ export class AuthService {
           }
         });
       }),
-
       catchError((error) => {
         console.error('Login Error:', error);
         return throwError(() =>
@@ -134,11 +178,9 @@ export class AuthService {
     console.log('Executing logout');
     this.storageService.clear();
     this.isAuthenticatedSubject.next(false);
-    this.notificationService.showSuccess('Hẹn gặp lại bạn!', 'Đăng xuất thành công').then(() => {
-      this.router.navigate(['/login']).then(() => {
-        location.reload();
-      });
-    });
+    // this.notificationService.showSuccess('Hẹn gặp lại bạn!', 'Cảm ơn bạn đã đồng hành cùng chúng tôi').then(() => {
+      this.router.navigate(['/login'])
+    // });
   }
 
   handleSessionExpired(message: string): void {

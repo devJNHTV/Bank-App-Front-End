@@ -18,6 +18,7 @@ import { CustomDateAdapter } from '../../shared/custom-date-adapter';
 import { MY_DATE_FORMATS } from '../../shared/date-formats';
 import { RegistrationService } from '../../core/services/registration.service';
 import Swal from 'sweetalert2';
+import { StepperRegisterComponent } from '../stepper-register.component';
 
 @Component({
   selector: 'app-register',
@@ -35,7 +36,8 @@ import Swal from 'sweetalert2';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    StepperRegisterComponent
   ],
   providers: [
     { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },
@@ -59,11 +61,11 @@ export class RegisterComponent {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      username: ['testfe6', Validators.required],
+      username: ['testfe32', Validators.required],
       fullName: ['test frontend', Validators.required],
-      email: ['testfe6@gmail.com', [Validators.required, Validators.email]],
-      phoneNumber: ['0123466666', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      identityNumber: ['123123126666', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
+      email: ['testfe32@gmail.com', [Validators.required, Validators.email]],
+      phoneNumber: ['0123466632', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      identityNumber: ['123123126632', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
       address: ['123 Nguyễn Văn Trỗi', Validators.required],
       dateOfBirth: [new Date(2002, 5, 22), Validators.required],
       gender: ['male', Validators.required],
