@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RegistrationService } from '../../core/services/registration.service';
 import { PLATFORM_ID } from '@angular/core';
 import Swal from 'sweetalert2';
+import { StepperRegisterComponent } from '../stepper-register.component';
 
 @Component({
   selector: 'app-verify-otp',
@@ -25,6 +26,7 @@ import Swal from 'sweetalert2';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    StepperRegisterComponent
   ],
   templateUrl: './verify-otp.component.html',
   styleUrls: ['./verify-otp.component.scss'],
@@ -65,7 +67,7 @@ export class VerifyOtpComponent implements OnInit, OnDestroy {
       
       // Khôi phục email từ storage nếu không có trong params
       if (!this.email && isPlatformBrowser(this.platformId)) {
-        this.email = sessionStorage.getItem(this.EMAIL_KEY);
+        this.email = localStorage.getItem(this.EMAIL_KEY);
       }
       
       if (!this.email) {
@@ -286,5 +288,10 @@ export class VerifyOtpComponent implements OnInit, OnDestroy {
         });
       },
     });
+  }
+
+  back() {
+    this.email = sessionStorage.getItem(this.EMAIL_KEY);
+    this.router.navigate(['/kyc-otp'], { queryParams: { email: this.email } });
   }
 }

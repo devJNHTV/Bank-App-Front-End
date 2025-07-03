@@ -11,6 +11,7 @@ import { NotificationService } from './notification.service';
 import { ApiEndpointsService } from './api-endpoints.service';
 import { KycService } from './kyc.service';
 import Swal from 'sweetalert2';
+import { AdminService } from './admin.service';
 
 @Injectable({
   providedIn: 'root',
@@ -83,6 +84,28 @@ export class AuthService {
     }
   }
 
+  getUserInfo(): any {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch {
+      return null;
+    }
+  }
+
+  checkAdminAccess(): boolean {
+    const userInfo = this.getUserInfo();
+    return (
+      userInfo &&
+      userInfo.realm_access &&
+      userInfo.realm_access.roles &&
+      (userInfo.realm_access.roles.includes('ADMIN') ||
+        userInfo.realm_access.roles.includes('ROLE_ADMIN'))
+    );
+  }
+
   login(username: string, password: string): Observable<any> {
     console.log('Attempting login for user:', username);
     const body = new HttpParams()
@@ -103,13 +126,17 @@ export class AuthService {
         }
         this.isAuthenticatedSubject.next(true);
 
+        // Kiểm tra vai trò admin
+        const isAdmin = this.checkAdminAccess();
+        const redirectUrl = isAdmin ? '/dashboard/customer' : '/customer-dashboard';
+
         this.kycService.checkKycStatus().subscribe({
           next: ({ verified }) => {
             console.log('KYC Check after login:', verified);
             this.isKycVerifiedSubject.next(verified);
 
-            this.router.navigate(['/customer-dashboard']).then(() => {
-              if (!verified) {
+            this.router.navigate([redirectUrl]).then(() => {
+              if (!verified && !isAdmin) { // Chỉ hiển thị thông báo KYC cho non-admin
                 Swal.fire({
                   title: 'Xác minh danh tính',
                   text: 'Tài khoản của bạn chưa được xác minh KYC. Bạn có muốn xác minh ngay không?',
@@ -127,7 +154,7 @@ export class AuthService {
           },
           error: (error) => {
             console.error('KYC Check Error after login:', error);
-            this.router.navigate(['/customer-dashboard']).then(() => {
+            this.router.navigate([redirectUrl]).then(() => {
               Swal.fire({
                 title: 'Không thể kiểm tra KYC',
                 text: 'Đã xảy ra lỗi khi kiểm tra trạng thái xác minh. Vui lòng kiểm tra lại sau.',
@@ -138,7 +165,6 @@ export class AuthService {
           }
         });
       }),
-
       catchError((error) => {
         console.error('Login Error:', error);
         return throwError(() =>

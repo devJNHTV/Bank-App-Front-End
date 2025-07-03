@@ -1,0 +1,141 @@
+<div class="main-content">
+  <p-toast position="top-right"></p-toast>
+  <div class="date-filters" style="margin-bottom: 20px;">
+    <label style="margin-right: 10px;">Từ ngày:</label>
+    <input type="date" [(ngModel)]="startDate" (ngModelChange)="onDateChange()">
+    <label style="margin-left: 20px; margin-right: 10px;">Đến ngày:</label>
+    <input type="date" [(ngModel)]="endDate" (ngModelChange)="onDateChange()">
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card total-kyc">
+      <div class="stat-content">
+        <div class="stat-number">{{ kycStats?.totalKycRequests || 0 }}</div>
+        <div class="stat-label">Tổng</div>
+      </div>
+      <div class="stat-icon">
+        <i class="pi pi-users"></i>
+      </div>
+    </div>
+    <div class="stat-card successful-kyc">
+      <div class="stat-content">
+        <div class="stat-number">{{ kycStats?.successfulKyc || 0 }}</div>
+        <div class="stat-label">KYC thành công</div>
+      </div>
+      <div class="stat-icon">
+        <i class="pi pi-check-circle"></i>
+      </div>
+    </div>
+    <div class="stat-card failed-kyc">
+      <div class="stat-content">
+        <div class="stat-number">{{ kycStats?.failedKyc || 0 }}</div>
+        <div class="stat-label">KYC thất bại</div>
+      </div>
+      <div class="stat-icon">
+        <i class="pi pi-times-circle"></i>
+      </div>
+    </div>
+    <div class="stat-card pending-kyc">
+      <div class="stat-content">
+        <div class="stat-number">{{ kycStats?.pendingKyc || 0 }}</div>
+        <div class="stat-label">Yêu cầu KYC</div>
+      </div>
+      <div class="stat-icon">
+        <i class="pi pi-clock"></i>
+      </div>
+    </div>
+  </div>
+  <div class="charts-section">
+    <div class="chart-container large">
+      <p-card *ngIf="customerGrowth; else noGrowthData">
+        <ng-template pTemplate="header">
+          <div class="chart-header">
+            <h3>Tăng trưởng khách hàng</h3>
+            <div class="chart-change" [ngClass]="customerGrowth.growthRate >= 0 ? 'positive' : 'negative'">
+              <i class="pi" [ngClass]="customerGrowth.growthRate >= 0 ? 'pi-arrow-up' : 'pi-arrow-down'"></i>
+              <span>{{ customerGrowth.growthRate }}%</span>
+            </div>
+          </div>
+        </ng-template>
+        <div class="chart-content">
+          <p-chart type="line" [data]="lineChartData" [options]="lineChartOptions" style="min-height: 300px;"></p-chart>
+          <div class="chart-stats">
+            <div class="chart-stat">
+              <div class="value">{{ customerGrowth.previousPeriodCustomers }}</div>
+              <div class="label">Giai đoạn trước</div>
+            </div>
+            <div class="chart-stat">
+              <div class="value">{{ customerGrowth.totalNewCustomers }}</div>
+              <div class="label">Khách hàng mới</div>
+            </div>
+          </div>
+        </div>
+      </p-card>
+      <ng-template #noGrowthData>
+        <p-card>
+          <ng-template pTemplate="header">
+            <div class="chart-header">
+              <h3>Tăng trưởng khách hàng</h3>
+            </div>
+          </ng-template>
+          <div class="chart-content" style="min-height: 300px; display: flex; align-items: center; justify-content: center;">
+            <span>Không có dữ liệu tăng trưởng khách hàng trong khoảng thời gian này.</span>
+          </div>
+        </p-card>
+      </ng-template>
+    </div>
+    <div class="chart-container medium">
+      <p-card>
+        <ng-template pTemplate="header">
+          <h3>Phân bố trạng thái KYC</h3>
+        </ng-template>
+        <div class="chart-content">
+          <p-chart type="doughnut" [data]="doughnutChartData" [options]="doughnutChartOptions"></p-chart>
+          <div class="platform-stats">
+            <div class="platform-item">
+              <span class="platform-name">Thành công</span>
+              <span class="platform-change positive">{{ kycStats?.successfulKyc || 0 }}</span>
+            </div>
+            <div class="platform-item">
+              <span class="platform-name">Thất bại</span>
+              <span class="platform-change negative">{{ kycStats?.failedKyc || 0 }}</span>
+            </div>
+            <div class="platform-item">
+              <span class="platform-name">Yêu cầu KYC</span>
+              <span class="platform-change neutral">{{ kycStats?.pendingKyc || 0 }}</span>
+            </div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+    <div class="chart-container small">
+      <p-card>
+        <ng-template pTemplate="header">
+          <h3>Tỷ lệ trạng thái KYC</h3>
+        </ng-template>
+        <div class="traffic-stats">
+          <div class="traffic-item">
+            <div class="traffic-info">
+              <span class="traffic-name">Thành công</span>
+              <span class="traffic-percentage">{{ kycStats && kycStats.totalKycRequests ? ((kycStats.successfulKyc / kycStats.totalKycRequests) * 100 | number: '1.0-0') : 0 }}%</span>
+            </div>
+            <p-progressBar [value]="kycStats && kycStats.totalKycRequests ? (kycStats.successfulKyc / kycStats.totalKycRequests) * 100 : 0" [style]="{'height': '6px'}"></p-progressBar>
+          </div>
+          <div class="traffic-item">
+            <div class="traffic-info">
+              <span class="traffic-name">Thất bại</span>
+              <span class="traffic-percentage">{{ kycStats && kycStats.totalKycRequests ? ((kycStats.failedKyc / kycStats.totalKycRequests) * 100 | number: '1.0-0') : 0 }}%</span>
+            </div>
+            <p-progressBar [value]="kycStats && kycStats.totalKycRequests ? (kycStats.failedKyc / kycStats.totalKycRequests) * 100 : 0" [style]="{'height': '6px'}"></p-progressBar>
+          </div>
+          <div class="traffic-item">
+            <div class="traffic-info">
+              <span class="traffic-name">Yêu cầu KYC</span>
+              <span class="traffic-percentage">{{ kycStats && kycStats.totalKycRequests ? ((kycStats.pendingKyc / kycStats.totalKycRequests) * 100 | number: '1.0-0') : 0 }}%</span>
+            </div>
+            <p-progressBar [value]="kycStats && kycStats.totalKycRequests ? (kycStats.pendingKyc / kycStats.totalKycRequests) * 100 : 0" [style]="{'height': '6px'}"></p-progressBar>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>

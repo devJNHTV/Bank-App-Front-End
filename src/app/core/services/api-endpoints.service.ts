@@ -25,7 +25,7 @@ export class ApiEndpointsService {
   }
 
   getKycStatusEndpoint(): string {
-    return `http://localhost:8888/api/customers/status`;
+    return `${this.apiUrl}/status`;
   }
 
   getKycVerifyEndpoint(): string {
