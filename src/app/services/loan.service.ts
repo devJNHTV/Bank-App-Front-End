@@ -88,4 +88,13 @@ export class LoanService {
   checkInfoIncome(infoIncome: any): Observable<ApiResponseWrapper<any>> {
     return this.http.post<ApiResponseWrapper<any>>(`${this.baseUrl}/check-info-income`, infoIncome, { headers: this.getAuthHeaders() });
   }
+  createInfoIncome(infoIncome: any): Observable<ApiResponseWrapper<any>> {
+    return this.http.post<ApiResponseWrapper<any>>('http://localhost:8888/api/info-income', infoIncome, { headers: this.getAuthHeaders() });
+  }
+  updateInfoIncome(infoId: number, infoIncome: any): Observable<ApiResponseWrapper<any>> {
+    return this.http.put<ApiResponseWrapper<any>>(`http://localhost:8888/api/info-income/${infoId}`, infoIncome, { headers: this.getAuthHeaders() });
+  }
+  getInfoIncomesByLoanId(loanId: number): Observable<ApiResponseWrapper<any>> {
+    return this.http.get<ApiResponseWrapper<any>>(`http://localhost:8888/api/info-income/loan/${loanId}`, { headers: this.getAuthHeaders() });
+  }
 } 

@@ -18,6 +18,8 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastrService } from 'ngx-toastr';
 import { LoanService } from '../../services/loan.service';
+import { MessageService } from 'primeng/api';
+
 @Component({
   selector: 'app-pay-repayment',
   standalone: true,
@@ -33,7 +35,7 @@ import { LoanService } from '../../services/loan.service';
     DialogModule,
     InputTextModule
   ],
-  
+  providers: [MessageService],
   templateUrl: './pay-repayment.component.html',
   styleUrls: ['./pay-repayment.component.scss']
 })

@@ -8,7 +8,7 @@ export interface Loan {
   accountNumber: string;
   amount: number;
   interestRate: number;
-  infoIncome: InfoIncome | null;
+  infoIncomes: InfoIncome[] | null;
   termMonths: number;
   status: LoanStatus | null;
   createdAt: string| null;

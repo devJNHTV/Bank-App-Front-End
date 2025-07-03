@@ -7,9 +7,9 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-current-repayment-schedule',
@@ -33,7 +33,6 @@ export class CurrentRepaymentScheduleComponent implements OnInit {
 
   constructor(
     private repaymentService: RepaymentService,
-    private messageService: MessageService,
     private router: Router
   ) {}
 

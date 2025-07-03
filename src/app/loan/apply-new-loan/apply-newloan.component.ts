@@ -140,7 +140,9 @@ export class ApplyNewLoanComponent implements OnInit {
       obs.subscribe({
         next: (res) => {
           const loans = res.data || [];
+          console.log(loans);
           const hasActiveLoan = loans.some((loan: Loan) => loan.status === 'APPROVED' || loan.status === 'PENDING');
+          console.log(hasActiveLoan);
           if (hasActiveLoan) {
             this.router.navigate(['/loan/warning-apply-loan']);
           } else {
@@ -211,39 +213,46 @@ export class ApplyNewLoanComponent implements OnInit {
       this.loanForm.markAllAsTouched();
       return;
     }
-    const infoIncome: InfoIncome = {
-      infoId: null,
-      accountNumber: this.loanForm.value.incomeAccountNumber,
-      bankName: this.loanForm.value.bankName,
-      declaredIncome: this.loanForm.value.declaredIncome
-    };
     const loan: Loan = {
       accountNumber: this.loanForm.value.accountNumber,
       amount: this.loanForm.value.amount,
       interestRate: this.loanForm.value.interestRate, 
       termMonths: this.loanForm.value.termMonths,
-      infoIncome: infoIncome,
       customerId: null,
       loanId: null,
       approvedAt: null,
       createdAt: null,
       repayments: null,
       status:LoanStatus.PENDING,
-      rejectionReasons: null
+      rejectionReasons: null,
+      infoIncomes: null
     };
     this.loanForm.get('interestRate')?.setValue(  this.rateControl.value);
-    console.log(this.rateControl.value);
-    console.log(this.loanForm.value.interestRate);
     loan.interestRate = this.rateControl.value;
-    console.log(loan);
     this.loanService.createLoan(loan).subscribe({
       next: (response: ApiResponseWrapper<Loan>) => {
-        this.loading = false;
-        this.toastr.success(response.message || 'Đăng ký khoản vay thành công!', 'Thành công');
-        this.onLoanCreated();
+        const createdLoan = response.data;
+        // Sau khi tạo loan thành công, tạo InfoIncome
+        const infoIncome = {
+          infoId: null,
+          loanId:createdLoan.loanId ,
+          accountNumber: this.loanForm.value.incomeAccountNumber,
+          bankName: this.loanForm.value.bankName,
+          declaredIncome: this.loanForm.value.declaredIncome
+        };
+        this.loanService.createInfoIncome(infoIncome).subscribe({
+          next: () => {
+            this.loading = false;
+            this.toastr.success('Đăng ký khoản vay thành công!', 'Thành công');
+            this.onLoanCreated();
+          },
+          error: (err) => {
+            this.loading = false;
+            this.toastr.error('Tạo InfoIncome thất bại', 'Lỗi');
+          }
+        });
       },
       error: (httpError: HttpErrorResponse) => {
-        console.log(httpError);
         this.loading = false;
         this.toastr.error( `Lỗi: ${httpError.error.message}`,'Lỗi');
       }

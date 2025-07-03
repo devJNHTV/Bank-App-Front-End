@@ -90,14 +90,14 @@ export class DetailLoanRejectComponent implements OnInit {
     this.loanService.getLoanById(loanId).subscribe({
       next: ({ data }) => {
         this.loanDetail = data;
-        // Initialize form with current loan values
+        const infoIncome = data.infoIncomes && data.infoIncomes.length > 0 ? data.infoIncomes[0] : null;
         this.loanForm.patchValue({
           amount: data.amount,
           interestRate: data.interestRate,
           termMonths: data.termMonths,
-          declaredIncome: data.infoIncome?.declaredIncome ?? null,
-          incomeAccountNumber: data.infoIncome?.accountNumber ?? null,
-          bankName: data.infoIncome?.bankName ?? null
+          declaredIncome: infoIncome?.declaredIncome ?? null,
+          incomeAccountNumber: infoIncome?.accountNumber ?? null,
+          bankName: infoIncome?.bankName ?? null
         });
         this.loading = false;
       },
@@ -136,14 +136,6 @@ export class DetailLoanRejectComponent implements OnInit {
 
   updateAndResubmitLoan() {
     if (!this.loanDetail?.loanId || !this.loanForm.valid) return;
-
-    const infoIncome: InfoIncome = {
-      infoId: this.loanDetail.infoIncome?.infoId ?? null,
-      accountNumber: this.loanForm.value.incomeAccountNumber ?? '',
-      bankName: this.loanForm.value.bankName ?? '',
-      declaredIncome: this.loanForm.value.declaredIncome ?? 0
-    };
-
     const updatedLoan: Loan = {
       loanId: this.loanDetail.loanId,
       customerId: this.loanDetail.customerId,
@@ -154,17 +146,34 @@ export class DetailLoanRejectComponent implements OnInit {
       amount: this.loanForm.value.amount ?? 0,  
       interestRate: this.loanForm.value.interestRate ?? 0,
       termMonths: this.loanForm.value.termMonths ?? 0,
-      infoIncome: infoIncome,
       status: LoanStatus.PENDING,
-      repayments: this.loanDetail.repayments ?? []
+      repayments: this.loanDetail.repayments ?? [],
+      infoIncomes: this.loanDetail.infoIncomes ?? []
     };
-    console.log(updatedLoan);
     this.processingAction = true;
     this.loanService.updateLoan(updatedLoan).subscribe({
       next: () => {
-        this.processingAction = false;
-        this.toastr.success('Cập nhật và gửi lại khoản vay thành công!', 'Thành công');
-        this.router.navigate(['/loans/overview']);
+        const infoIncome = {
+          infoId: this.loanDetail?.infoIncomes && this.loanDetail?.infoIncomes.length > 0 ? this.loanDetail?.infoIncomes[0].infoId : null,
+          loanId: this.loanDetail?.loanId ?? 0,
+          accountNumber: this.loanForm.value.incomeAccountNumber ?? '',
+          bankName: this.loanForm.value.bankName ?? '',
+          declaredIncome: this.loanForm.value.declaredIncome ?? 0
+        };
+        console.log(infoIncome);
+        
+        this.loanService.updateInfoIncome(infoIncome?.infoId ?? 0, infoIncome).subscribe({
+          next: () => {
+            this.processingAction = false;
+            this.toastr.success('Cập nhật và gửi lại khoản vay thành công!', 'Thành công');
+            this.router.navigate(['/loans/overview']);
+          },
+          error: () => {
+            this.processingAction = false;
+            this.error = 'Failed to update InfoIncome';
+            this.toastr.error(this.error, 'Thất bại');
+          }
+        });
       },
       error: () => {
         this.processingAction = false;

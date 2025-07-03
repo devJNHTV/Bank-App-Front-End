@@ -97,25 +97,36 @@ export class LoanDetailViewComponent implements OnInit {
     }
   }
 
+  get firstInfoIncome() {
+    return this.loanDetail && this.loanDetail.infoIncomes && this.loanDetail.infoIncomes.length > 0 ? this.loanDetail.infoIncomes[0] : null;
+  }
+
   loadLoanDetail(loanId: number) {
     this.loading = true;
     this.loanService.getLoanById(loanId).subscribe({
       next: ({ data }) => {
         this.loanDetail = data;
-        console.log(this.loanDetail);
-
-        if (data.status === 'REJECTED') {
-          this.loanForm.patchValue({
-            amount: data.amount,
-            interestRate: data.interestRate,
-            termMonths: data.termMonths,
-            // Không còn dùng declaredIncome trực tiếp
+        if (data.loanId != null) {
+          this.loanService.getInfoIncomesByLoanId(data.loanId).subscribe({
+            next: (res) => {
+              this.loanDetail!.infoIncomes = res.data || [];
+              if (this.firstInfoIncome && this.firstInfoIncome.accountNumber && this.firstInfoIncome.bankName) {
+                this.fetchTransactionHistory(this.firstInfoIncome);
+              }
+            },
+            error: () => {
+              this.loanDetail!.infoIncomes = [];
+            },
+            complete: () => {
+              this.loadCustomerDetail();
+              this.loading = false;
+            }
           });
+        } else {
+          this.loanDetail.infoIncomes = [];
+          this.loadCustomerDetail();
+          this.loading = false;
         }
-        if (this.loanDetail?.infoIncome && this.loanDetail.infoIncome.accountNumber && this.loanDetail.infoIncome.bankName) {
-          this.fetchTransactionHistory(this.loanDetail.infoIncome);
-        }
-        this.loadCustomerDetail();
       },
       error: () => {
         this.error = 'Failed to load loan details';

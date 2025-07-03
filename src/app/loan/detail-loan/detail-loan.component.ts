@@ -24,13 +24,14 @@ export class DetailLoanComponent implements OnInit {
     createdAt: '',
     approvedAt: '',
     customerId: null,
-    infoIncome: null,
+    infoIncomes: [],
     status: null,
     repayments: [],
     rejectionReasons: []
   };
   loading: boolean = true;
   error: string | null = null;
+  firstInfoIncome : InfoIncome | null = null;
   constructor(
     private route: ActivatedRoute,
     private loanService: LoanService
@@ -48,12 +49,21 @@ export class DetailLoanComponent implements OnInit {
     this.loanService.getLoanById(loanId).subscribe({
       next: (response) => {
         this.loanDetail = response.data;
-        console.log(this.loanDetail);
         this.loading = false;
+        if (this.loanDetail.loanId) {
+          this.loanService.getInfoIncomesByLoanId(this.loanDetail.loanId).subscribe({
+            next: (response) => {
+              this.firstInfoIncome = response.data[0];
+            }
+          });
+        } else {
+          this.firstInfoIncome = null;
+        }
       },
       error: (error) => {
         this.error = 'Failed to load loan details';
         this.loading = false;
+        this.firstInfoIncome = null;
         console.error('Error loading loan detail:', error);
       }
     });

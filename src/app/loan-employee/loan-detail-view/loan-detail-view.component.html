@@ -262,9 +262,9 @@
           <div class="card-header">
             <i class="pi pi-history"></i>
             <h2>Lịch sử giao dịch thu nhập</h2>
-            <ng-container *ngIf="loanDetail?.infoIncome">
-              ({{ loanDetail?.infoIncome?.bankName }} - {{ loanDetail?.infoIncome?.accountNumber }} - 
-              {{ formatCurrency(loanDetail?.infoIncome?.declaredIncome || 0) }})
+            <ng-container *ngIf="firstInfoIncome">
+              ({{ firstInfoIncome.bankName }} - {{ firstInfoIncome.accountNumber }} - 
+              {{ formatCurrency(firstInfoIncome.declaredIncome || 0) }})
             </ng-container>
           </div>
           <div *ngIf="loadingTransactions" class="loading-transactions">
