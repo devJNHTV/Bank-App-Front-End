@@ -8,7 +8,7 @@
 </div>
 
 <!-- Danh sách thẻ tín dụng -->
-<div class="credit-card-list">
+<div class="credit-card-list" *ngIf="creditCards.length > 0">
   <div class="container">
     <div *ngFor="let card of creditCards; let last = last" class="card-row">
       <!-- Card Image -->
@@ -58,9 +58,7 @@
    
   </div>
 </div>
-
-<!-- Footer Section -->
-
-
-<!-- Chat Support Button -->
-<p-button icon="pi pi-comments" rounded styleClass="chat-button" severity="success"></p-button>
+<div class="no-credit-card" *ngIf="creditCards.length === 0">
+  <p>Hiện tại chưa có thẻ tín dụng phù hợp với bạn</p>
+  <p>Vui lòng thử lại sau</p>
+</div>

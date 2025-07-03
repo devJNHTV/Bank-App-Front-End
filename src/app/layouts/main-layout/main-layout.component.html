@@ -2,9 +2,8 @@
   <mat-sidenav #sidenav mode="side" opened class="sidenav" fixedInViewport>
   
     <!-- Logo Header -->
-    <div class="logo-container">
+    <div class="logo-container" routerLink="/customer-dashboard">
       <div class="logo">
-        <!-- <span class="logo-icon" >🌿</span> -->
         <img
           src="https://kienlongbank.com/Data/Sites/1/media/logo-klb/logo-kienlongbank-favicon-logo-klb.jpg"
           alt="KienlongBank Logo"
@@ -17,7 +16,7 @@
     <!-- Navigation Menu -->
     <mat-nav-list class="nav-menu">
       <a
-      *ngIf="!isAdmin()" 
+        *ngIf="!isAdmin()" 
         mat-list-item
         routerLink="/customer-dashboard"
         routerLinkActive="active-link"
@@ -28,35 +27,35 @@
         <span matListItemTitle>Trang chủ</span>
       </a>
       <a
-      mat-list-item
-      routerLink="/account/payment"
-      routerLinkActive="active-link"
-      [routerLinkActiveOptions]="{ exact: true }"
-      class="nav-item"
-    >
-      <mat-icon matListItemIcon>account_balance_wallet</mat-icon>
-      <span matListItemTitle>Tài khoản thanh toán</span>
-    </a>
+        mat-list-item
+        routerLink="/account/payment"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>account_balance_wallet</mat-icon>
+        <span matListItemTitle>Tài khoản thanh toán</span>
+      </a>
       <a
-      mat-list-item
-      routerLink="/account/saving"
-      routerLinkActive="active-link"
-      [routerLinkActiveOptions]="{ exact: true }"
-      class="nav-item"
-    >
-      <mat-icon matListItemIcon>savings</mat-icon>
-      <span matListItemTitle>Tài khoản tiết kiệm</span>
-    </a>
-    <a
-    mat-list-item
-    routerLink="/account/credit"
-    routerLinkActive="active-link"
-    [routerLinkActiveOptions]="{ exact: true }"
-    class="nav-item"
-  >
-    <mat-icon matListItemIcon>credit_card</mat-icon>
-    <span matListItemTitle>Tài khoản tín dụng</span>
-  </a>
+        mat-list-item
+        routerLink="/account/saving"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>savings</mat-icon>
+        <span matListItemTitle>Tài khoản tiết kiệm</span>
+      </a>
+      <a
+        mat-list-item
+        routerLink="/account/credit"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>credit_card</mat-icon>
+        <span matListItemTitle>Tài khoản tín dụng</span>
+      </a>
 
       <a
       *ngIf="!isAdmin()"
@@ -70,7 +69,9 @@
         <span matListItemTitle>Giao dịch</span>
       </a>
 
-      <a *ngIf="!isAdmin()" 
+
+      <a
+      *ngIf="!isAdmin()" 
       mat-list-item
       routerLink="/loans"
       routerLinkActive="active-link"
@@ -81,7 +82,9 @@
       <span matListItemTitle>Khoản Vay</span>
     </a>
   
-    <a *ngIf="isAdmin()" 
+
+    <a
+      *ngIf="isAdmin()" 
       mat-list-item
       routerLink="/employee/loans"
       routerLinkActive="active-link"
@@ -130,13 +133,13 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <div class="sidenav-close">
+    <!-- <div class="sidenav-close">
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>
           {{ sidenav.opened ? 'chevron_left' : 'chevron_right' }}
         </mat-icon>
       </button>
-    </div>
+    </div> -->
     
     <!-- Header Toolbar -->
     <mat-toolbar class="header-toolbar">

@@ -4,7 +4,6 @@ import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { ApiEndpointsService } from './api-endpoints.service';
-import { CustomerListResponse } from '../models/customer-list-response.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +40,7 @@ export class UserService {
     }
   }
 
-  getCustomerDetail(userId: string): Observable<any> {
+  getCustomerDetail(): Observable<any> {
     return this.http.get(this.apiEndpointsService.getCustomerDetailEndpoint()).pipe(
       tap((res) => console.log('Customer Detail:', res)),
       catchError((error) =>

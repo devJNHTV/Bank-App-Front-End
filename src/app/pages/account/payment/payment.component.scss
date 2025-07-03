@@ -572,3 +572,228 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 }
+
+// KYC Verification Dialog Styling
+:host ::ng-deep .kyc-verification-dialog {
+  .p-dialog {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .p-dialog-content {
+    padding: 0;
+    border-radius: 16px;
+  }
+
+  .dialog-content {
+    padding: 40px 30px 30px;
+    text-align: center;
+    background: white;
+
+    .dialog-icon {
+      margin-bottom: 20px;
+
+      i {
+        font-size: 4rem;
+        color: #3b82f6;
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 50%;
+        border: 3px solid rgba(59, 130, 246, 0.2);
+      }
+    }
+
+    .dialog-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0 0 16px 0;
+    }
+
+    .dialog-message {
+      font-size: 1rem;
+      color: #6b7280;
+      line-height: 1.6;
+      margin: 0 0 30px 0;
+      max-width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .dialog-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+
+      .cancel-button {
+        min-width: 120px;
+        color: #6b7280 !important;
+        border-color: #d1d5db !important;
+        
+        &:hover {
+          background: #f9fafb !important;
+          border-color: #9ca3af !important;
+          color: #374151 !important;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 2px rgba(156, 163, 175, 0.2) !important;
+        }
+      }
+
+      .confirm-button {
+        min-width: 120px;
+        background: #7c3aed !important;
+        border-color: #7c3aed !important;
+        
+        &:hover {
+          background: #6d28d9 !important;
+          border-color: #6d28d9 !important;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2) !important;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .p-dialog {
+      width: 90% !important;
+      margin: 20px;
+    }
+
+    .dialog-content {
+      padding: 30px 20px 20px;
+
+      .dialog-icon i {
+        font-size: 3rem;
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+      }
+
+      .dialog-title {
+        font-size: 1.3rem;
+      }
+
+      .dialog-message {
+        font-size: 0.9rem;
+      }
+
+      .dialog-actions {
+        flex-direction: column;
+        gap: 8px;
+
+        .cancel-button,
+        .confirm-button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// KYC Pending Dialog Styling
+:host ::ng-deep .kyc-pending-dialog {
+  .p-dialog {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .p-dialog-content {
+    padding: 0;
+    border-radius: 16px;
+  }
+
+  .dialog-content {
+    padding: 40px 30px 30px;
+    text-align: center;
+    background: white;
+
+    .dialog-icon {
+      margin-bottom: 20px;
+
+      i {
+        font-size: 4rem;
+        color: #f59e0b;
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        background: rgba(245, 158, 11, 0.1);
+        border-radius: 50%;
+        border: 3px solid rgba(245, 158, 11, 0.2);
+      }
+    }
+
+    .dialog-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0 0 16px 0;
+    }
+
+    .dialog-message {
+      font-size: 1rem;
+      color: #6b7280;
+      line-height: 1.6;
+      margin: 0 0 30px 0;
+      max-width: 350px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: center;
+
+      .confirm-button {
+        min-width: 120px;
+        background: #f59e0b !important;
+        border-color: #f59e0b !important;
+        
+        &:hover {
+          background: #d97706 !important;
+          border-color: #d97706 !important;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2) !important;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .p-dialog {
+      width: 90% !important;
+      margin: 20px;
+    }
+
+    .dialog-content {
+      padding: 30px 20px 20px;
+
+      .dialog-icon i {
+        font-size: 3rem;
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+      }
+
+      .dialog-title {
+        font-size: 1.3rem;
+      }
+
+      .dialog-message {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

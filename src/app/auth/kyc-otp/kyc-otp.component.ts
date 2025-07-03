@@ -17,6 +17,7 @@ import { MY_DATE_FORMATS } from '../../shared/date-formats';
 import Swal from 'sweetalert2';
 import { RegistrationService } from '../../core/services/registration.service';
 import Tesseract from 'tesseract.js';
+import { StepperRegisterComponent } from '../stepper-register.component';
 
 @Component({
   selector: 'app-kyc',
@@ -34,6 +35,7 @@ import Tesseract from 'tesseract.js';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    StepperRegisterComponent
   ],
   providers: [
     { provide: DateAdapter, useClass: CustomDateAdapter },
@@ -85,7 +87,7 @@ export class KycOtpComponent implements OnInit {
         Swal.fire({
           icon: 'info',
           title: 'Thông báo',
-          text: 'Vui lòng xác minh danh tính để tiếp tục!',
+          text: 'Vui lòng xác minh thông tin đăng ký!',
           timer: 3000,
           timerProgressBar: true,
         });

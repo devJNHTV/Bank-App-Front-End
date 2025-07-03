@@ -33,6 +33,7 @@ export interface AccountSavings {
     termValueMonths: number;
     renewOption: string;   
     interestPaymentType: string;
+    maturityDate: Date;
 }
 export interface creditCards
 {
@@ -56,6 +57,7 @@ export interface CreditAccount {
     typeName: string;
     imageUrl: string;
     availableCredit: number;
+    cardID: string;
 }
 export interface CreditCardDetails {
     cardNumber: string;

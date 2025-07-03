@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { ApiEndpointsService } from './api-endpoints.service';
+import { KycStatisticsResponse } from '../models/KycStatisticsResponse';
+import { CustomerGrowthResponse } from '../models/CustomerGrowthResponse';
+import { ApiResponse } from '../models/ApiResponse';
 
 @Injectable({
   providedIn: 'root',

@@ -114,11 +114,12 @@ $text-muted: #94a3b8;
           text-align: left;
           padding: 1.5rem 1.5rem 1rem 1.5rem;
           border-bottom: 1px solid #e0e0e0;
+          background: linear-gradient(135deg, #32d967 0%, #025126 100%);
           
           .section-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1a3c6c;
+            color: white;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -224,13 +225,15 @@ $text-muted: #94a3b8;
         border: none;
 
         .card-header {
+          text-align: left;
           padding: 1.5rem 1.5rem 1rem 1.5rem;
           border-bottom: 1px solid #e0e0e0;
+          background: linear-gradient(135deg, #32d967 0%, #025126 100%);
           
           .section-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1a3c6c;
+            color: white;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -378,14 +381,14 @@ $text-muted: #94a3b8;
       gap: 2rem;
 
       .transactions-section, .loans-section {
-        background: $card-background;
+        background: $card-background; 
         border-radius: 16px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         border: 1px solid $border-color;
         overflow: hidden;
 
         .section-header {
-          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+          background: linear-gradient(135deg, #32d967 0%, #025126 100%);
           padding: 1.5rem 2rem;
           border-bottom: 1px solid $border-color;
           display: flex;
@@ -396,7 +399,7 @@ $text-muted: #94a3b8;
             margin: 0;
             font-size: 1.25rem;
             font-weight: 600;
-            color: $text-primary;
+            color: white;
             display: flex;
             align-items: center;
             gap: 0.75rem;

@@ -18,6 +18,7 @@ import { CustomDateAdapter } from '../../shared/custom-date-adapter';
 import { MY_DATE_FORMATS } from '../../shared/date-formats';
 import { RegistrationService } from '../../core/services/registration.service';
 import Swal from 'sweetalert2';
+import { StepperRegisterComponent } from '../stepper-register.component';
 
 @Component({
   selector: 'app-register',
@@ -35,7 +36,8 @@ import Swal from 'sweetalert2';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    StepperRegisterComponent
   ],
   providers: [
     { provide: DateAdapter, useClass: CustomDateAdapter, deps: [MAT_DATE_LOCALE] },

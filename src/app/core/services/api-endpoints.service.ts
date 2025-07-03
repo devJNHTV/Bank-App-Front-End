@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { CustomerResponse } from '../models/customer-response.dto';
-import { ApiResponseWrapper } from '../models/api-response-wrapper.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +25,7 @@ export class ApiEndpointsService {
   }
 
   getKycStatusEndpoint(): string {
-    return `http://localhost:8888/api/customers/status`;
+    return `${this.apiUrl}/status`;
   }
 
   getKycVerifyEndpoint(): string {
@@ -75,4 +73,11 @@ export class ApiEndpointsService {
   }
 
 
+  getKycStatistics(): string {
+    return `${this.apiUrl}/kyc/statistics`
+  }
+
+  getGrowth(): string {
+    return `${this.apiUrl}/growth`
+  }
 }

@@ -60,12 +60,11 @@ export class CustomerDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCustomerDetail();
-    // this.loadCustomerAccounts();
   }
 
   loadCustomerDetail(): void {
     this.isLoading = true;
-    this.userService.getCustomerDetail(this.userId).subscribe({
+    this.userService.getCustomerDetail().subscribe({
       next: (customer) => {
         this.customer = customer.data;
         console.log("customer detail: ", this.customer)
@@ -85,17 +84,6 @@ export class CustomerDetailComponent implements OnInit {
       }
     });
   }
-
-  // loadCustomerAccounts(): void {
-  //   this.userService.getCustomerAccounts().subscribe({
-  //     next: (accounts) => {
-  //       this.customerAccounts = accounts;
-  //     },
-  //     error: (error) => {
-  //       console.error('Lỗi khi tải danh sách tài khoản khách hàng:', error);
-  //     }
-  //   });
-  // }
 
   openUpdateDialog(): void {
     const dialogRef = this.dialog.open(CustomerUpdateDialogComponent, {

@@ -55,25 +55,36 @@
         <div class="flex ">
 
           <input
-            type="number"
+            type="text"
             pInputText
             id="toAccountNumber"
             formControlName="toAccountNumber"
             placeholder="Số tài khoản"
+            pattern="[0-9]*"
+            (keypress)="onlyNumbers($event)"
             [ngClass]="{
               'ng-invalid ng-dirty':
                 submitted && transferForm.controls['toAccountNumber'].errors
             }"
             aria-describedby="toAccountNumber-help"
           />
-          <small
+          <ng-container
             id="toAccountNumber-help"
-            *ngIf="
-              submitted && transferForm.controls['toAccountNumber'].errors?.['required']
-            "
-            class="p-error"
-            >Số tài khoản đích không được để trống.</small
+            *ngIf="submitted && transferForm.controls['toAccountNumber'].errors"
           >
+            <small
+              *ngIf="transferForm.controls['toAccountNumber'].errors?.['required']"
+              class="p-error"
+            >
+              Số tài khoản đích không được để trống.
+            </small>
+            <small
+              *ngIf="transferForm.controls['toAccountNumber'].errors?.['pattern']"
+              class="p-error"
+            >
+              Số tài khoản chỉ được chứa số.
+            </small>
+          </ng-container>
           <button
             pButton
             type="button"
