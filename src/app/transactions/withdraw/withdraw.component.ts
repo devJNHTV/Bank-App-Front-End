@@ -64,7 +64,7 @@ export class WithdrawComponent implements OnInit {
   ) {
     this.withdrawForm = this.fb.group({
       fromAccountNumber: ['', Validators.required],
-      amount: [null, [Validators.required, Validators.min(1000)]],
+      amount: [null, [Validators.required, Validators.min(1)]],
       currency: [this.currencyOptions[0].currencyCode, Validators.required],
       description: [''],
     });

@@ -9,20 +9,22 @@ import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
-import { TransactionService } from '../../services/transaction.service';
+import { TransactionService } from '../../../services/transaction.service';
 import { MessageService } from 'primeng/api';
 import { Location } from '@angular/common';
-import { ConfirmTransactionComponent } from '../confirm/confirm-transaction.component.ts';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { Toast } from 'primeng/toast';
 import { Textarea } from 'primeng/textarea';
+import { ConfirmTransactionComponent } from '../../../transactions/confirm/confirm-transaction.component.ts';
+import { debounceTime, distinctUntilChanged, map, of, switchMap } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-deposit',
-  templateUrl: './deposit.component.html',
-  styleUrls: ['./deposit.component.scss'],
+    selector: 'app-transaction-deposit',
+  templateUrl: './transaction-deposit.component.html',
+  styleUrls: ['./transaction-deposit.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -39,7 +41,7 @@ import { Textarea } from 'primeng/textarea';
   ],
   providers: [MessageService],
 })
-export class DepositComponent implements OnInit {
+export class TransactionDepositComponent implements OnInit {
   depositForm!: FormGroup;
   submitted = false;
 
@@ -63,7 +65,7 @@ export class DepositComponent implements OnInit {
   ) {
     this.depositForm = this.fb.group({
       toAccountNumber: ['', Validators.required],
-      amount: [null, [Validators.required, Validators.min(1000)]],
+      amount: [null, [Validators.required, Validators.min(1)]],
       currency: [this.currencyOptions[0].currencyCode, Validators.required],
       description: [''],
     });
@@ -75,39 +77,37 @@ export class DepositComponent implements OnInit {
   fromCustomerName: string | null = null;
 
   ngOnInit(): void {
-    this.transactionService.getAccountForCustomer().subscribe({
-      next: (res) => {
-        console.log(res);
-        this.toAccountOptions = res.result.map((acc: any) => ({
-          accountNumber: acc.accountNumber,
-          accountDescription: `Tài khoản thanh toán - ${acc.accountNumber}`,
-          balance: acc.balance,
-        }));
-        if (this.toAccountOptions.length > 0) {
-          this.depositForm.patchValue({
-            toAccountNumber: this.toAccountOptions[0].accountNumber,
-          });
-          this.selectedBalance = this.toAccountOptions[0].balance;
-        }
-      },
-      error: (err) => {
-        console.error('Lỗi khi lấy danh sách tài khoản:', err);
-      },
-    });
-    // Get Current Customer
-    this.transactionService.getCurrentCustomer().subscribe({
-      next: (res) => {
-        this.toCustomerName = this.removeVietnameseTones(
-          res.result.fullName.toUpperCase()
-        );
-        this.depositForm.patchValue({
-          description: this.toCustomerName + ' NAP TIEN',
-        });
-      },
-      error: (err) => {
-        console.error('Lỗi khi lấy khách hàng hiện tại:', err);
-      },
-    });
+    this.depositForm
+      .get('toAccountNumber')
+      ?.valueChanges.pipe(
+        debounceTime(300), // 1. Đợi 300ms sau lần nhập cuối cùng, tránh gọi API quá nhiều khi người dùng gõ liên tục
+        distinctUntilChanged(), // 2. Chỉ tiếp tục nếu giá trị thay đổi so với lần trước, tránh gọi API lặp lại với giá trị cũ
+        switchMap((toAccountNumber) => {
+          if (!toAccountNumber) {
+            this.toCustomerName = null;
+            return of(null);
+          }
+          return this.transactionService
+            .getCustomerByAccountNumber(toAccountNumber)
+            .pipe(
+              map((res) => res.result.fullName),
+              catchError((err) => {
+                this.toCustomerName = null;
+                return of(null);
+              })
+            );
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.toCustomerName = this.removeVietnameseTones(res.toUpperCase());
+          }
+        },
+        error: (err) => {
+          console.error('Lỗi khi lấy khách hàng:', err);
+        },
+      });
   }
 
   currencyOptions = [

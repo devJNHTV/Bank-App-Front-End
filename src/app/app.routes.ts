@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { TransferComponent } from './transactions/transfer/transfer.component';
 import { TransactionHomeComponent } from './transactions/transaction-home/transaction-home.component';
-import { DepositComponent } from './transactions/deposit/deposit.component';
 import { WithdrawComponent } from './transactions/withdraw/withdraw.component';
 import { TransactionResultComponent } from './transactions/results/transaction-result.component';
 import { TransactionHistoryComponent } from './transactions/history/transaction-history.component';
@@ -58,6 +57,7 @@ import { DashboardCustomerComponent } from './admin/admin-dashboard/dashboard-cu
 import { KycManagerComponent } from './admin/kyc-manager/kyc-manager.component';
 import { AdminTransactionDetailComponent } from './admin/transaction/transaction-detail/transaction-detail.component';
 import { DashboardTransactionComponent } from './admin/admin-dashboard/dashboard-transaction/dashboard-transaction.component';
+import { TransactionDepositComponent } from './admin/transaction/transaction-deposit/transaction-deposit.component';
   export const routes: Routes = [
   // Authentication routes (no sidebar)
   {
@@ -92,7 +92,7 @@ import { DashboardTransactionComponent } from './admin/admin-dashboard/dashboard
       { path: 'employee/loans/:id', component: LoanDetailViewComponent },
       { path: 'admin/transactions', component: AdminTransactionListComponent, canActivate: [KycGuard] },
       { path: 'admin/transactions/detail/:referenceCode', component: AdminTransactionDetailComponent, canActivate: [KycGuard] },
-      
+      { path: 'admin/transactions/deposit', component: TransactionDepositComponent, canActivate: [KycGuard] },
     ]
   },
   // Customer routes (with MainLayoutComponent)
@@ -128,7 +128,7 @@ import { DashboardTransactionComponent } from './admin/admin-dashboard/dashboard
       { path: 'transactions', component: TransactionHomeComponent, canActivate: [KycGuard] },
       { path: 'transactions/transfer', component: TransferComponent, canActivate: [KycGuard] },
       { path: 'transactions/external-transfer', component: ExternalTransferComponent, canActivate: [KycGuard] },
-      { path: 'transactions/deposit', component: DepositComponent, canActivate: [KycGuard] },
+
       { path: 'transactions/withdraw', component: WithdrawComponent, canActivate: [KycGuard] },
       { path: 'transactions/transaction-result', component: TransactionResultComponent, canActivate: [KycGuard] },
       { path: 'transactions/history', component: TransactionHistoryComponent, canActivate: [KycGuard] },

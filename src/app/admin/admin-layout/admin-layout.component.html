@@ -54,6 +54,10 @@
             <i class="pi pi-money-bill"></i>
             <span (click)="navigateTo('/admin/transactions')">Danh sách giao dịch</span>
           </li>
+          <li class="menu-item" [class.active]="isActive('/admin/transactions/deposit')">
+            <i class="pi pi-money-bill"></i>
+            <span (click)="navigateTo('/admin/transactions/deposit')">Nạp tiền</span>
+          </li>
           <li class="menu-item" [class.active]="isActive('/employee/loans')">
             <i class="pi pi-server"></i>
             <span (click)="navigateTo('/employee/loans')">Quản lý khoản vay</span>

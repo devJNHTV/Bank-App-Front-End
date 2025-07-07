@@ -89,7 +89,7 @@ export class ExternalTransferComponent implements OnInit {
       fromAccountNumber: [null, Validators.required],
       toBankCode: [null, Validators.required],
       toAccountNumber: ['', Validators.required],
-      amount: [null, [Validators.required, Validators.min(1000)]],
+      amount: [null, [Validators.required, Validators.min(1)]],
       currency: [this.currencyOptions[0].currencyCode, Validators.required],
       description: [''],
     });

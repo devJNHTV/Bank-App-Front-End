@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SharedMaterialModule } from '../../../shared/shared-material.module';
 import { TableModule } from 'primeng/table';
 import { BadgeModule } from 'primeng/badge';
 import { CardModule } from 'primeng/card';
