@@ -74,13 +74,14 @@ export class LoginComponent implements OnInit {
 
   // Tạo captcha ngẫu nhiên
   generateCaptcha(): void {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    // const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const chars = 'a';
     this.captchaText = '';
     
     // Tạo chuỗi captcha 5 ký tự
-    for (let i = 0; i < 5; i++) {
+    // for (let i = 0; i < 5; i++) {
       this.captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    // }
     
     // Vẽ captcha lên canvas
     setTimeout(() => {

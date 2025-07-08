@@ -1,98 +1,76 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { MatTableModule, MatTable, MatTableDataSource } from '@angular/material/table';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatSortModule, MatSort } from '@angular/material/sort';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatCardModule } from '@angular/material/card';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
+import { ChipModule } from 'primeng/chip';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { AdminService } from '../../core/services/admin.service';
-import { CustomerResponse } from '../../core/models/customer-response.dto'; 
+import { CustomerResponse } from '../../core/models/customer-response.dto';
 
 @Component({
   selector: 'app-customer-list',
-  templateUrl: './customer-list.component.html',
-  styleUrls: ['./customer-list.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatCardModule,
-    MatTooltipModule
-  ]
+    ToastModule,
+    TableModule,
+    PaginatorModule,
+    ChipModule,
+    ButtonModule,
+    TooltipModule,
+    InputTextModule,
+    FormsModule
+  ],
+  templateUrl: './customer-list.component.html',
+  styleUrls: ['./customer-list.component.scss']
 })
 export class CustomerListComponent implements OnInit {
-
   totalElements = 0;
   pageSize = 10;
   pageIndex = 0;
   keyword: string = '';
-
-  displayedColumns: string[] = [
-    'cifCode',
-    'fullName',
-    'address',
-    'email',
-    'phoneNumber',
-    'identityNumber',
-    'dateOfBirth',
-    'gender',
-    'status',
-    'kycStatus',
-    'actions'
-  ];
-  dataSource!: MatTableDataSource<CustomerResponse>;
+  customers: CustomerResponse[] = [];
   isLoading = false;
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<CustomerResponse>;
 
   constructor(
     private adminService: AdminService,
-    private router: Router
-  ) {
-    this.dataSource = new MatTableDataSource<CustomerResponse>();
-  }
+    private router: Router,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.loadCustomers();
   }
 
-  loadCustomers(): void {
+  loadCustomers(event?: any): void {
     this.isLoading = true;
-
-    this.adminService.getCustomerList(this.pageIndex, this.pageSize, this.keyword).subscribe({
+    let page = this.pageIndex;
+    let size = this.pageSize;
+    if (event) {
+      page = Math.floor(event.first / event.rows);
+      size = event.rows;
+    }
+    this.adminService.getCustomerList(page, size, this.keyword).subscribe({
       next: (response) => {
-        this.dataSource = new MatTableDataSource<CustomerResponse>(response.data.customers);
+        this.customers = response.data.customers;
         this.totalElements = response.data.totalElements;
         this.pageSize = response.data.pageSize || this.pageSize;
         this.pageIndex = response.data.currentPage;
-        this.dataSource.sort = this.sort;
       },
       error: (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Lỗi',
-          text: error.message || 'Không thể tải danh sách khách hàng'
-        }).then(() => {
-          this.router.navigate(['/customer-dashboard']);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Lỗi',
+          detail: error.message || 'Không thể tải danh sách khách hàng'
         });
+        this.router.navigate(['/dashboard']);
       },
       complete: () => {
         this.isLoading = false;
@@ -101,14 +79,12 @@ export class CustomerListComponent implements OnInit {
   }
 
   onPageChange(event: any) {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.loadCustomers();
+    this.pageIndex = Math.floor(event.first / event.rows);
+    this.pageSize = event.rows;
+    this.loadCustomers(event);
   }
 
-  onSearch(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.keyword = value.trim();
+  onSearch(): void {
     this.pageIndex = 0;
     this.loadCustomers();
   }
@@ -122,9 +98,9 @@ export class CustomerListComponent implements OnInit {
       title: 'Cập nhật trạng thái khách hàng',
       input: 'select',
       inputOptions: {
-        ACTIVE: 'Hoạt động',
-        SUSPENDED: 'Không hoạt động',
-        CLOSED: 'Bị khóa'
+        ACTIVE: 'Kích hoạt',
+        SUSPENDED: 'Tạm khóa',
+        CLOSED: 'Khóa'
       },
       inputValue: currentStatus,
       showCancelButton: true,
@@ -139,26 +115,22 @@ export class CustomerListComponent implements OnInit {
     if (newStatus) {
       this.adminService.updateCustomerStatus(cifCode, newStatus).subscribe({
         next: () => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Thành công',
-            text: 'Cập nhật trạng thái khách hàng thành công',
-            timer: 1500
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Thành công',
+            detail: 'Cập nhật trạng thái khách hàng thành công',
+            life: 1500
           });
           this.loadCustomers();
         },
         error: (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Lỗi',
-            text: error.message || 'Không thể cập nhật trạng thái khách hàng'
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Lỗi',
+            detail: error.message || 'Không thể cập nhật trạng thái khách hàng'
           });
         }
       });
     }
-  }
-
-  goBack(): void {
-    this.router.navigate(['/dashboard']);
   }
 }

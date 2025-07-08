@@ -1,133 +1,85 @@
-<div class="dashboard-content animate__animated animate__fadeIn">
-  <mat-card class="customer-card mat-elevation-z4">
-    <mat-card-header>
-      <mat-card-title class="card-title">
-        <mat-icon class="title-icon">supervisor_account</mat-icon>
-        Quản lý khách hàng
-      </mat-card-title>
-      <button mat-icon-button color="primary" (click)="goBack()" class="back-button">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-    </mat-card-header>
-
-    <mat-card-content>
-      <!-- Filter -->
-      <div class="filter-section">
-        <mat-form-field appearance="outline" class="filter-field">
-          <mat-label>Tìm kiếm khách hàng...</mat-label>
-          <input matInput (keyup)="onSearch($event)" #input />
-          <button mat-icon-button matSuffix>
-            <mat-icon>search</mat-icon>
-          </button>
-        </mat-form-field>
-      </div>
-
-      <!-- Table -->
-      <div class="table-wrapper mat-elevation-z1">
-        <mat-spinner *ngIf="isLoading" diameter="40" class="spinner-center"></mat-spinner>
-
-        <table mat-table [dataSource]="dataSource" matSort *ngIf="!isLoading">
-
-          <!-- Các cột dữ liệu -->
-          <ng-container matColumnDef="cifCode">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Mã CIF</th>
-            <td mat-cell *matCellDef="let row">{{ row.cifCode }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="fullName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Họ và tên</th>
-            <td mat-cell *matCellDef="let row">{{ row.fullName }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="address">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Địa chỉ</th>
-            <td mat-cell *matCellDef="let row" class="wrap-cell">{{ row.address }}</td>
-          </ng-container>
-
-
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-            <td mat-cell *matCellDef="let row" class="wrap-cell">{{ row.email }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="phoneNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Số điện thoại</th>
-            <td mat-cell *matCellDef="let row">{{ row.phoneNumber }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="identityNumber">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Số CMND/CCCD</th>
-            <td mat-cell *matCellDef="let row">{{ row.identityNumber }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="dateOfBirth">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Ngày sinh</th>
-            <td mat-cell *matCellDef="let row">{{ row.dateOfBirth | date: 'dd/MM/yyyy' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="gender">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Giới tính</th>
-            <td mat-cell *matCellDef="let row">{{ row.gender == 'male' ? 'Nam' : 'Nữ' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Trạng thái</th>
-            <td mat-cell *matCellDef="let row">
-              <mat-chip [ngClass]="row.status === 'ACTIVE' ? 'chip-active' : 'chip-inactive'" selected>
-                {{
-                  row.status === 'ACTIVE' ? 'Hoạt động' :
-                  row.status === 'SUSPENDED' ? 'Không hoạt động' : 'Bị khóa'
-                }}
-              </mat-chip>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="kycStatus">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Trạng thái KYC</th>
-            <td mat-cell *matCellDef="let row">
-              <mat-chip [ngClass]="row.kycStatus === 'VERIFIED' ? 'chip-active' : 'chip-inactive'" selected>
-                {{
-                  row.kycStatus === 'VERIFIED' ? 'Đã xác thực' :
-                  row.kycStatus === 'PENDING' ? 'Đang chờ xác thực' : 'Bị từ chối'
-                }}
-              </mat-chip>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Hành động</th>
-            <td mat-cell *matCellDef="let row">
-              <button mat-icon-button color="primary" (click)="viewCustomerDetail(row.cifCode)" matTooltip="Xem chi tiết">
-                <mat-icon>visibility</mat-icon>
-              </button>
-              <button mat-icon-button [color]="row.status === 'ACTIVE' ? 'warn' : 'accent'"
-                      (click)="updateCustomerStatus(row.cifCode, row.status)"
-                      [matTooltip]="row.status === 'ACTIVE' ? 'Khóa' : 'Kích hoạt'">
-                <mat-icon>{{ row.status === 'ACTIVE' ? 'block' : 'check_circle' }}</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          <tr class="mat-row no-data-row" *matNoDataRow>
-            <td class="mat-cell" colspan="10">
-              ❗ Không có dữ liệu phù hợp với bộ lọc "<strong>{{ input.value }}</strong>"
-            </td>
-          </tr>
-        </table>
-
-        <!-- Paginator -->
-        <mat-paginator
-          [length]="totalElements"
-          [pageSize]="pageSize"
-          [pageIndex]="pageIndex"
-          [pageSizeOptions]="[5, 10, 25, 100]"
-          (page)="onPageChange($event)"
-          showFirstLastButtons
-          *ngIf="!isLoading">
-        </mat-paginator>
-      </div>
-    </mat-card-content>
-  </mat-card>
+<div class="main-content">
+  <p-toast position="top-right"></p-toast>
+  <div class="customerlist-header-card">
+    <div class="search-bar">
+      <i class="pi pi-search"></i>
+      <input type="text" pInputText placeholder="Tìm kiếm khách hàng..." [(ngModel)]="keyword" (ngModelChange)="onSearch()" />
+    </div>
+    <!-- <div class="header-actions">
+      <i class="pi pi-bell"></i>
+      <i class="pi pi-user"></i>
+    </div> -->
+  </div>
+  <div class="customerlist-table-card">
+    <p-table
+      [value]="customers"
+      [paginator]="true"
+      [rows]="pageSize"
+      [totalRecords]="totalElements"
+      [lazy]="true"
+      [loading]="isLoading"
+      (onLazyLoad)="onPageChange($event)"
+      [responsiveLayout]="'scroll'"
+      [rowsPerPageOptions]="[5,10,25,100]"
+      [first]="pageIndex * pageSize"
+      styleClass="p-datatable-gridlines customerlist-table"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Mã CIF</th>
+          <th>Họ và tên</th>
+          <th>Địa chỉ</th>
+          <th>Email</th>
+          <th>Số điện thoại</th>
+          <th>Số CMND/CCCD</th>
+          <th>Ngày sinh</th>
+          <th>Giới tính</th>
+          <th>Trạng thái</th>
+          <th>KYC</th>
+          <th>Hành động</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ row.cifCode }}</td>
+          <td>{{ row.fullName }}</td>
+          <td>{{ row.address }}</td>
+          <td>{{ row.email }}</td>
+          <td>{{ row.phoneNumber }}</td>
+          <td>{{ row.identityNumber }}</td>
+          <td>{{ row.dateOfBirth | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ row.gender == 'male' ? 'Nam' : 'Nữ' }}</td>
+          <td>
+            <p-chip
+              [label]="row.status === 'ACTIVE' ? 'Kích hoạt' : (row.status === 'SUSPENDED' ? 'Tạm khóa' : 'Khóa')"
+              [class]="row.status === 'ACTIVE' ? 'chip-active' : 'chip-inactive'"
+            ></p-chip>
+          </td>
+          <td>
+            <p-chip
+              [label]="row.kycStatus === 'VERIFIED' ? 'Đã xác thực' : (row.kycStatus === 'PENDING' ? 'Đang chờ xác thực' : 'Bị từ chối')"
+              [class]="row.kycStatus === 'VERIFIED' ? 'chip-active' : 'chip-inactive'"
+            ></p-chip>
+          </td>
+          <td>
+            <button pButton icon="pi pi-eye" class="p-button-rounded p-button-info p-mr-2" (click)="viewCustomerDetail(row.cifCode)" pTooltip="Xem chi tiết"></button>
+            <button
+              pButton
+              [icon]="row.status === 'ACTIVE' ? 'pi pi-lock' : 'pi pi-check-circle'"
+              [class]="row.status === 'ACTIVE' ? 'p-button-rounded p-button-danger' : 'p-button-rounded p-button-success'"
+              (click)="updateCustomerStatus(row.cifCode, row.status)"
+              [pTooltip]="row.status === 'ACTIVE' ? 'Khóa' : 'Kích hoạt'"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="11" class="no-data-row">
+            ❗ Không có dữ liệu phù hợp với bộ lọc "<strong>{{ keyword }}</strong>"
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>

@@ -25,7 +25,7 @@ export class ApiEndpointsService {
   }
 
   getKycStatusEndpoint(): string {
-    return `http://localhost:8888/api/customers/status`;
+    return `${this.apiUrl}/status`;
   }
 
   getKycVerifyEndpoint(): string {
@@ -70,5 +70,13 @@ export class ApiEndpointsService {
 
   getKeycloakUrl(): string {
     return this.keycloakUrl;
+  }
+
+  getKycStatistics(): string {
+    return `${this.apiUrl}/kyc/statistics`
+  }
+
+  getGrowth(): string {
+    return `${this.apiUrl}/growth`
   }
 }

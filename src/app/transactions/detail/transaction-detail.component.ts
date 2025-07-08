@@ -54,7 +54,7 @@ export class TransactionDetailComponent implements OnInit {
   loadFromCustomerName(fromAccountNumber: string) {
     this.transactionService.getCustomerByAccountNumber(fromAccountNumber).subscribe({
       next: (response: any) => {
-        this.fromCustomerName    = this.removeVietnameseTones(response.data.fullName.toUpperCase());
+        this.fromCustomerName    = this.removeVietnameseTones(response.result.fullName.toUpperCase());
         console.log(this.fromCustomerName);
       },
       error: (error) => {
@@ -105,7 +105,7 @@ export class TransactionDetailComponent implements OnInit {
         }else{
           this.transactionService.getCustomerByAccountNumber(this.transaction.toAccountNumber).subscribe({
             next: (response: any) => {
-              this.toCustomerName    = this.removeVietnameseTones(response.data.fullName.toUpperCase());  
+              this.toCustomerName    = this.removeVietnameseTones(response.result.fullName.toUpperCase());  
             },
             error: (error) => {
               this.error = 'Có lỗi xảy ra khi tải thông tin khách hàng';

@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { UserService } from './user.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { ApiEndpointsService } from './api-endpoints.service'; 
+import { ApiResponse } from '../models/ApiResponse';
+import { KycStatisticsResponse } from '../models/KycStatisticsResponse';
+import { CustomerGrowthResponse } from '../models/CustomerGrowthResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -76,5 +79,27 @@ export class AdminService {
         throwError(() => new Error('Cập nhật trạng thái khách hàng thất bại: ' + (error.error?.message || 'Lỗi không xác định')))
       )
     );
+  }
+
+  getKycStatistics(startDate?: string, endDate?: string): Observable<ApiResponse<KycStatisticsResponse>> {
+    let params = new HttpParams();
+    if (startDate) params = params.set('startDate', startDate);
+    if (endDate) params = params.set('endDate', endDate);
+    return this.http.get<ApiResponse<KycStatisticsResponse>>(this.apiEndpointsService.getKycStatistics(), { params })
+  }
+
+  getCustomerGrowth(startDate?: string, endDate?: string): Observable<ApiResponse<CustomerGrowthResponse>> {
+    let params = new HttpParams();
+    if (startDate) params = params.set('startDate', startDate);
+    if (endDate) params = params.set('endDate', endDate);
+    return this.http.get<ApiResponse<CustomerGrowthResponse>>(this.apiEndpointsService.getGrowth(), { params });
+  }
+
+  getPendingKycRequests(page: number, size: number, keyword: string): Observable<any> {
+    return this.http.get(`http://localhost:8888/api/customers/kyc/pending?page=${page}&size=${size}&keyword=${keyword}`);
+  }
+
+  approveKyc(cifCode: string, status: string, reason: string | null): Observable<any> {
+    return this.http.post(`http://localhost:8888/api/customers/kyc/approve`, { cifCode, status, reason });
   }
 }

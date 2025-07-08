@@ -85,18 +85,7 @@
         <mat-icon matListItemIcon>people</mat-icon>
         <span matListItemTitle>Danh sách người dùng</span>
       </a>
-      <a
-        *ngIf="isAdmin()"
-        mat-list-item
-        routerLink="/admin/transactions"
-        routerLinkActive="active-link"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="nav-item"
-      >
-        <mat-icon matListItemIcon>receipt_long
-        </mat-icon>
-        <span matListItemTitle>Danh sách giao dịch</span>
-      </a>
+    
 
       <a
       *ngIf="!isAdmin()"
@@ -122,17 +111,6 @@
       <span matListItemTitle>Khoản Vay</span>
     </a>
   
-    <a
-    *ngIf="isAdmin()"
-      mat-list-item
-      routerLink="/employee/loans"
-      routerLinkActive="active-link"
-      [routerLinkActiveOptions]="{ exact: true }"
-      class="nav-item"
-    >
-      <mat-icon matListItemIcon>folder_open</mat-icon>
-      <span matListItemTitle>Quản Lý Khoản Vay</span>
-    </a>
     </mat-nav-list>
   </mat-sidenav>
 
