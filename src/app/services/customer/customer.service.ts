@@ -7,15 +7,10 @@ import { Observable } from 'rxjs';
 })
 export class CustomerService {
   private apiUrl = 'http://localhost:8888/api/customers';  
-  token = localStorage.getItem('access-token');
   constructor(private http: HttpClient) { }
 
   getCustomerInfo(): Observable<Customer[]> {
-    return this.http.get<Customer[]>(`${this.apiUrl}/detail`, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
-    });
+    return this.http.get<Customer[]>(`${this.apiUrl}/detail`);
   }
 
 }

@@ -56,7 +56,8 @@ export class CreditDetailComponent implements OnInit, OnDestroy {
     availableCredit: 0,
     cifCode: '',
     typeName: '',
-    imageUrl: ''
+    imageUrl: '',
+    cardID: ''
   };
   creditCardDetails: CreditCardDetails = {
     cardNumber: '',

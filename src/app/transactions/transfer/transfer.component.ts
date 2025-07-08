@@ -75,8 +75,8 @@ export class TransferComponent implements OnInit {
   ) {
     this.transferForm = this.fb.group({
       fromAccountNumber: [null, Validators.required],
-      toAccountNumber: ['', Validators.required],
-      amount: [null, [Validators.required, Validators.min(1)]],
+      toAccountNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      amount: [null, [Validators.required, Validators.min(1000)]],
       currency: [this.currencyOptions[0].currencyCode, Validators.required],
       description: [''],
     });
@@ -312,6 +312,26 @@ export class TransferComponent implements OnInit {
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D');
   }
+
+  onlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Cho phép: backspace, delete, tab, escape, enter
+    if ([46, 8, 9, 27, 13].indexOf(charCode) !== -1 ||
+      // Cho phép Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (charCode === 65 && event.ctrlKey === true) ||
+      (charCode === 67 && event.ctrlKey === true) ||
+      (charCode === 86 && event.ctrlKey === true) ||
+      (charCode === 88 && event.ctrlKey === true)) {
+      return true;
+    }
+    // Chỉ cho phép số (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
   goBack(): void {
     this.location.back();
   }

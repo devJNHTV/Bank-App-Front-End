@@ -16,25 +16,16 @@ export class AccountService {
       console.log(this.token);
 
     return this.http.get<Account[]>(`${this.apiUrl}/getAllPaymentAccount`, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
     });
   } 
 
   getTerms(): Observable<Term[]> {
     return this.http.get<Term[]>(`${this.apiUrl}/get-all-term`, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
     }); 
   }
 
   createSavingsAccount(formData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/create-savings-request`, formData, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
     });
   }
  
@@ -43,28 +34,18 @@ export class AccountService {
     return this.http.post(`${this.apiUrl}/confirm-otp-and-create-Saving-account`, {
       otpCode: otpCode,
       savingRequestID: savingRequestID
-    }, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
     });
   }
 
   resendOtp(transactionId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/resend-otp/${transactionId}`, {}, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     });
   }
 
   // Payment Account
   createPaymentAccount(cifCode: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/create-payment-request/${cifCode}`, {
-    }, {
-      headers: {    
-        'Authorization': `Bearer ${this.token}`
-      }
     });
   }
 
@@ -72,89 +53,64 @@ export class AccountService {
     return this.http.post(`${this.apiUrl}/confirm-otp-payment`, {
       otpCode: otpCode,
       paymentRequestId: paymentRequestId
-    }, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+    
     });
   }
 
   resendOtpPaymentAccount(transactionId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/resend-payment-otp/${transactionId}`, {}, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     });
   }
   getAccountByAccountNumber(accountNumber: string): Observable<any> {
     return this.http.get<Account>(`${this.apiUrl}/getAccountPaymentByID/${accountNumber}`, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     }); 
   }
   getTransactions(accountNumber: string, page: number = 0, size: number = 2): Observable<any> {
     console.log('page', page);
     console.log('size', size);
     return this.http.get<Transaction[]>(`${this.apiUrlTransaction}/account/${accountNumber}?page=${page}&size=${size}`, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     });
   }
   getSavingsAccounts(): Observable<AccountSavings[]> {
     return this.http.get<AccountSavings[]>(`${this.apiUrl}/getAllSavingAccount`, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     });
   } 
   createWithdrawTransaction(formData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/create-request-withdraw-fromSaving`, formData, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     });
   } 
   verifyWithdrawOtp(otpCode: string, savingRequestID: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/confirm-otp-withdraw-saving`, {
       otpCode: otpCode,
       savingRequestID: savingRequestID
-    }, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+    
     });
   }
   getCreditCards(): Observable<creditCards[]> {
     return this.http.get<creditCards[]>(`${this.apiUrl}/getAllCreditCard`, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     });
   }
   applyCredit(formData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/create-credit-request`, formData, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     });
   }
   verifyOtpCredit(otpCode: string, creditRequestId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/confirm-otp-credit`, {
       otpCode: otpCode,
       creditRequestId: creditRequestId
-    }, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+    
     });
   }
   resendOtpCredit(creditRequestId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/resend-otp-credit/${creditRequestId}`, {} , {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     });
   }
   getCreditAccounts(): Observable<CreditAccount[]> {
@@ -162,9 +118,7 @@ export class AccountService {
   }
   sendOtpForCardDetails(accountNumber: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/send-otp/credit/getSensitiveInfo/${accountNumber}`, {}, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+      
     });
   }
   verifyOtpForCardDetails(otpCode: string, transactionId: string, accountNumber: string): Observable<any> {
@@ -172,10 +126,19 @@ export class AccountService {
       otpCode: otpCode,
       tempRequestKey: transactionId,
       accountNumber: accountNumber
-    }, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+    
+    });
+  }
+  getAllCreditCards(): Observable<creditCards[]> {  
+    return this.http.get<creditCards[]>(`${this.apiUrl}/getAllCreditAccount-anyway`, {
+    });
+  }
+  getAccountCreationStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/api/admin/statistic/accounts/growth`, {
+    });
+  }
+  getAccountStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/api/admin/statistic/dashboard`, {
     });
   }
 }

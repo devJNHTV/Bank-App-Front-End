@@ -55,6 +55,9 @@ import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.componen
 import { AdminGuard } from './core/guards/admin.guard';
 import { DashboardCustomerComponent } from './admin/admin-dashboard/dashboard-customer.component';
 import { KycManagerComponent } from './admin/kyc-manager/kyc-manager.component';
+import { AccountStatisticComponent } from './admin/account-statistic/account-statistic.component';
+import { CreditRequestComponent } from './admin/credit-request/credit-request.component';
+export const routes: Routes = [
 import { AdminTransactionDetailComponent } from './admin/transaction/transaction-detail/transaction-detail.component';
 import { DashboardTransactionComponent } from './admin/admin-dashboard/dashboard-transaction/dashboard-transaction.component';
 import { TransactionDepositComponent } from './admin/transaction/transaction-deposit/transaction-deposit.component';
@@ -81,10 +84,12 @@ import { TransactionDepositComponent } from './admin/transaction/transaction-dep
     children: [
       { path: 'dashboard/transaction', component: DashboardTransactionComponent },
       { path: 'dashboard/customer', component: DashboardCustomerComponent },
+      { path: 'dashboard/account', component: AccountStatisticComponent },
       { path: 'customers', component: CustomerListComponent },
       { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent },
       { path: 'accounts', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
       { path: 'kyc-management', component: KycManagerComponent }, // Placeholder, thay bằng component thực tế
+      { path: 'credit-requests', component: CreditRequestComponent },
       { path: 'settings', component: CustomerListComponent }, // Placeholder, thay bằng component thực tế
       { path: 'admin/transactions', component: AdminTransactionListComponent },
       { path: 'employee/loans', component: PendingLoanListComponent },
@@ -107,9 +112,8 @@ import { TransactionDepositComponent } from './admin/transaction/transaction-dep
       { path: 'home', component: HomeComponent, canActivate: [KycGuard] },
       { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
       { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
+      { path: 'admin/transactions', component: TransactionListComponent, canActivate: [KycGuard] },
       { path: 'change-password', component: ChangePasswordComponent, canActivate: [KycGuard] },
-  
-
       { 
         path: 'account', 
         component: AccountComponent,

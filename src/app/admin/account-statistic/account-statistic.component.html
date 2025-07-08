@@ -1,0 +1,242 @@
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Thống Kê Tài Khoản</h1>
+    <div class="time-filter">
+      <p-button 
+        label="Monthly" 
+        [outlined]="false" 
+        styleClass="filter-btn active"
+        size="small">
+      </p-button>
+      <p-button 
+        label="Weekly" 
+        [outlined]="true" 
+        styleClass="filter-btn"
+        size="small">
+      </p-button>
+    </div>
+  </div>
+
+  <!-- Main Statistics Row -->
+  <div class="stats-row">
+    <!-- Main Balance Summary -->
+    <div class="main-summary-card">
+      <div class="summary-header">
+        <h3>Tài Khoản Được Tạo Theo Loại</h3>
+        <div class="date-filter-container">
+          <div class="date-filter">
+            <span class="filter-label">Từ ngày:</span>
+            <p-calendar 
+              [(ngModel)]="startDate"
+              [showIcon]="true" 
+              dateFormat="dd/mm/yy"
+              [showButtonBar]="true"
+              (onSelect)="onDateFilterChange()"
+              styleClass="date-input">
+            </p-calendar>
+          </div>
+          <div class="date-filter">
+            <span class="filter-label">Đến ngày:</span>
+            <p-calendar 
+              [(ngModel)]="endDate"
+              [showIcon]="true" 
+              dateFormat="dd/mm/yy"
+              [showButtonBar]="true"
+              (onSelect)="onDateFilterChange()"
+              styleClass="date-input">
+            </p-calendar>
+          </div>
+          <p-button 
+            label="Lọc" 
+            icon="pi pi-filter"
+            size="small"
+            (click)="onDateFilterChange()"
+            styleClass="filter-button">
+          </p-button>
+        </div>
+      </div>
+      
+      <div class="chart-container-main">
+        <div *ngIf="isLoadingAccountStats" class="loading-container">
+          <div class="loading-spinner">
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Đang tải dữ liệu...</span>
+          </div>
+        </div>
+        <p-chart 
+          *ngIf="!isLoadingAccountStats"
+          type="line" 
+          [data]="dailyAccountCreationData" 
+          [options]="dailyAccountCreationOptions"
+          height="200px">
+        </p-chart>
+      </div>
+      
+      <div class="summary-stats">
+        <div class="stat-item total-accounts">
+          <i class="pi pi-chart-line"></i>
+          <div>
+            <span class="label">Tổng tài khoản tạo</span>
+            <span class="value">{{ getTotalAccountsInPeriod() }}</span>
+          </div>
+        </div>
+        
+        <div class="stat-item growth-rate">
+          <i class="pi pi-percentage"></i>
+          <div>
+            <span class="label">Tỷ lệ tăng trưởng</span>
+            <span class="value">{{ accountCreationStatistics.growthRate }}%</span>
+          </div>
+        </div>
+
+        <div class="stat-item peak-day">
+          <i class="pi pi-calendar"></i>
+          <div>
+            <span class="label">Ngày cao điểm</span>
+            <span class="value">{{ getPeakDay() }}</span>
+          </div>
+        </div>
+
+        <div class="stat-item payment-accounts">
+          <i class="pi pi-credit-card"></i>
+          <div>
+            <span class="label">Thanh toán</span>
+            <span class="value">{{ getTotalPaymentAccounts() }}</span>
+          </div>
+        </div>
+
+        <div class="stat-item saving-accounts">
+          <i class="pi pi-wallet"></i>
+          <div>
+            <span class="label">Tiết kiệm</span>
+            <span class="value">{{ getTotalSavingAccounts() }}</span>
+          </div>
+        </div>
+
+        <div class="stat-item credit-accounts">
+          <i class="pi pi-dollar"></i>
+          <div>
+            <span class="label">Tín dụng</span>
+            <span class="value">{{ getTotalCreditAccounts() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats Cards - KPI -->
+    <div class="quick-stats">
+      <!-- Total Assets - Quan trọng nhất -->
+      <div class="quick-stat-card assets-card">
+        <div class="stat-icon">
+          <i class="pi pi-dollar"></i>
+        </div>
+        <div class="stat-details">
+          <span class="stat-label">Tổng Tài Sản</span>
+          <span class="stat-value highlight">{{ formatCurrency(dashboardData.totalAssets) }}</span>
+          <span class="stat-change neutral">Chỉ số quan trọng nhất</span>
+        </div>
+      </div>
+
+      <!-- Monthly Growth Rate - Cần chú ý -->
+      <div class="quick-stat-card growth-card">
+        <div class="stat-icon">
+          <i class="{{ getGrowthIcon() }}"></i>
+        </div>
+        <div class="stat-details">
+          <span class="stat-label">Tăng Trưởng Hàng Tháng</span>
+          <span class="stat-value {{ getGrowthClass() }}">{{ formatNumber(dashboardData.monthlyGrowthRate) }}%</span>
+          <span class="stat-change {{ getGrowthClass() }}">Cần chú ý ngay lập tức</span>
+        </div>
+      </div>
+
+      <!-- New Accounts Trend -->
+      <div class="quick-stat-card accounts-card">
+        <div class="stat-icon">
+          <i class="pi pi-users"></i>
+        </div>
+        <div class="stat-details">
+          <span class="stat-label">Tài Khoản Mới</span>
+          <div class="accounts-comparison">
+            <div class="account-item">
+              <span class="period">Tháng này:</span>
+              <span class="value">{{ formatNumber(dashboardData.newAccountsThisMonth) }}</span>
+            </div>
+            <div class="account-item">
+              <span class="period">Tháng trước:</span>
+              <span class="value">{{ formatNumber(dashboardData.newAccountsLastMonth) }}</span>
+            </div>
+          </div>
+          <div class="mini-trend-chart">
+            <p-chart 
+              type="line" 
+              [data]="accountsTrendData" 
+              [options]="accountsTrendOptions"
+              height="40px">
+            </p-chart>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Customers -->
+      <div class="quick-stat-card customers-card">
+        <div class="stat-icon">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="stat-details">
+          <span class="stat-label">Tổng Khách Hàng</span>
+          <span class="stat-value">{{ formatNumber(dashboardData.totalCustomers) }}</span>
+          <span class="stat-change neutral">Đang hoạt động</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-row">
+    <!-- Pie Chart Card -->
+    <p-card class="chart-card" header="Phân Loại Tài Khoản">
+      <div class="chart-container">
+        <p-chart 
+          type="pie" 
+          [data]="pieChartData" 
+          [options]="pieChartOptions"
+          height="300px">
+        </p-chart>
+      </div>
+    </p-card>
+
+    <!-- Bar Chart Card -->
+    <p-card class="chart-card" header="Số Dư Tài Khoản">
+      <div class="chart-container">
+        <p-chart 
+          type="bar" 
+          [data]="barChartData" 
+          [options]="barChartOptions"
+          height="300px">
+        </p-chart>
+      </div>
+    </p-card>
+
+    <!-- Admission Summary -->
+    <p-card class="chart-card" header="Tóm Tắt Tiết Kiệm">
+      <div class="admission-content">
+        <div class="admission-header">
+          <span class="admission-value">{{ formatCurrency(dashboardData.savingsStatistics.averageBalance) }}</span>
+          <span class="admission-change">+8% từ tuần trước</span>
+          <i class="pi pi-pencil edit-icon"></i>
+        </div>
+        
+        <div class="chart-container-small">
+          <p-chart 
+            type="doughnut" 
+            [data]="doughnutChartData" 
+            [options]="doughnutChartOptions"
+            height="200px">
+          </p-chart>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+</div>

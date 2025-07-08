@@ -8,13 +8,14 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { Account } from '../../../interfaces/account.interface';
 import { AccountService } from '../../../services/account/account.service';
 import { Customer } from '../../../interfaces/customer.inteface';
 import { CustomerService } from '../../../services/customer/customer.service';
 import { Router } from '@angular/router';
-import { KycService } from '../../../core/services/kyc.service';
+import { KycService } from '../../../services/kyc/kyc.service';
 import { BehaviorSubject } from 'rxjs';
 @Component({
   selector: 'app-payment',
@@ -28,7 +29,8 @@ import { BehaviorSubject } from 'rxjs';
     InputTextModule,
     FormsModule,
     MessageModule,
-    ToastModule
+    ToastModule,
+    DialogModule
   ],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.scss',
@@ -38,6 +40,8 @@ export class PaymentComponent implements OnInit, OnDestroy {
   accounts: Account[] = [];
   loading: boolean = false;
   addAccount: boolean = false;
+  showKycDialog: boolean = false;
+  showPendingDialog: boolean = false;
   
   // Customer info và flow states
   currentStep: number = 1; // 1: Xác nhận thông tin, 2: OTP
@@ -103,7 +107,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   getAccountStatus(status: string): 'success' | 'warn' | 'danger' {
     if (status === 'ACTIVE') return 'success';
-    if (status === 'CLOSED') return 'warn';
+    if (status === 'CLOSED') return 'warn'; 
     return 'danger';
   }
 
@@ -112,9 +116,24 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
 
   createAccount(): void {    
-    this.addAccount = true;
-    this.currentStep = 1;
-
+    // gọi 1 api dể check trạng thái KYC của customer
+    this.kycService.getKycStatus().subscribe({
+      next: (res: any) => {
+        console.log('Trạng thái KYC:',  res.status);
+        if(res.status === 'VERIFIED') {
+          this.addAccount = true;
+          this.currentStep = 1;
+        }
+        else if(res.status === 'PENDING') {
+          // Hiển thị dialog thông báo đang đợi duyệt KYC
+          this.showPendingDialog = true;
+        }
+        else {
+            // Hiển thị dialog xác minh danh tính
+            this.showKycDialog = true;
+        }
+      }
+    });
   }
 
   // Xác nhận thông tin customer và chuyển sang bước OTP
@@ -134,7 +153,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'success',
             summary: 'Thành công',
-            detail: 'Mã OTP đã được gửi đến số điện thoại của bạn'
+            detail: 'Mã OTP đã được gửi đến email của bạn'
           });
         },
         error: (error) => {
@@ -286,5 +305,41 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
   goToDetail(accountNumber: string): void {
     this.router.navigate(['/account/payment/detail', accountNumber]);
+  }
+  formathideEMail(email : string ): string
+  {
+
+    const [username, domain] = email.split('@');
+
+      if (username.length <= 3) {
+        return '*'.repeat(username.length) + '@' + domain;
+      }
+
+      const visiblePart = username.slice(0, 3);
+      const hiddenPart = '*'.repeat(username.length - 3);
+
+      return `${visiblePart}${hiddenPart}@${domain}`;
+  }
+  transfer(): void {
+    this.router.navigate(['/transactions/transfer']);
+  }
+  withdraw(): void {
+    this.router.navigate(['/transactions/withdraw']);
+  }
+
+  // Đóng dialog và chuyển đến trang KYC
+  onKycDialogConfirm(): void {
+    this.showKycDialog = false;
+    this.router.navigate(['/kyc']);
+  }
+
+  // Đóng dialog không làm gì
+  onKycDialogCancel(): void {
+    this.showKycDialog = false;
+  }
+
+  // Đóng dialog pending KYC
+  onPendingDialogConfirm(): void {
+    this.showPendingDialog = false;
   }
 }

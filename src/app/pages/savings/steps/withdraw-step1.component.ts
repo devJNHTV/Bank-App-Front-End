@@ -146,6 +146,25 @@ import { SelectModule } from 'primeng/select';
     </p-card>
   `,
   styles: [`
+    :host {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    ::ng-deep p-card {
+      max-width: 70%;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    ::ng-deep .p-card {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+    }
+
     .form-field {
       margin-bottom: 1.5rem;
     }
@@ -224,6 +243,16 @@ import { SelectModule } from 'primeng/select';
       margin-top: 2rem;
       padding-top: 1rem;
       border-top: 1px solid #dee2e6;
+    }
+
+    @media (max-width: 768px) {
+      :host {
+        padding: 1rem 0.5rem;
+      }
+      
+      ::ng-deep p-card {
+        max-width: 100%;
+      }
     }
   `]
 })
