@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit {
   loginError = '';
   showPassword = false;
   
-  // Captcha properties
   captchaText = '';
   captchaInput = '';
   captchaCanvas: HTMLCanvasElement | null = null;
@@ -66,22 +65,22 @@ export class LoginComponent implements OnInit {
 
   initForm(): void {
     this.loginForm = this.fb.group({
-      username: ['test21', [Validators.required]],
-      password: ['290801Bin@', [Validators.required, Validators.minLength(6)]],
-      captcha: ['', [Validators.required]] // Thêm field captcha
+      username: ['admin', [Validators.required]],
+      password: ['123456Admin@', [Validators.required, Validators.minLength(6)]],
+      captcha: ['', [Validators.required]]
     });
   }
 
   // Tạo captcha ngẫu nhiên
   generateCaptcha(): void {
-    // const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const chars = 'a';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    // const chars = 'a';
     this.captchaText = '';
     
     // Tạo chuỗi captcha 5 ký tự
-    // for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       this.captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
-    // }
+    }
     
     // Vẽ captcha lên canvas
     setTimeout(() => {
@@ -155,10 +154,9 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    // Kiểm tra captcha trước khi đăng nhập
     if (!this.validateCaptcha()) {
       this.loginError = 'Mã captcha không đúng. Vui lòng nhập lại.';
-      this.refreshCaptcha(); // Tạo captcha mới
+      this.refreshCaptcha();
       return;
     }
 
@@ -177,7 +175,7 @@ export class LoginComponent implements OnInit {
       error: (error) => {
         this.loginError = error.message || 'Đăng nhập thất bại. Vui lòng thử lại.';
         this.isLoading = false;
-        this.refreshCaptcha(); // Tạo captcha mới khi đăng nhập thất bại
+        this.refreshCaptcha();
       }
     });
   }

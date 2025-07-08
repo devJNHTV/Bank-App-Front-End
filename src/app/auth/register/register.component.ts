@@ -61,11 +61,11 @@ export class RegisterComponent {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      username: ['testfe32', Validators.required],
-      fullName: ['test frontend', Validators.required],
-      email: ['testfe32@gmail.com', [Validators.required, Validators.email]],
-      phoneNumber: ['0123466632', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      identityNumber: ['123123126632', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
+      username: ['testdemo', Validators.required],
+      fullName: ['test demo', Validators.required],
+      email: ['testdemo@gmail.com', [Validators.required, Validators.email]],
+      phoneNumber: ['0987654321', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      identityNumber: ['123456789012', [Validators.required, Validators.pattern('^[0-9]{12}$')]],
       address: ['123 Nguyễn Văn Trỗi', Validators.required],
       dateOfBirth: [new Date(2002, 5, 22), Validators.required],
       gender: ['male', Validators.required],
