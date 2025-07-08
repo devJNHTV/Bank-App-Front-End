@@ -24,7 +24,7 @@
               <i class="pi pi-users"></i>
               <span>Customer Dashboard</span>
             </li>
-            <li class="dropdown-item" [class.active]="isActive('/dashboard/account')" (click)="navigateTo('/dashboard/customer')">
+            <li class="dropdown-item" [class.active]="isActive('/dashboard/account')" (click)="navigateTo('/dashboard/account')">
               <i class="pi pi-credit-card"></i>
               <span>Account Dashboard</span>
             </li>
@@ -49,6 +49,10 @@
           <li class="menu-item" [class.active]="isActive('/kyc-management')">
             <i class="pi pi-verified"></i>
             <span (click)="navigateTo('kyc-management')">Duyệt KYC</span>
+          </li>
+          <li class="menu-item" [class.active]="isActive('/credit-requests')">
+            <i class="pi pi-credit-card"></i>
+            <span (click)="navigateTo('credit-requests')">Yêu cầu thẻ tín dụng</span>
           </li>
         </ul>
       </div>

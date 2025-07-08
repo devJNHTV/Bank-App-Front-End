@@ -137,4 +137,8 @@ export class AccountService {
     return this.http.get<any>(`${this.apiUrl}/api/admin/statistic/accounts/growth`, {
     });
   }
+  getAccountStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/api/admin/statistic/dashboard`, {
+    });
+  }
 }
