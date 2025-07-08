@@ -22,9 +22,9 @@ export class DashboardLoanAdminComponent implements OnInit {
   totalOutstanding = 0;
   totalInterest = 0;
   totalLoans = 0;
-  totalClosedLoans = 0;
-  totalLateLoans = 0;
-  totalRejectedLoans = 0;
+  totalPaidRepayments = 0;
+  totalUnpaidRepayments = 0;
+  totalLateRepayments = 0;
 
   // Chart data
   barChartData: any;
@@ -36,30 +36,30 @@ export class DashboardLoanAdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    // Gọi API song song
     Promise.all([
       this.loanService.getTotalDisbursedSystem().toPromise(),
       this.loanService.getTotalCollectedSystem().toPromise(),
       this.loanService.getTotalProfitSystem().toPromise(),
-      this.loanService.getAllLoans().toPromise()
-    ]).then(([disbursed, collected, profit, allLoans]) => {
+      this.loanService.getAllLoans().toPromise(),
+      this.loanService.getRepaymentStats().toPromise()
+    ]).then(([disbursed, collected, profit, allLoans, repaymentStats]) => {
       this.totalBorrowed = disbursed?.data || 0;
       this.totalOutstanding = (disbursed?.data || 0) - (collected?.data || 0);
       this.totalInterest = profit?.data || 0;
-      // Thống kê số lượng
       const loans = allLoans?.data || [];
       this.totalLoans = loans.length;
-      this.totalClosedLoans = loans.filter((l: any) => l.status === 'CLOSED').length;
-      this.totalLateLoans = loans.filter((l: any) => l.status === 'LATE').length;
-      this.totalRejectedLoans = loans.filter((l: any) => l.status === 'REJECTED').length;
-      // Cập nhật biểu đồ
+      const stats = repaymentStats?.data || {};
+      this.totalPaidRepayments = (stats as any)['paid'] || 0;
+      this.totalUnpaidRepayments = (stats as any)['unpaid'] || 0;
+      this.totalLateRepayments = (stats as any)['late'] || 0;
       this.barChartData = {
-        labels: ['Đã giải ngân', 'Đã thu hồi', 'Tiền lãi'],
+        labels: ['Đã trả', 'Chưa trả', 'Trễ hạn'],
         datasets: [
           {
             label: 'Số tiền (VNĐ)',
-            backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],
-            data: [this.totalBorrowed, collected?.data || 0, this.totalInterest]
+            backgroundColor: ['#00C9A7', '#FF6B6B', '#FFD93D'],
+            borderColor: ['#00A693', '#E63946', '#F4D35E'],
+            data: [this.totalPaidRepayments, this.totalUnpaidRepayments, this.totalLateRepayments]
           }
         ]
       };
@@ -75,8 +75,8 @@ export class DashboardLoanAdminComponent implements OnInit {
         datasets: [
           {
             data: [this.totalBorrowed, collected?.data || 0, this.totalInterest],
-            backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],
-            hoverBackgroundColor: ['#64B5F6', '#81C784', '#FFB74D']
+            backgroundColor: ['#5E60CE', '#48BFE3', '#FF9F1C'],
+            hoverBackgroundColor: ['#6930C3', '#56CFE1', '#FFBF69']
           }
         ]
       };

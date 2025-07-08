@@ -9,124 +9,63 @@
     </h1>
     <p class="dashboard-subtitle">Tổng quan thông tin và thống kê hệ thống cho vay</p>
   </div>
-  <div class="">
-    <div class="poo">
-      <div class="pie">
-        <div class="chart-wrapper">
-          <p-chart
-            type="bar"
-            [data]="barChartData"
-            [options]="barChartOptions"
-            style="height:350px; width:100%;"
-          ></p-chart>
-        </div>
-      </div>
-
-      <div class="ring">
-        <div class="chart-wrapper">
-          <p-chart
-            type="pie"
-            [data]="pieChartData"
-            [options]="pieChartOptions"
-            style="height:350px; width:100%;"
-          ></p-chart>
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- Stats Cards Section -->
-  <div class="stats-section">
-    <div class="stats-grid">
-      <div class="stat-card primary">
-        <div class="stat-icon">
-          <i class="pi pi-wallet"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-title">Tổng số khoản vay</h3>
-          <div class="stat-value">{{ totalLoans }} <div class="stat-trend positive">
-              <i class="pi pi-arrow-up"></i>
-              <span>Khoản vay</span>
-            </div></div>
-          
-        </div>
-      </div>
-
-      <div class="stat-card success">
-        <div class="stat-icon">
-          <i class="pi pi-money-bill"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-title">Đã giải ngân</h3>
-          <div class="stat-value">{{ totalBorrowed | number }} <div class="stat-unit">VNĐ</div></div>
-
-        </div>
-      </div>
-
-      <div class="stat-card info">
-        <div class="stat-icon">
-          <i class="pi pi-credit-card"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-title">Đã thu hồi</h3>
-          <div class="stat-value">{{ (totalBorrowed - totalOutstanding) | number }} <div class="stat-unit">VNĐ</div></div>
-          
-        </div>
-      </div>
-
-      <div class="stat-card warning">
-        <div class="stat-icon">
-          <i class="pi pi-percentage"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-title">Tiền lãi thu được</h3>
-          <div class="stat-value">{{ totalInterest | number }} <div class="stat-unit">VNĐ</div></div>
-          
-        </div>
-      </div>
-
-      <div class="stat-card complete">
-        <div class="stat-icon">
-          <i class="pi pi-check-circle"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-title">Khoản vay đã đóng</h3>
-          <div class="stat-value">{{ totalClosedLoans }}<div class="stat-trend positive">
-              <i class="pi pi-check"></i>
-              <span>Hoàn thành</span>
-            </div></div>
-          
-        </div>
-      </div>
-
-      <div class="stat-card danger">
-        <div class="stat-icon">
-          <i class="pi pi-exclamation-triangle"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-title">Khoản vay trễ hạn</h3>
-          <div class="stat-value">{{ totalLateLoans }} <div class="stat-trend negative">
-              <i class="pi pi-clock"></i>
-              <span>Cần xử lý</span>
-            </div></div>
-          
-        </div>
-      </div>
-
-      <div class="stat-card rejected">
-        <div class="stat-icon">
-          <i class="pi pi-times-circle"></i>
-        </div>
-        <div class="stat-content">
-          <h3 class="stat-title">Khoản vay bị từ chối</h3>
-          <div class="stat-value">{{ totalRejectedLoans }}<div class="stat-trend neutral">
-              <i class="pi pi-ban"></i>
-              <span>Đã từ chối</span>
-            </div></div>
-          
-        </div>
+  <div *ngIf="!loading" class="dashboard-report">
+  <ul class="report-list">
+    <li>
+      <strong>Tổng số khoản vay:</strong>
+      {{ totalLoans }} khoản
+    </li>
+    <li>
+      <strong>Đã giải ngân:</strong>
+      {{ totalBorrowed | number }} VNĐ
+    </li>
+    <li>
+      <strong>Đã thu hồi:</strong>
+      {{ (totalBorrowed - totalOutstanding) | number }} VNĐ
+    </li>
+    <li>
+      <strong>Tiền lãi thu được:</strong>
+      {{ totalInterest | number }} VNĐ
+    </li>
+    <li>
+      <strong>Kỳ hạn vay chưa trả:</strong>
+      {{ totalUnpaidRepayments }}
+      <span class="trend negative"><i class="pi pi-clock"></i> cần xử lý</span>
+    </li>
+    <li>
+      <strong>Kỳ hạn vay trễ hạn:</strong>
+      {{ totalLateRepayments }}
+      <span class="trend negative"><i class="pi pi-exclamation-triangle"></i> cần xử lý</span>
+    </li>
+    <li>
+      <strong>Kỳ hạn vay đã trả:</strong>
+      {{ totalPaidRepayments }}
+      <span class="trend positive"><i class="pi pi-check"></i> hoàn thành</span>
+    </li>
+    <div class="pie">
+      <div class="chart-wrapper">
+        <p-chart
+          type="bar"
+          [data]="barChartData"
+          [options]="barChartOptions"
+          style="height:350px; width:100%;"
+        ></p-chart>
       </div>
     </div>
+  </ul>
+  <div class="ring">
+    <div class="chart-wrapper">
+      <p-chart
+        type="pie"
+        [data]="pieChartData"
+        [options]="pieChartOptions"
+        style="height:350px; width:100%;"
+      ></p-chart>
+    </div>
   </div>
+</div>
+
 
   <!-- Charts Section -->
   

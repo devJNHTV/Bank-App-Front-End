@@ -292,13 +292,16 @@
         </div>
         <div class="form-field">
           <label for="incomeAccountNumber">Số tài khoản ngân hàng chứng minh thu nhập</label>
-          <input
+          <p-inputNumber
             id="incomeAccountNumber"
             type="text"
             formControlName="incomeAccountNumber"
             placeholder="Nhập số tài khoản ngân hàng chứng minh thu nhập"
             [class.invalid]="loanForm.get('incomeAccountNumber')?.touched && loanForm.get('incomeAccountNumber')?.invalid"
-            style="width: 100%" />
+            styleClass="w-full"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }">
+          </p-inputNumber>
           <small class="p-error" *ngIf="loanForm.get('incomeAccountNumber')?.touched && loanForm.get('incomeAccountNumber')?.hasError('required')">
             Vui lòng nhập số tài khoản ngân hàng chứng minh thu nhập.
           </small>

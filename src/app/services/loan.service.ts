@@ -107,4 +107,7 @@ export class LoanService {
   getTotalProfitSystem(): Observable<ApiResponseWrapper<number>> {
     return this.http.get<ApiResponseWrapper<number>>(`${this.baseUrl}/admin/total-profit`, { headers: this.getAuthHeaders() });
   }
+  getRepaymentStats(): Observable<ApiResponseWrapper<Map<string, number>>> {
+    return this.http.get<ApiResponseWrapper<Map<string, number>>>('http://localhost:8888/api/repayments/stats', { headers: this.getAuthHeaders() });
+  }
 } 
