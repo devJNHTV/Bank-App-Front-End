@@ -9,10 +9,13 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { LoanService } from '../../services/loan.service';
 import { Loan } from '../../models/loan.model';
 import { LoanStatus } from '../../models/loanStatus .model';
+import { ToastrService } from 'ngx-toastr';
+import { InfoIncome } from '../../models/infoIncome.model';
 
 @Component({
   selector: 'app-detail-loan-reject',
@@ -25,7 +28,8 @@ import { LoanStatus } from '../../models/loanStatus .model';
     InputNumberModule,
     ToastModule,
     TagModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    DropdownModule
   ],
   providers: [MessageService],
   templateUrl: './detail-loan-reject.component.html',
@@ -52,17 +56,26 @@ export class DetailLoanRejectComponent implements OnInit {
       Validators.required, 
       Validators.min(1)
     ]),
-    declaredIncome: new FormControl<number | null>(null, [
-      Validators.required, 
-      Validators.min(0)
-    ])
+    // InfoIncome fields
+    incomeAccountNumber: new FormControl<string | null>(null, [Validators.required]),
+    bankName: new FormControl<string | null>(null, [Validators.required]),
+    declaredIncome: new FormControl<number | null>(null, [Validators.required, Validators.min(0)])
   });
+
+  bankOptions = [
+    { bankName: 'Vietcombank', bankCode: '970436' },
+    { bankName: 'Techcombank', bankCode: '970437' },
+    { bankName: 'BIDV', bankCode: '970438' },
+    { bankName: 'VietinBank', bankCode: '970439' },
+    { bankName: 'ACB', bankCode: '970440' },
+  ];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private loanService: LoanService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -77,12 +90,14 @@ export class DetailLoanRejectComponent implements OnInit {
     this.loanService.getLoanById(loanId).subscribe({
       next: ({ data }) => {
         this.loanDetail = data;
-        // Initialize form with current loan values
+        const infoIncome = data.infoIncomes && data.infoIncomes.length > 0 ? data.infoIncomes[0] : null;
         this.loanForm.patchValue({
           amount: data.amount,
           interestRate: data.interestRate,
           termMonths: data.termMonths,
-          declaredIncome: data.declaredIncome
+          declaredIncome: infoIncome?.declaredIncome ?? null,
+          incomeAccountNumber: infoIncome?.accountNumber ?? null,
+          bankName: infoIncome?.bankName ?? null
         });
         this.loading = false;
       },
@@ -121,7 +136,6 @@ export class DetailLoanRejectComponent implements OnInit {
 
   updateAndResubmitLoan() {
     if (!this.loanDetail?.loanId || !this.loanForm.valid) return;
-
     const updatedLoan: Loan = {
       loanId: this.loanDetail.loanId,
       customerId: this.loanDetail.customerId,
@@ -132,30 +146,39 @@ export class DetailLoanRejectComponent implements OnInit {
       amount: this.loanForm.value.amount ?? 0,  
       interestRate: this.loanForm.value.interestRate ?? 0,
       termMonths: this.loanForm.value.termMonths ?? 0,
-      declaredIncome: this.loanForm.value.declaredIncome ?? 0,
       status: LoanStatus.PENDING,
-      repayments: this.loanDetail.repayments ?? []
+      repayments: this.loanDetail.repayments ?? [],
+      infoIncomes: this.loanDetail.infoIncomes ?? []
     };
-
     this.processingAction = true;
     this.loanService.updateLoan(updatedLoan).subscribe({
       next: () => {
-        this.processingAction = false;
-        this.messageService.add({ 
-          severity: 'success', 
-          summary: 'Success', 
-          detail: 'Loan updated and resubmitted successfully' 
+        const infoIncome = {
+          infoId: this.loanDetail?.infoIncomes && this.loanDetail?.infoIncomes.length > 0 ? this.loanDetail?.infoIncomes[0].infoId : null,
+          loanId: this.loanDetail?.loanId ?? 0,
+          accountNumber: this.loanForm.value.incomeAccountNumber ?? '',
+          bankName: this.loanForm.value.bankName ?? '',
+          declaredIncome: this.loanForm.value.declaredIncome ?? 0
+        };
+        console.log(infoIncome);
+        
+        this.loanService.updateInfoIncome(infoIncome?.infoId ?? 0, infoIncome).subscribe({
+          next: () => {
+            this.processingAction = false;
+            this.toastr.success('Cập nhật và gửi lại khoản vay thành công!', 'Thành công');
+            this.router.navigate(['/loans/overview']);
+          },
+          error: () => {
+            this.processingAction = false;
+            this.error = 'Failed to update InfoIncome';
+            this.toastr.error(this.error, 'Thất bại');
+          }
         });
-        this.router.navigate(['/customer/loans']);
       },
       error: () => {
         this.processingAction = false;
         this.error = 'Failed to update and resubmit loan';
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'Error', 
-          detail: this.error 
-        });
+        this.toastr.error(this.error, 'Thất bại');
       }
     });
   }

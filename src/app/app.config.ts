@@ -1,24 +1,24 @@
 import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { HTTP_INTERCEPTORS, provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
-  import { provideStore } from '@ngrx/store';
+import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import Aura from '@primeng/themes/aura';
-import { routes } from './app.routes';  
+import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { MessageService } from 'primeng/api';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideToastr } from 'ngx-toastr';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideClientHydration(), 
+    provideClientHydration(),
     provideHttpClient(
       withFetch(),
       withInterceptorsFromDi(),
@@ -27,13 +27,9 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     provideAnimationsAsync(),
     provideAnimations(),
-    provideToastr({                    
-      positionClass: 'toast-bottom-right',
-      timeOut: 3000,
-      closeButton: true,
-      progressBar: true,
-      preventDuplicates: true
-    }),
+    provideStore(),
+    provideEffects(),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     providePrimeNG({
       theme: {
         preset: Aura,
@@ -42,13 +38,9 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: '.app-dark',
           cssLayer: false
         }
-      },
+      }
     }),
-    provideStore(),
-    provideEffects(),
-    provideStoreDevtools({
-      maxAge: 25,
-      logOnly: !isDevMode(),
-    }),
-  ],
+    provideAnimationsAsync(),
+    provideToastr()
+  ]
 };

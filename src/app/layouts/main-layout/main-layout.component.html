@@ -29,6 +29,19 @@
       </a>
       <a
       *ngIf="!isAdmin()"
+        mat-list-item
+        routerLink="/transactions"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon>payments</mat-icon>
+        <span matListItemTitle>Giao dịch</span>
+      </a>
+
+
+      <a
+      *ngIf="!isAdmin()" 
       mat-list-item
       routerLink="/account/payment"
       routerLinkActive="active-link"

@@ -12,6 +12,11 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BadgeModule } from 'primeng/badge';  
+import { registerLocaleData } from '@angular/common';
+import localeVi from '@angular/common/locales/vi';
+import { PrimeNG } from 'primeng/config';
+import { LOCALE_ID } from '@angular/core';
+registerLocaleData(localeVi, 'vi');
 @Component({
   selector: 'app-loan-history',
   standalone: true,
@@ -26,7 +31,7 @@ import { BadgeModule } from 'primeng/badge';
     ToastModule,
     ProgressSpinnerModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, { provide: LOCALE_ID, useValue: 'vi' },PrimeNG],
   templateUrl: './loan-history.component.html',
   styleUrls: ['./loan-history.component.scss']
 })
@@ -37,14 +42,26 @@ export class LoanHistoryComponent implements OnInit {
   error: string | null = null;
   dateRange: Date[] = [];
   expandedRows: { [key: number]: boolean } = {};
-
+  viLocale: any = {
+    firstDayOfWeek: 1,
+    dayNames: ["Chủ Nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"],
+    dayNamesShort: ["CN","T2","T3","T4","T5","T6","T7"],
+    dayNamesMin:   ["CN","T2","T3","T4","T5","T6","T7"],   
+    monthNames: ["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"],
+    monthNamesShort: ["Th1","Th2","Th3","Th4","Th5","Th6","Th7","Th8","Th9","Th10","Th11","Th12"],
+    today: 'Hôm nay',
+    clear: 'Xóa'
+  };
+  
   constructor(
     private repaymentService: RepaymentService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private primeng: PrimeNG
   ) {}
 
   ngOnInit(): void {
     this.loadRepaymentHistory();
+    this.primeng.setTranslation(this.viLocale);
   }
 
   loadRepaymentHistory(): void {

@@ -18,6 +18,17 @@ export class AccountService {
     return this.http.get<Account[]>(`${this.apiUrl}/getAllPaymentAccount`, {
     });
   } 
+  getAccountsByUserId(userId: string): Observable<Account[]>  {
+    console.log("sdadasdsadasd");
+    
+    console.log(userId);
+
+  return this.http.get<Account[]>(`${this.apiUrl}/getAllPaymentAccountByUserId/${userId}`, {
+    headers: {
+      'Authorization': `Bearer ${this.token}`
+    }
+  });
+} 
 
   getTerms(): Observable<Term[]> {
     return this.http.get<Term[]>(`${this.apiUrl}/get-all-term`, {

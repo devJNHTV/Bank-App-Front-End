@@ -252,11 +252,11 @@
               <span>{{ loanDetail.termMonths }}</span>
             </div>
           </div>
-          <div class="info-item">
+          <div class="info-item" *ngIf="firstInfoIncome">
             <i class="pi pi-wallet"></i>
             <div class="info-content">
-              <label>Thu nhập</label>
-              <span>{{ formatCurrency(loanDetail.declaredIncome) }}</span>
+              <label>Thu nhập chứng minh</label>
+              <span>{{ formatCurrency(firstInfoIncome.declaredIncome) }}</span>
             </div>
           </div>
           <div class="info-item">
@@ -271,6 +271,20 @@
             <div class="info-content">
               <label>Ngày duyệt</label>
               <span>{{ formatDate(loanDetail.approvedAt) }}</span>
+            </div>
+          </div>
+          <div class="info-item" *ngIf="firstInfoIncome">
+            <i class="pi pi-building"></i>
+            <div class="info-content">
+              <label>Ngân hàng chứng minh thu nhập</label>
+              <span>{{ firstInfoIncome.bankName }}</span>
+            </div>
+          </div>
+          <div class="info-item" *ngIf="firstInfoIncome">
+            <i class="pi pi-credit-card"></i>
+            <div class="info-content">
+              <label>Số tài khoản chứng minh thu nhập</label>
+              <span>{{ firstInfoIncome.accountNumber }}</span>
             </div>
           </div>
         </div>

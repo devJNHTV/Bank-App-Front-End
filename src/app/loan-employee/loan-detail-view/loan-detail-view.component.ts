@@ -21,8 +21,19 @@ import { LoanService } from '../../services/loan.service';
 import { Loan } from '../../models/loan.model';
 import { LoanStatus } from '../../models/loanStatus .model';
 import { DividerModule } from 'primeng/divider';
+import Swal from 'sweetalert2';
+import { UserService } from '../../core/services/user.service';
+import { CustomerResponse } from '../../interfaces/customerResponse';
 
 type Severity = 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast';
+
+interface TransactionDto {
+  id: string;
+  amount: number;
+  timestamp: string;
+  description: string;
+  type: string;
+}
 
 @Component({
   selector: 'app-loan-detail-view',
@@ -54,18 +65,19 @@ export class LoanDetailViewComponent implements OnInit {
   accounts: Account[] = [];
   loading = true;
   error: string | null = null;
-
+  userId: string = '';
   showRejectDialog = false;
   showEditDialog = false;
   processingAction = false;
   rejectionReasonControl = new FormControl('');
-  
-  // Form for editing loan details
+  customerDetail: CustomerResponse | null = null;
+  transactionHistory: TransactionDto[] = [];
+  loadingTransactions = false;
+
   loanForm = new FormGroup({
     amount: new FormControl<number | null>(null, [Validators.required, Validators.min(1000000)]),
     interestRate: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
     termMonths: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
-    declaredIncome: new FormControl<number | null>(null, [Validators.required, Validators.min(0)])
   });
 
   constructor(
@@ -74,7 +86,8 @@ export class LoanDetailViewComponent implements OnInit {
     private loanService: LoanService,
     private messageService: MessageService,
     private accountService: AccountService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -84,26 +97,36 @@ export class LoanDetailViewComponent implements OnInit {
     }
   }
 
+  get firstInfoIncome() {
+    return this.loanDetail && this.loanDetail.infoIncomes && this.loanDetail.infoIncomes.length > 0 ? this.loanDetail.infoIncomes[0] : null;
+  }
+
   loadLoanDetail(loanId: number) {
     this.loading = true;
     this.loanService.getLoanById(loanId).subscribe({
       next: ({ data }) => {
         this.loanDetail = data;
-        console.log(this.loanDetail);
-        if (data.customerId) {
-          this.loadCustomerInfo(data.customerId);
-          this.loadAccounts();
-        }
-        // Initialize form with current loan values
-        if (data.status === 'REJECTED') {
-          this.loanForm.patchValue({
-            amount: data.amount,
-            interestRate: data.interestRate,
-            termMonths: data.termMonths,
-            declaredIncome: data.declaredIncome
+        if (data.loanId != null) {
+          this.loanService.getInfoIncomesByLoanId(data.loanId).subscribe({
+            next: (res) => {
+              this.loanDetail!.infoIncomes = res.data || [];
+              if (this.firstInfoIncome && this.firstInfoIncome.accountNumber && this.firstInfoIncome.bankName) {
+                this.fetchTransactionHistory(this.firstInfoIncome);
+              }
+            },
+            error: () => {
+              this.loanDetail!.infoIncomes = [];
+            },
+            complete: () => {
+              this.loadCustomerDetail();
+              this.loading = false;
+            }
           });
+        } else {
+          this.loanDetail.infoIncomes = [];
+          this.loadCustomerDetail();
+          this.loading = false;
         }
-        this.loading = false;
       },
       error: () => {
         this.error = 'Failed to load loan details';
@@ -113,18 +136,36 @@ export class LoanDetailViewComponent implements OnInit {
     });
   }
 
-  loadCustomerInfo(customerId: number) {
-    // giả lập dữ liệu
-    this.customerInfo = {
-      cifCode: "CIF00000005",
-      fullName: "Test User",
-      address: "123 ABC Street",
-      email: "test3@example.com",
-      dateOfBirth: "2024-01-05",
-      phoneNumber: "0123456783",
-      status: "ACTIVE",
-      kycStatus: "REJECTED"
-    };
+  loadCustomerDetail() {
+    const customerId = this.loanDetail?.customerId?.toString() ?? '';
+    this.loanService.getCustomerDetail(customerId).subscribe({
+      next: (customerDetail) => {
+        this.customerDetail = customerDetail.data;
+        this.userId = this.customerDetail?.userId ?? '';
+        console.log("customer detail: ", this.customerDetail);
+        this.loadAccounts();
+      },
+      error: (err) => {
+        console.error('Không tải được danh sách tài khoản:', err);
+        this.toastr.error('Lỗi khi tải danh sách tài khoản.', 'Lỗi');
+        this.loading = false;
+      }
+    });
+  }
+
+  loadAccounts(): void {
+    this.loanService.getAccountsByUserId(this.userId).subscribe({
+      next: (res: any) => {
+        this.accounts = res.data;
+        console.log(this.accounts);
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Không tải được danh sách tài khoản:', err);
+        this.toastr.error('Lỗi khi tải danh sách tài khoản.', 'Lỗi');
+        this.loading = false;
+      }
+    });
   }
 
   formatCurrency(amount: number): string {
@@ -144,19 +185,6 @@ export class LoanDetailViewComponent implements OnInit {
       default:         return 'info';
     }
   }
-  loadAccounts(): void {
-    this.accountService.getAccounts().subscribe({
-      next: (res: any) => {
-        this.accounts = res.data;
-        console.log(this.accounts);
-        
-      },
-      error: (err) => {
-        console.error('Không tải được danh sách tài khoản:', err);
-        this.toastr.error('Lỗi khi tải danh sách tài khoản.', 'Lỗi');
-      }
-    });
-  }
 
   approveLoan() {
     this.loading = true;
@@ -164,13 +192,13 @@ export class LoanDetailViewComponent implements OnInit {
     this.loanService.approveLoan(this.loanDetail?.loanId ?? 0).subscribe({
       next: () => {
         this.processingAction = false;
-        this.toastr.success( 'Kích hoạt khoản vay thành công!', 'Thành công');
+        this.toastr.success('Kích hoạt khoản vay thành công!', 'Thành công');
         this.router.navigate(['/employee/loans/pending']);
       },
       error: (err) => {
         this.processingAction = false;
         console.log(err);
-        this.toastr.error( err.error.message, 'Thất bại');
+        this.toastr.error(err.error.message, 'Thất bại');
       },
       complete: () => {
         this.loading = false;
@@ -190,9 +218,8 @@ export class LoanDetailViewComponent implements OnInit {
 
   rejectLoan() {
     this.loading = true;
-    console.log(this.loanDetail);
-    
     if (!this.loanDetail?.loanId) return;
+
     const reason = this.rejectionReasonControl.value?.trim();
     if (!reason) return;
 
@@ -204,13 +231,13 @@ export class LoanDetailViewComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.processingAction = false;
-        this.toastr.success( 'TỪ chối khoản vay thành công!', 'Thành công');
+        this.toastr.success('Từ chối khoản vay thành công!', 'Thành công');
         this.closeRejectDialog();
-        this.router.navigate(['/detail/loan/'+this.loanDetail?.loanId]);
+        this.router.navigate(['/employee/loans']);
       },
       error: (err) => {
         this.processingAction = false;
-        this.toastr.error( err.error.message, 'Thất bại');
+        this.toastr.error(err.error.message, 'Thất bại');
       },
       complete: () => {
         this.loading = false;
@@ -230,8 +257,22 @@ export class LoanDetailViewComponent implements OnInit {
         amount: this.loanDetail.amount,
         interestRate: this.loanDetail.interestRate,
         termMonths: this.loanDetail.termMonths,
-        declaredIncome: this.loanDetail.declaredIncome
       });
     }
+  }
+
+  fetchTransactionHistory(infoIncome: any) {
+    this.loadingTransactions = true;
+    this.loanService.checkInfoIncome(infoIncome).subscribe({
+      next: (res: any) => {
+        this.transactionHistory = res.data || [];
+        this.loadingTransactions = false;
+      },
+      error: (err: any) => {
+        this.transactionHistory = [];
+        this.loadingTransactions = false;
+        this.toastr.error('Không lấy được lịch sử giao dịch thu nhập', 'Lỗi');
+      }
+    });
   }
 }

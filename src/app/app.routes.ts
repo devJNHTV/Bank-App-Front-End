@@ -55,6 +55,7 @@ import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.componen
 import { AdminGuard } from './core/guards/admin.guard';
 import { DashboardCustomerComponent } from './admin/admin-dashboard/dashboard-customer.component';
 import { KycManagerComponent } from './admin/kyc-manager/kyc-manager.component';
+import { DashboardLoanAdminComponent } from './loan/dashboard-loan-admin/dashboard-loan-admin.component';
 import { AccountStatisticComponent } from './admin/account-statistic/account-statistic.component';
 import { CreditRequestComponent } from './admin/credit-request/credit-request.component';
 export const routes: Routes = [
@@ -84,6 +85,8 @@ import { TransactionDepositComponent } from './admin/transaction/transaction-dep
     children: [
       { path: 'dashboard/transaction', component: DashboardTransactionComponent },
       { path: 'dashboard/customer', component: DashboardCustomerComponent },
+      { path: 'admin/loan-dashboard', component: DashboardLoanAdminComponent },
+
       { path: 'dashboard/account', component: AccountStatisticComponent },
       { path: 'customers', component: CustomerListComponent },
       { path: 'customers/detail/:cifCode', component: CustomerDetailAdminComponent },
@@ -112,6 +115,9 @@ import { TransactionDepositComponent } from './admin/transaction/transaction-dep
       { path: 'home', component: HomeComponent, canActivate: [KycGuard] },
       { path: 'about', component: AboutComponent, canActivate: [KycGuard] },
       { path: 'savings', component: SavingsComponent, canActivate: [KycGuard] },
+      { path: 'change-password', component: ChangePasswordComponent, canActivate: [KycGuard] },
+
+
       { path: 'admin/transactions', component: TransactionListComponent, canActivate: [KycGuard] },
       { path: 'change-password', component: ChangePasswordComponent, canActivate: [KycGuard] },
       { 

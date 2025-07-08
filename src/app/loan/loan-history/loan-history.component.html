@@ -225,8 +225,10 @@
               selectionMode="range"
               [showButtonBar]="true"
               [readonlyInput]="true"
+              dateFormat="dd/mm/yy"
+              [locale]="viLocale"
               placeholder="Chọn khoảng thời gian"
-              styleClass="w-full md:w-25rem"
+              styleClass="w-full md:w-25rem z-index-10"
             ></p-calendar>
           </span>
           <div class="filter-buttons">
@@ -288,7 +290,7 @@
                 ></button>
               </td>
               <td>{{ repayment.repaymentId }}</td>
-              <td>{{ repayment.dueDate | date:'mediumDate' }}</td>
+              <td>{{ repayment.dueDate | date:'dd/MM/yyyy' }}</td>
               <td>
                 {{ repayment.status }}
               </td>

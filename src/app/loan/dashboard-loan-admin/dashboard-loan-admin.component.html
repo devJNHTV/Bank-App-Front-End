@@ -1,0 +1,72 @@
+<div *ngIf="loading" style="display: flex; justify-content: center; align-items: center; height: 300px;">
+  <p-progressSpinner></p-progressSpinner>
+</div>
+<div *ngIf="!loading" class="dashboard-loan-admin-wrapper">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">
+      <i class="pi pi-chart-line"></i>
+      Dashboard Khoản Vay
+    </h1>
+    <p class="dashboard-subtitle">Tổng quan thông tin và thống kê hệ thống cho vay</p>
+  </div>
+  <!-- Stats Cards Section -->
+  <div *ngIf="!loading" class="dashboard-report">
+  <ul class="report-list">
+    <li>
+      <strong>Tổng số khoản vay:</strong>
+      {{ totalLoans }} khoản
+    </li>
+    <li>
+      <strong>Đã giải ngân:</strong>
+      {{ totalBorrowed | number }} VNĐ
+    </li>
+    <li>
+      <strong>Đã thu hồi:</strong>
+      {{ (totalBorrowed - totalOutstanding) | number }} VNĐ
+    </li>
+    <li>
+      <strong>Tiền lãi thu được:</strong>
+      {{ totalInterest | number }} VNĐ
+    </li>
+    <li>
+      <strong>Kỳ hạn vay chưa trả:</strong>
+      {{ totalUnpaidRepayments }}
+      <span class="trend negative"><i class="pi pi-clock"></i> cần xử lý</span>
+    </li>
+    <li>
+      <strong>Kỳ hạn vay trễ hạn:</strong>
+      {{ totalLateRepayments }}
+      <span class="trend negative"><i class="pi pi-exclamation-triangle"></i> cần xử lý</span>
+    </li>
+    <li>
+      <strong>Kỳ hạn vay đã trả:</strong>
+      {{ totalPaidRepayments }}
+      <span class="trend positive"><i class="pi pi-check"></i> hoàn thành</span>
+    </li>
+    <div class="pie">
+      <div class="chart-wrapper">
+        <p-chart
+          type="bar"
+          [data]="barChartData"
+          [options]="barChartOptions"
+          style="height:350px; width:100%;"
+        ></p-chart>
+      </div>
+    </div>
+  </ul>
+  <div class="ring">
+    <div class="chart-wrapper">
+      <p-chart
+        type="pie"
+        [data]="pieChartData"
+        [options]="pieChartOptions"
+        style="height:350px; width:100%;"
+      ></p-chart>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Charts Section -->
+  
+</div>
